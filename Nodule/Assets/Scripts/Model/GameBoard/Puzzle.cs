@@ -5,6 +5,10 @@ using Assets.Scripts.Model.Items;
 
 namespace Assets.Scripts.Model.GameBoard
 {
+    /// <summary>
+    /// A Puzzle specifies the rules for interacting 
+    /// with a <seealso cref="GameBoard"/>.
+    /// </summary>
     public class Puzzle
     {
         private readonly GameBoard _gameBoard;
