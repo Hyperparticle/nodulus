@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Assets.Scripts.Model.Builders;
 using Assets.Scripts.Model.Data;
@@ -8,33 +7,29 @@ using Assets.Scripts.Model.Items;
 namespace Assets.Scripts.Model.GameBoard
 {
     /// <summary>
-    /// A Grid is a collection of <seealso cref="Node"/>s, <seealso cref="Edge"/>s, and 
-    /// <seealso cref="Field"/>s in space. It defines the positioning of all nodes. It 
-    /// contains methods to place and remove nodes and edges, in which the Grid will 
-    /// auto-create fields between nodes as necessary. It also contains methods to find 
-    /// a node at a given point, and find all nodes connected to a point (called an 
-    /// <seealso cref="Island"/>).
+    /// A Grid is a collection of <seealso cref="Node"/>s in a 2D space. 
+    /// It defines the positioning of all nodes, and auto-generates fields 
+    /// (which specify potential connection points for edges) as nodes are 
+    /// added and removed.
     /// </summary>
     public class Grid
     {
-        // Keep a simple collection of nodes, edges, fields, and islands
-        private readonly ICollection<Node> _nodes = new HashSet<Node>();
-        private readonly ICollection<Edge> _edges = new HashSet<Edge>();
+        // Keep a simple collection of fields
         private ICollection<Field> _fields = new HashSet<Field>();
-        private readonly ICollection<Island> _islands = new HashSet<Island>();
+
         
         // Map the positions of nodes
         private readonly IDictionary<Point, Node> _nodeMap = new Dictionary<Point, Node>();
 
         private readonly FieldBuilder _fieldBuilder;
         
-        public IEnumerable<Node> Nodes { get { return _nodes; } }
-        public IEnumerable<Edge> Edges { get { return _edges; } }
+        public IEnumerable<Node> Nodes { get { return _nodeMap.Values; } }
         public IEnumerable<Field> Fields { get { return _fields; } }
+
 
         public Grid()
         {
-             _fieldBuilder = new FieldBuilder(EdgeConnectedHandler, EdgeDisconnectedHandler);
+             _fieldBuilder = new FieldBuilder();
         }
 
         /// <summary>
@@ -45,7 +40,7 @@ namespace Assets.Scripts.Model.GameBoard
         {
             get
             {
-                return Point.Boundary(_nodes.Select(node => node.Position).ToList());
+                return Point.Boundary(_nodeMap.Keys);
             }
         }
 
@@ -54,8 +49,7 @@ namespace Assets.Scripts.Model.GameBoard
         /// </summary>
         public Node NodeAt(Point pos)
         {
-            Node node;
-            return _nodeMap.TryGetValue(pos, out node) ? node : null;
+            return NodeAt(pos, _nodeMap);
         }
 
         /// <summary>
@@ -77,11 +71,10 @@ namespace Assets.Scripts.Model.GameBoard
             if (HasNodeAt(node.Position)) return false;
             
             // Add the node based on its position
-            _nodes.Add(node);
             _nodeMap.Add(node.Position, node);
 
             // Build fields, and update the list
-            _fields = _fieldBuilder.BuildFields(node);
+            _fields = _fieldBuilder.BuildFields(node, _nodeMap);
 
             return true;
         }
@@ -98,17 +91,8 @@ namespace Assets.Scripts.Model.GameBoard
             var node = NodeAt(pos);
             if (node == null) return false;
 
-            // Remove the node
-            _nodes.Remove(node);
+            // Remove the node itself
             _nodeMap.Remove(node.Position);
-
-            // Remove any attached edges
-            node.Fields.Values
-                .Where(field => field.HasEdge)
-                .ToList()
-                .ForEach(field => {
-                    _edges.Remove(field.Edge);
-                });
 
             // Destroy fields, and update the list
             _fields = _fieldBuilder.DestroyFields(node);
@@ -116,28 +100,11 @@ namespace Assets.Scripts.Model.GameBoard
             return true;
         }
 
-        /// <summary>
-        /// Adds the specified edge to the grid.
-        /// </summary>
-        public void AddEdge(Edge edge)
+        public static Node NodeAt(Point pos, IDictionary<Point, Node> nodeMap)
         {
-            _edges.Add(edge);
+            Node node;
+            return nodeMap.TryGetValue(pos, out node) ? node : null;
         }
 
-        /// <summary>
-        /// An event handler that should fire whenever an edge is connected
-        /// </summary>
-        public void EdgeConnectedHandler(object sender, Island removedIsland)
-        {
-            _islands.Remove(removedIsland);
-        }
-
-        /// <summary>
-        /// An event handler that should fire whenever an edge is disconnected
-        /// </summary>
-        public void EdgeDisconnectedHandler(object sender, Island newIsland)
-        {
-            _islands.Add(newIsland);
-        }
     }
 }

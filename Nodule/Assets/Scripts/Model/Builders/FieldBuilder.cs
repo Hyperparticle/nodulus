@@ -1,14 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Assets.Scripts.Model.Data;
+using Assets.Scripts.Model.GameBoard;
 using Assets.Scripts.Model.Items;
 using Assets.Scripts.Utility;
 
 namespace Assets.Scripts.Model.Builders
 {
     /// <summary>
-    /// A FieldBuilder takes nodes as input, produces, and returns corresponding 
+    /// A FieldBuilder takes nodes as input, and produces corresponding 
     /// Fields between nodes. A field will be created whenever two nodes have a direct
     /// route to each other on the grid. A field will be removed whenever a node 
     /// connected to it is removed.
@@ -17,19 +17,14 @@ namespace Assets.Scripts.Model.Builders
 
         // Keep a simple collection of nodes, edges, and fields
         private readonly ICollection<Field> _fields = new HashSet<Field>();
-
-        // Map the positions of nodes
-        private readonly IDictionary<Point, Node> _nodeMap = new Dictionary<Point, Node>();
-
+        
         // Maps points to occupying fields
         private IDictionary<Point, Field> _occupiedFields = new Dictionary<Point, Field>();
 
-        public ICollection<Field> BuildFields(Node node)
+        public ICollection<Field> BuildFields(Node node, IDictionary<Point, Node> nodeMap)
         {
-            _nodeMap.Add(node.Position, node);
-
             // Find and add fields in all directions
-            Dir.AllDirections.ForEach(direction => AddField(node, direction));
+            Directions.All.ForEach(direction => AddField(node, direction, nodeMap));
 
             return new HashSet<Field>(_fields);
         }
@@ -38,15 +33,14 @@ namespace Assets.Scripts.Model.Builders
         {
             node.Fields.Values.ToList()
                 .ForEach(field => RemoveField(field));
-            _nodeMap.Remove(node.Position);
 
             return new HashSet<Field>(_fields);
         }
 
-        private void AddField(Node node, Direction direction)
+        private void AddField(Node node, Direction direction, IDictionary<Point, Node> nodeMap)
         {
             // Find the nearest node in the given direction
-            var nearest = NearestNode(node, direction);
+            var nearest = NearestNode(node, direction, nodeMap);
             if (nearest == null) return;
 
             var length = node.GetDistance(nearest);
@@ -68,14 +62,14 @@ namespace Assets.Scripts.Model.Builders
         /// <summary>
         /// Finds the nearest node to another in a given direction
         /// </summary>
-        private Node NearestNode(Node start, Direction direction)
+        private static Node NearestNode(Node start, Direction direction, IDictionary<Point, Node> nodeMap)
         {
             var dirPoint = direction.ToPoint();
 
             for (var i = 1; i < Field.MaxLength; i++)
             {
-                var next = NodeAt(start.Position + i * dirPoint);
-                if (next != null) return next;
+                var next = Grid.NodeAt(start.Position + i * dirPoint, nodeMap);
+                if (next != null) { return next; }
             }
 
             return null;
@@ -118,12 +112,6 @@ namespace Assets.Scripts.Model.Builders
             _occupiedFields = _occupiedFields
                 .Where(occ => !occ.Value.Position.Equals(field.Position))
                 .ToDictionary(pair => pair.Key, pair => pair.Value);
-        }
-
-        private Node NodeAt(Point pos)
-        {
-            Node node;
-            return _nodeMap.TryGetValue(pos, out node) ? node : null;
         }
 
         private static void AddOverlap(Field f1, Field f2)

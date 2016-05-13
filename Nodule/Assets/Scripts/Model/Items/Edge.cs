@@ -34,7 +34,10 @@ namespace Assets.Scripts.Model.Items
         {
             // Disconnect this edge from an existing field
             if (Field != null)
+            {
                 Field.DisconnectEdge(this);
+            }
+                
 
             // Connect this edge to the new field
             Field = field;

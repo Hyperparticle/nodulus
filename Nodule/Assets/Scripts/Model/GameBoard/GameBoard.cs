@@ -5,13 +5,22 @@ using Assets.Scripts.Model.Items;
 
 namespace Assets.Scripts.Model.GameBoard
 {
+    /// <summary>
+    /// A Gameboard is a <seealso cref="Grid"/> that keeps track of 
+    /// nodes connected via edges.
+    /// </summary>
     public class GameBoard
     {
         private readonly Grid _grid;
 
+        private readonly ICollection<Edge> _edges = new HashSet<Edge>();
+        private readonly ICollection<Island> _islands = new HashSet<Island>();
+        
         public IEnumerable<Node> Nodes { get { return _grid.Nodes; } }
-        public IEnumerable<Edge> Edges { get { return _grid.Edges; } }
         public IEnumerable<Field> Fields { get { return _grid.Fields; } }
+        public IEnumerable<Edge> Edges { get { return _edges; } }
+        public IEnumerable<Island> Islands { get { return _islands; } }
+
         public Node StartNode { get; set; }
 
         public Point Size { get; private set; }
@@ -87,6 +96,30 @@ namespace Assets.Scripts.Model.GameBoard
             {
                 FindConnectedNodes(connection.ParentNode, nodes);
             }
+        }
+
+        /// <summary>
+        /// Adds the specified edge to the grid.
+        /// </summary>
+        public void AddEdge(Edge edge)
+        {
+            _edges.Add(edge);
+        }
+
+        /// <summary>
+        /// An event handler that should fire whenever an edge is connected
+        /// </summary>
+        public void EdgeConnectedHandler(object sender, Island removedIsland)
+        {
+            _islands.Remove(removedIsland);
+        }
+
+        /// <summary>
+        /// An event handler that should fire whenever an edge is disconnected
+        /// </summary>
+        public void EdgeDisconnectedHandler(object sender, Island newIsland)
+        {
+            _islands.Add(newIsland);
         }
     }
 }

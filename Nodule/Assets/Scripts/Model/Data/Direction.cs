@@ -110,7 +110,7 @@ namespace Assets.Scripts.Model.Data
         }
     }
 
-    public static class Dir
+    public static class Directions
     {
         private static readonly List<Direction> DirectionList =
             new List<Direction>
@@ -121,9 +121,9 @@ namespace Assets.Scripts.Model.Data
                 Direction.Right
             };
 
-        public static List<Direction> AllDirections { get { return new List<Direction>(DirectionList);} }
+        public static List<Direction> All { get { return new List<Direction>(DirectionList);} }
 
-        public static IEnumerable<Direction> Perpendicular(Direction direction)
+        public static IEnumerable<Direction> Orthagonal(Direction direction)
         {
             return new List<Direction> { direction.Rotated(1), direction.Rotated(-1) };
         }
