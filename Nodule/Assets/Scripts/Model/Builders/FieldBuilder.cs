@@ -1,0 +1,141 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using Assets.Scripts.Model.Data;
+using Assets.Scripts.Model.Items;
+using Assets.Scripts.Utility;
+
+namespace Assets.Scripts.Model.Builders
+{
+    /// <summary>
+    /// A FieldBuilder takes nodes as input, produces, and returns corresponding 
+    /// Fields between nodes. A field will be created whenever two nodes have a direct
+    /// route to each other on the grid. A field will be removed whenever a node 
+    /// connected to it is removed.
+    /// </summary>
+    public class FieldBuilder {
+
+        // Keep a simple collection of nodes, edges, and fields
+        private readonly ICollection<Field> _fields = new HashSet<Field>();
+
+        // Map the positions of nodes
+        private readonly IDictionary<Point, Node> _nodeMap = new Dictionary<Point, Node>();
+
+        // Maps points to occupying fields
+        private IDictionary<Point, Field> _occupiedFields = new Dictionary<Point, Field>();
+
+        public ICollection<Field> BuildFields(Node node)
+        {
+            _nodeMap.Add(node.Position, node);
+
+            // Find and add fields in all directions
+            Dir.AllDirections.ForEach(direction => AddField(node, direction));
+
+            return new HashSet<Field>(_fields);
+        }
+
+        public ICollection<Field> DestroyFields(Node node)
+        {
+            node.Fields.Values.ToList()
+                .ForEach(field => RemoveField(field));
+            _nodeMap.Remove(node.Position);
+
+            return new HashSet<Field>(_fields);
+        }
+
+        private void AddField(Node node, Direction direction)
+        {
+            // Find the nearest node in the given direction
+            var nearest = NearestNode(node, direction);
+            if (nearest == null) return;
+
+            var length = node.GetDistance(nearest);
+
+            // If an existing field is found, remove it
+            Field existingField;
+            if (node.Fields.TryGetValue(direction, out existingField))
+                RemoveField(existingField);
+
+            // Ensure that fields always point either up or right
+            Pair.Swap(ref node, ref nearest, direction.IsDownLeft());
+
+            // Create a new field, and add it to the list
+            var field = new Field(length, node, nearest);
+            _fields.Add(field);
+            AddOccupied(field);
+        }
+
+        /// <summary>
+        /// Finds the nearest node to another in a given direction
+        /// </summary>
+        private Node NearestNode(Node start, Direction direction)
+        {
+            var dirPoint = direction.ToPoint();
+
+            for (var i = 1; i < Field.MaxLength; i++)
+            {
+                var next = NodeAt(start.Position + i * dirPoint);
+                if (next != null) return next;
+            }
+
+            return null;
+        }
+
+        private void RemoveField(Field field)
+        {
+            if (field == null) return;
+
+            field.DisconnectNodes();
+            _fields.Remove(field);
+            RemoveOccupied(field);
+            RemoveOverlap(field);
+        }
+
+        private void AddOccupied(Field field)
+        {
+            var dirPoint = field.Direction.ToPoint();
+
+            for (var i = 1; i < field.Length; i++)
+            {
+                var next = field.Position + i * dirPoint;
+
+                // Keep track of overlap
+                Field overlap;
+                if (_occupiedFields.TryGetValue(next, out overlap))
+                {
+                    AddOverlap(field, overlap);
+                    continue;
+                }
+
+                // Add all points occupied by the field to the map
+                _occupiedFields.Add(next, field);
+            }
+        }
+
+        private void RemoveOccupied(Field field)
+        {
+            // Create a new dictionary with the field positions removed
+            _occupiedFields = _occupiedFields
+                .Where(occ => !occ.Value.Position.Equals(field.Position))
+                .ToDictionary(pair => pair.Key, pair => pair.Value);
+        }
+
+        private Node NodeAt(Point pos)
+        {
+            Node node;
+            return _nodeMap.TryGetValue(pos, out node) ? node : null;
+        }
+
+        private static void AddOverlap(Field f1, Field f2)
+        {
+            f1.Overlap.Add(f2);
+            f2.Overlap.Add(f1);
+        }
+
+        private static void RemoveOverlap(Field field)
+        {
+            foreach (var overlap in field.Overlap)
+                overlap.Overlap.Remove(field);
+        }
+    }
+}
