@@ -15,7 +15,7 @@ namespace Assets.Scripts.Model.Builders
     /// </summary>
     public class FieldBuilder {
 
-        // Keep a simple collection of nodes, edges, and fields
+        // Keep a simple collection of fields
         private readonly ICollection<Field> _fields = new HashSet<Field>();
         
         // Maps points to occupying fields

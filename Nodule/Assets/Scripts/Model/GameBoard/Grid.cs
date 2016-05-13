@@ -9,7 +9,7 @@ namespace Assets.Scripts.Model.GameBoard
     /// <summary>
     /// A Grid is a collection of <seealso cref="Node"/>s in a 2D space. 
     /// It defines the positioning of all nodes, and auto-generates fields 
-    /// (which specify potential connection points for edges) as nodes are 
+    /// (which specify potential connection points for arcs) as nodes are 
     /// added and removed.
     /// </summary>
     public class Grid
@@ -22,9 +22,6 @@ namespace Assets.Scripts.Model.GameBoard
         private readonly IDictionary<Point, Node> _nodeMap = new Dictionary<Point, Node>();
 
         private readonly FieldBuilder _fieldBuilder;
-        
-        public IEnumerable<Node> Nodes { get { return _nodeMap.Values; } }
-        public IEnumerable<Field> Fields { get { return _fields; } }
 
 
         public Grid()

@@ -6,7 +6,7 @@ using Assets.Scripts.Model.Data;
 namespace Assets.Scripts.Model.Items
 {
     /// <summary>
-    /// A Node represents a point in grid space, allowing edges to 
+    /// A Node represents a point in grid space, allowing arcs to 
     /// connect between them.
     /// </summary>
     public class Node : IBoardItem
@@ -20,14 +20,12 @@ namespace Assets.Scripts.Model.Items
             new Dictionary<Direction, Field>();
         public Dictionary<Direction, Field> Fields { get { return _fields; } }
 
-        private Island _island;
-
         public IEnumerable<Field> Connections
         {
             get
             {
                 return _fields.Values
-                    .Where(field => field.HasEdge && !field.Edge.IsPulled);
+                    .Where(field => field.HasArc && !field.Arc.IsPulled);
             }
         }
         
@@ -37,41 +35,20 @@ namespace Assets.Scripts.Model.Items
         {
             Position = position;
             Final = final;
-
-            _island = new Island(this);
         }
 
         public bool HasConnection(Direction direction)
         {
             Field field;
             if (!_fields.TryGetValue(direction, out field)) return false;
-            return !field.HasEdge;
+            return !field.HasArc;
         }
 
         public void DisconnectField(Direction direction)
         {
             Fields[direction].DisconnectNodes();
         }
-
-        public void JoinIsland(Node node)
-        {
-            var removedIsland = _island.Join(node._island);
-
-            node._island = removedIsland;
-        }
-
-        public void SplitIsland(Field field)
-        {
-            if (this != field.ParentNode)
-            {
-                Console.Error.WriteLine("Incorrect use: this node must be parent of field");
-                return;
-            }
-
-            var newIsland = _island.Split(field);
-            field.ConnectedNode._island = newIsland;
-        }
-
+        
         public Direction GetDirection(Node end)
         {
             var diff = end.Position - Position;

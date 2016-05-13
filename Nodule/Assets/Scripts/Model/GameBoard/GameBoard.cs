@@ -1,26 +1,20 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using Assets.Scripts.Model.Data;
 using Assets.Scripts.Model.Items;
 
 namespace Assets.Scripts.Model.GameBoard
 {
     /// <summary>
-    /// A Gameboard is a <seealso cref="Grid"/> that keeps track of 
-    /// nodes connected via edges.
+    /// A GameBoard is a <seealso cref="Grid"/> that keeps track of 
+    /// arcs that connect nodes.
     /// </summary>
     public class GameBoard
     {
         private readonly Grid _grid;
 
-        private readonly ICollection<Edge> _edges = new HashSet<Edge>();
-        private readonly ICollection<Island> _islands = new HashSet<Island>();
+        private readonly ICollection<Arc> _arcs = new HashSet<Arc>();
+        private readonly IslandSet _islandSet = new IslandSet();
         
-        public IEnumerable<Node> Nodes { get { return _grid.Nodes; } }
-        public IEnumerable<Field> Fields { get { return _grid.Fields; } }
-        public IEnumerable<Edge> Edges { get { return _edges; } }
-        public IEnumerable<Island> Islands { get { return _islands; } }
-
         public Node StartNode { get; set; }
 
         public Point Size { get; private set; }
@@ -35,91 +29,40 @@ namespace Assets.Scripts.Model.GameBoard
         {
             var added = _grid.AddNode(node);
             Size = _grid.Size;
+            _islandSet.Add(node);
             return added;
         }
 
-        public bool CreateEdge(Point pos, Direction direction)
+        /// <summary>
+        /// Adds the specified Arc to the game board.
+        /// </summary>
+        public bool Push(Arc arc, Field field)
         {
-            var node = _grid.NodeAt(pos);
-            if (node == null) return false;
+            if (!field.ValidPlacement(arc)) { return false; }
 
-            Field field;
-            if (!node.Fields.TryGetValue(direction, out field)) return false;
-
-            CreateEdge(field);
+            arc.Push(field);
+            _arcs.Add(arc);
+            _islandSet.Connect(arc, field);
             return true;
         }
 
-        public void CreateEdge(Field field)
+        /// <summary>
+        /// Removes the specified Arc from the game board.
+        /// </summary>
+        public bool Pull(Arc arc)
         {
-            _grid.AddEdge(new Edge(field), field);
-        }
-
-        public static bool IsConnected(Node start, Node end)
-        {
-            return IsConnected(start, end, new HashSet<Node>());
-        }
-
-        private static bool IsConnected(Node start, Node end, ICollection<Node> nodes)
-        {
-            if (start.Equals(end)) return true;
-
-            nodes.Add(start);
-
-            // Simple recursive breadth-first search (no loops)
-            return start.Connections
-                .Where(connection => !nodes.Contains(connection.ConnectedNode))          // Prevent endless looping
-                .Any(connection => IsConnected(connection.ConnectedNode, end, nodes));   // True if connection exists
-        }
-
-        public static IEnumerable<Node> ConnectedNodes(Node start)
-        {
-            var nodes = new HashSet<Node>();
-            FindConnectedNodes(start, nodes);
-
-            return nodes;
-        }
-
-        private static void FindConnectedNodes(Node start, ICollection<Node> nodes)
-        {
-            nodes.Add(start);
-
-            // Accumulates all connected nodes in the collection
-            foreach (var connection in start.Connections
-                .Where(connection => !nodes.Contains(connection.ConnectedNode)))
-            {
-                FindConnectedNodes(connection.ConnectedNode, nodes);
-            }
-
-            foreach (var connection in start.Connections
-                .Where(connection => !nodes.Contains(connection.ParentNode)))
-            {
-                FindConnectedNodes(connection.ParentNode, nodes);
-            }
+            arc.Pull();
+            _arcs.Remove(arc);
+            _islandSet.Disconnect(arc);
+            return true;
         }
 
         /// <summary>
-        /// Adds the specified edge to the grid.
+        /// Checks if the two nodes are connected via arcs
         /// </summary>
-        public void AddEdge(Edge edge)
+        public bool IsConnected(Node start, Node end)
         {
-            _edges.Add(edge);
-        }
-
-        /// <summary>
-        /// An event handler that should fire whenever an edge is connected
-        /// </summary>
-        public void EdgeConnectedHandler(object sender, Island removedIsland)
-        {
-            _islands.Remove(removedIsland);
-        }
-
-        /// <summary>
-        /// An event handler that should fire whenever an edge is disconnected
-        /// </summary>
-        public void EdgeDisconnectedHandler(object sender, Island newIsland)
-        {
-            _islands.Add(newIsland);
+            return _islandSet.IsConnected(start, end);
         }
     }
 }

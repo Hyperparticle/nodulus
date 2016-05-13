@@ -11,11 +11,8 @@ namespace Assets.Scripts.Model.GameBoard
 
         public Player Player { get; private set; }
         public Node StartNode { get { return _gameBoard.StartNode; } }
-        public IEnumerable<Node> Nodes { get { return _gameBoard.Nodes; } }
-        public IEnumerable<Edge> Edges { get { return _gameBoard.Edges; } } 
-        public IEnumerable<Field> Fields { get { return _gameBoard.Fields; } }
 
-        public Edge Inversion { get; private set; }
+        public Arc Inversion { get; private set; }
         
         public int NumMoves { get; private set; }
         public bool Win { get; private set; }
@@ -36,12 +33,12 @@ namespace Assets.Scripts.Model.GameBoard
             UpdateMoves();
         }
 
-        public bool Invert(Edge edge, Direction direction)
+        public bool Invert(Arc arc, Direction direction)
         {
-            var move = _inversions.FirstOrDefault(takeMove => takeMove.Equals(edge));
+            var move = _inversions.FirstOrDefault(takeMove => takeMove.Equals(arc));
             if (move == null || !move.Play(direction)) return false;
 
-            Inversion = edge;
+            Inversion = arc;
             NumMoves++;
             UpdateMoves();
 
@@ -73,8 +70,8 @@ namespace Assets.Scripts.Model.GameBoard
         private IEnumerable<Inversion> FindTakeMoves()
         {
             return Player.Fields
-                .Where(field => field.HasEdge)
-                .Select(connection => new Inversion(Player, connection.Edge, Inversion != null))
+                .Where(field => field.HasArc)
+                .Select(connection => new Inversion(Player, connection.Arc, Inversion != null))
                 .Where(takeMove => takeMove.IsValid);
         }
 

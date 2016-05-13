@@ -17,8 +17,8 @@ namespace Assets.Scripts.Model.Items
         public Node ParentNode { get; private set; }
         public Node ConnectedNode { get; private set; }
 
-        public Edge Edge { get; private set; }
-        public bool HasEdge { get { return Edge != null; } }
+        public Arc Arc { get; private set; }
+        public bool HasArc { get { return Arc != null; } }
         
         public ICollection<Field> Overlap { get; private set; }
 
@@ -36,32 +36,26 @@ namespace Assets.Scripts.Model.Items
             connectedNode.Fields.Add(Direction.Opposite(), this);
         }
 
-        public bool ValidPlacement(Edge edge)
+        public bool ValidPlacement(Arc arc)
         {
             // A placement is valid if:
-            // 1. No edge exists in the field
-            // 2. Edge length is equal to field length
-            // 3. Edges do not overlap
+            // 1. No Arc exists in the field
+            // 2. Arc length is equal to field length
+            // 3. Arcs do not overlap
 
-            var overlap = Overlap.Any(field => field.HasEdge);
-            var noEdge = !HasEdge || Edge.Equals(edge);
-            return noEdge && edge.Length == Length && !overlap;
+            var overlap = Overlap.Any(field => field.HasArc);
+            var noArc = !HasArc || Arc.Equals(arc);
+            return noArc && arc.Length == Length && !overlap;
         }
 
-        public void ConnectEdge(Edge edge)
+        public void ConnectArc(Arc arc)
         {
-            Edge = edge;
-
-            // Union the nodes' islands together
-            ParentNode.JoinIsland(ConnectedNode);
+            Arc = arc;
         }
 
-        public void DisconnectEdge(Edge edge)
+        public void DisconnectArc(Arc arc)
         {
-            Edge = null;
-
-            // Split the nodes' islands apart
-            ParentNode.SplitIsland(this);
+            Arc = null;
         }
 
         public void DisconnectNodes()

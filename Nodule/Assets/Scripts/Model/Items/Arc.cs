@@ -3,10 +3,10 @@
 namespace Assets.Scripts.Model.Items
 {
     /// <summary>
-    /// An Edge represents a visible connection between two nodes, allowing a traversible
+    /// An Arc represents a visible connection between two nodes, allowing a traversible
     /// path between them.
     /// </summary>
-    public class Edge : IBoardItem
+    public class Arc : IBoardItem
     {
         public Point Position { get { return ParentNode.Position; } }
         public bool IsEnabled { get { return true; } }
@@ -19,7 +19,7 @@ namespace Assets.Scripts.Model.Items
 
         public bool IsPulled { get; private set; }
 
-        public Edge(Field field)
+        public Arc(Field field)
         {
             Length = field.Length;
             Push(field);
@@ -32,16 +32,16 @@ namespace Assets.Scripts.Model.Items
 
         public void Push(Field field)
         {
-            // Disconnect this edge from an existing field
+            // Disconnect this Arc from an existing field
             if (Field != null)
             {
-                Field.DisconnectEdge(this);
+                Field.DisconnectArc(this);
             }
                 
 
-            // Connect this edge to the new field
+            // Connect this Arc to the new field
             Field = field;
-            field.ConnectEdge(this);
+            field.ConnectArc(this);
             IsPulled = false;
         }
 
