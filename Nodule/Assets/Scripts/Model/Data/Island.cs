@@ -12,32 +12,38 @@ namespace Assets.Scripts.Model.Data
     public class Island {
 
         private readonly HashSet<Node> _connectedNodes;
+        private readonly HashSet<Field> _connectedFields;
 
         /// <summary>
         /// True if this island contains a final node
         /// </summary>
         public bool IsFinal { get { return _connectedNodes.Any(node => node.Final); } }
         
+        public IEnumerable<Field> Inskirts { get { return _connectedFields.Where(field => field.HasArc); } }
+        public IEnumerable<Field> Outskirts { get { return _connectedFields.Where(field => !field.HasArc); } }
+
         /// <summary>
         /// Creates a new island with one node in it
         /// </summary>
         public Island(Node node)
         {
             _connectedNodes = new HashSet<Node> { node };
+            _connectedFields = new HashSet<Field>(node.Fields.Values);
         }
 
         /// <summary>
         /// Creates a new island with a set of nodes
         /// </summary>
-        private Island(HashSet<Node> connectedNodes)
+        private Island(HashSet<Node> connectedNodes, HashSet<Field> connectedFields) 
         {
             _connectedNodes = connectedNodes;
+            _connectedFields = connectedFields;
         }
 
         /// <summary>
         /// Returns true if the node is contained inside this island
         /// </summary>
-        public bool ContainsNode(Node node)
+        public bool Contains(Node node)
         {
             return _connectedNodes.Contains(node);
         }
@@ -52,6 +58,7 @@ namespace Assets.Scripts.Model.Data
         public Island Join(Island island)
         {
             island._connectedNodes.UnionWith(_connectedNodes);
+            island._connectedFields.UnionWith(_connectedFields);
             return island;
         }
 
@@ -69,38 +76,27 @@ namespace Assets.Scripts.Model.Data
             var parent = field.ParentNode;
             var connected = field.ConnectedNode;
 
+            // Find all current connections with the parent node
+            _connectedNodes.Clear();
+            _connectedFields.Clear();
+            FindConnected(parent, _connectedNodes, _connectedFields);              
+
             // Find all current connections with the connected node
-            var split = ConnectedNodes(connected);
+            var splitNodes = new HashSet<Node>();
+            var splitFields = new HashSet<Field>();
+            FindConnected(connected, splitNodes, splitFields);
 
-            // If the new set contains the parent 
-            // node, then this island has not been split
-            if (split.Contains(parent)) { return this; }
-            
-            // Subtract the split set from this island (so that
-            // this island has only nodes connected to the parent)
-            _connectedNodes.ExceptWith(split);
-            
             // Return the island containing the connected node
-            return new Island(split);
-        }
-
-        /// <summary>
-        /// Generates a list of all nodes that are connected to the specified node.
-        /// </summary>
-        private static HashSet<Node> ConnectedNodes(Node start)
-        {
-            var nodes = new HashSet<Node>();
-            FindConnectedNodes(start, nodes);
-
-            return nodes;
+            return new Island(splitNodes, splitFields);
         }
 
         /// <summary>
         /// Recursively collects nodes that are connected to the specified node.
         /// </summary>
-        private static void FindConnectedNodes(Node start, HashSet<Node> nodes)
+        private static void FindConnected(Node start, HashSet<Node> nodes, HashSet<Field> fields) 
         {
             nodes.Add(start);
+            fields.UnionWith(start.Fields.Values);
 
             // Accumulates all connected nodes in the collection
 
@@ -108,14 +104,14 @@ namespace Assets.Scripts.Model.Data
             foreach (var connection in start.Connections
                 .Where(connection => !nodes.Contains(connection.ParentNode)))
             {
-                FindConnectedNodes(connection.ParentNode, nodes);
+                FindConnected(connection.ParentNode, nodes, fields);
             }
 
             // Find all connected node connections
             foreach (var connection in start.Connections
                 .Where(connection => !nodes.Contains(connection.ConnectedNode)))
             {
-                FindConnectedNodes(connection.ConnectedNode, nodes);
+                FindConnected(connection.ConnectedNode, nodes, fields);
             }
         }
     }

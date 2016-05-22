@@ -14,10 +14,6 @@ namespace Assets.Scripts.Model.GameBoard
     /// </summary>
     public class Grid
     {
-        // Keep a simple collection of fields
-        private ICollection<Field> _fields = new HashSet<Field>();
-
-        
         // Map the positions of nodes
         private readonly IDictionary<Point, Node> _nodeMap = new Dictionary<Point, Node>();
 
@@ -70,8 +66,8 @@ namespace Assets.Scripts.Model.GameBoard
             // Add the node based on its position
             _nodeMap.Add(node.Position, node);
 
-            // Build fields, and update the list
-            _fields = _fieldBuilder.BuildFields(node, _nodeMap);
+            // Build fields
+            _fieldBuilder.BuildFields(node, _nodeMap);
 
             return true;
         }
@@ -91,8 +87,8 @@ namespace Assets.Scripts.Model.GameBoard
             // Remove the node itself
             _nodeMap.Remove(node.Position);
 
-            // Destroy fields, and update the list
-            _fields = _fieldBuilder.DestroyFields(node);
+            // Destroy fields
+            _fieldBuilder.DestroyFields(node);
 
             return true;
         }

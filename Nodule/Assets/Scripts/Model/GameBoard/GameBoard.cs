@@ -16,6 +16,7 @@ namespace Assets.Scripts.Model.GameBoard
         private readonly IslandSet _islandSet = new IslandSet();
         
         public Node StartNode { get; set; }
+        public IslandSet IslandSet { get { return _islandSet; } }
 
         public Point Size { get; private set; }
         

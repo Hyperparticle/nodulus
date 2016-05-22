@@ -1,4 +1,5 @@
-﻿using Assets.Scripts.Model.Items;
+﻿using Assets.Scripts.Model.Data;
+using Assets.Scripts.Model.Items;
 
 namespace Assets.Scripts.Model.Moves
 {
@@ -7,7 +8,7 @@ namespace Assets.Scripts.Model.Moves
         private readonly Player _player;
         private readonly Arc _arc;
 
-        public Field Field { get; } 
+        public Field Field { get; private set; } 
 
         public PushMove(Player player, Arc arc, Field field)
         {
@@ -28,21 +29,25 @@ namespace Assets.Scripts.Model.Moves
             get
             {
                 if (_player == null || _arc == null || Field == null) return false;
-                return (_arc.IsPulled && _player.IsProximal(Field) && Field.ValidPlacement(_arc));
+                return _arc.IsPulled && _player.IsProximal(Field) && Field.ValidPlacement(_arc);
             }
         }
 
         public bool Play()
         {
             if (!IsValid) return false;
-            _arc.Revert(Field);
+
+            _arc.Push(Field);
             _player.MoveTo(Field.ParentNode);
+
             return true;
         }
 
         public bool Undo()
         {
-            
+            // TODO: validation?
+
+            return false;
         }
 
         //public bool Equals(Arc arc, Field field)

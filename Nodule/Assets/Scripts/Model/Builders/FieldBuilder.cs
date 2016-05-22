@@ -21,20 +21,16 @@ namespace Assets.Scripts.Model.Builders
         // Maps points to occupying fields
         private IDictionary<Point, Field> _occupiedFields = new Dictionary<Point, Field>();
 
-        public ICollection<Field> BuildFields(Node node, IDictionary<Point, Node> nodeMap)
+        public void BuildFields(Node node, IDictionary<Point, Node> nodeMap)
         {
             // Find and add fields in all directions
             Directions.All.ForEach(direction => AddField(node, direction, nodeMap));
-
-            return new HashSet<Field>(_fields);
         }
 
-        public ICollection<Field> DestroyFields(Node node)
+        public void DestroyFields(Node node)
         {
             node.Fields.Values.ToList()
                 .ForEach(field => RemoveField(field));
-
-            return new HashSet<Field>(_fields);
         }
 
         private void AddField(Node node, Direction direction, IDictionary<Point, Node> nodeMap)

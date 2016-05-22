@@ -11,7 +11,12 @@ namespace Assets.Scripts.Model.Data
     {
         private readonly IDictionary<Node, Island> _islandMap = new Dictionary<Node, Island>();
 
-        public IEnumerable<Island> Islands { get { return _islandMap.Values; } }
+        //public IEnumerable<Island> Islands { get { return _islandMap.Values; } }
+
+        public Island Get(Node node)
+        {
+            return _islandMap[node];
+        }
 
         public void Add(Node node)
         {

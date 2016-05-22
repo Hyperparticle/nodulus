@@ -7,84 +7,45 @@ using Assets.Scripts.Model.Moves;
 namespace Assets.Scripts.Model.GameBoard
 {
     /// <summary>
-    /// A Puzzle specifies the rules for interacting 
+    /// A Puzzle specifies the rules and methods for interacting 
     /// with a <seealso cref="GameBoard"/>.
     /// </summary>
     public class Puzzle
     {
         private readonly GameBoard _gameBoard;
+        private readonly Player _player;
 
-        public Player Player { get; private set; }
         public Node StartNode { get { return _gameBoard.StartNode; } }
-
-        public Arc Inversion { get; private set; }
-        
-        public int NumMoves { get; private set; }
-        public bool Win { get; private set; }
-        
-        private readonly HashSet<PullMove> _inversions = new HashSet<PullMove>();
-        private readonly HashSet<PushMove> _reversions = new HashSet<PushMove>();
-        
-        public IEnumerable<PullMove> Inversions { get { return _inversions; } }
-        public IEnumerable<PushMove> Reversions { get { return _reversions; } }
-
+        public bool Win { get { return _player.Win; } }
         public Point BoardSize { get { return _gameBoard.Size; } }
+
+        public IEnumerable<Field> PullFields { get { return _player.PullFields; } }
+        public IEnumerable<Field> PushFields { get { return _player.PushFields; } }
+
+        public Arc PulledArc { get; private set; }
 
         public Puzzle(GameBoard gameBoard)
         {
             _gameBoard = gameBoard;
-            Player = new Player(_gameBoard.StartNode);
+            _player = new Player(_gameBoard.IslandSet, _gameBoard.StartNode);
 
-            UpdateMoves();
         }
 
-        public bool Invert(Arc arc, Direction direction)
+        public bool PullArc(Arc arc, Direction direction)
         {
-            var move = _inversions.FirstOrDefault(takeMove => takeMove.Equals(arc));
-            if (move == null || !move.Play(direction)) return false;
+            if (PulledArc != null) { return false; }
 
-            Inversion = arc;
-            NumMoves++;
-            UpdateMoves();
-
-            return true;
+            var result = _player.PlayMove(new PullMove(_player, arc, direction));
+            PulledArc = result ? arc : PulledArc;
+            return result;
         }
 
-        public bool Revert(Field field)
+        public bool PushArc(Field field)
         {
-            var move = _reversions.FirstOrDefault(placeMove => placeMove.Equals(Inversion, field));
-            if (move == null || !move.Play()) return false;
-
-            Inversion = null;
-            NumMoves++;
-            UpdateMoves();
-            Win = Player.Win;
-
-            return true;
+            var result = _player.PlayMove(new PushMove(_player, PulledArc, field));
+            PulledArc = result ? null : PulledArc;
+            return result;
         }
-
-        private void UpdateMoves()
-        {
-            _inversions.Clear();
-            _reversions.Clear();
-
-            _inversions.UnionWith(FindTakeMoves());
-            _reversions.UnionWith(FindPlaceMoves());
-        }
-
-        private IEnumerable<Inversion> FindTakeMoves()
-        {
-            return Player.Fields
-                .Where(field => field.HasArc)
-                .Select(connection => new Inversion(Player, connection.Arc, Inversion != null))
-                .Where(takeMove => takeMove.IsValid);
-        }
-
-        private IEnumerable<Reversion> FindPlaceMoves()
-        {
-            return Player.Fields
-                .Select(field => new Reversion(Player, Inversion, field))
-                .Where(placeMoves => placeMoves.IsValid);
-        }
+ 
     }
 }
