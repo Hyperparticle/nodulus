@@ -1,84 +1,60 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 using Assets.Scripts.Model.Items;
 
 namespace Assets.Scripts.Model.Data
 {
+    /// <summary>
+    /// Maintains a disjoint set of node islands. This is used to determine if two nodes are 
+    /// connected via arcs.
+    /// </summary>
     public class IslandSet
     {
-        private readonly HashSet<Island> _islands = new HashSet<Island>();
-        private readonly IDictionary<Node, Island> _nodeMap = new Dictionary<Node, Island>();
+        private readonly IDictionary<Node, Island> _islandMap = new Dictionary<Node, Island>();
 
-        public IEnumerable<Island> Islands { get { return _islands; } }
+        public IEnumerable<Island> Islands { get { return _islandMap.Values; } }
 
         public void Add(Node node)
         {
-            _islands.Add(new Island(node));
+            _islandMap.Add(node, new Island(node));
         }
 
-        public void Connect(Arc arc, Field field)
+        public void Connect(Field field)
         {
-            var removedIsland = _island.Join(node._island);
+            var parent    = field.ParentNode;
+            var connected = field.ConnectedNode;
+            var start     = _islandMap[parent];
+            var end       = _islandMap[connected];
 
-            node._island = removedIsland;
+            // Join the islands into one
+            var joinedIsland = start.Join(end);
+
+            _islandMap[parent]    = joinedIsland;
+            _islandMap[connected] = joinedIsland;
         }
 
-        public void Disconnect(Arc arc)
+        public void Disconnect(Field field)
         {
-            if (this != field.ParentNode)
-            {
-                Console.Error.WriteLine("Incorrect use: this node must be parent of field");
-                return;
-            }
+            var parent    = field.ParentNode;
+            var connected = field.ConnectedNode;
+            var start     = _islandMap[parent];
+            var end       = _islandMap[connected];
 
-            var newIsland = _island.Split(field);
-            field.ConnectedNode._island = newIsland;
+            // if the nodes' islands are not equal, they are already disconnected
+            if (!start.Equals(end)) { return; }
+
+            // Try to split the islands (but can result in no split)
+            var newIsland = start.Split(field);
+            
+            _islandMap[connected] = newIsland;
         }
         
+        /// <summary>
+        /// True if the two nodes are connected (i.e., in the same island)
+        /// </summary>
         public bool IsConnected(Node start, Node end)
         {
             // If the nodes point to the same island, they are connected
-            return _nodeMap[start].Equals(_nodeMap[end]);
-        }
-
-        private static bool IsConnected(Node start, Node end, ICollection<Node> nodes)
-        {
-            if (start.Equals(end)) return true;
-
-            nodes.Add(start);
-
-            // Simple recursive breadth-first search (no loops)
-            return start.Connections
-                .Where(connection => !nodes.Contains(connection.ConnectedNode))          // Prevent endless looping
-                .Any(connection => IsConnected(connection.ConnectedNode, end, nodes));   // True if connection exists
-        }
-
-        public static IEnumerable<Node> ConnectedNodes(Node start)
-        {
-            var nodes = new HashSet<Node>();
-            FindConnectedNodes(start, nodes);
-
-            return nodes;
-        }
-
-        private static void FindConnectedNodes(Node start, ICollection<Node> nodes)
-        {
-            nodes.Add(start);
-
-            // Accumulates all connected nodes in the collection
-            foreach (var connection in start.Connections
-                .Where(connection => !nodes.Contains(connection.ConnectedNode)))
-            {
-                FindConnectedNodes(connection.ConnectedNode, nodes);
-            }
-
-            foreach (var connection in start.Connections
-                .Where(connection => !nodes.Contains(connection.ParentNode)))
-            {
-                FindConnectedNodes(connection.ParentNode, nodes);
-            }
+            return _islandMap[start].Equals(_islandMap[end]);
         }
     }
 }

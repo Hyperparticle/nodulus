@@ -2,6 +2,7 @@
 using System.Linq;
 using Assets.Scripts.Model.Data;
 using Assets.Scripts.Model.Items;
+using Assets.Scripts.Model.Moves;
 
 namespace Assets.Scripts.Model.GameBoard
 {
@@ -21,11 +22,11 @@ namespace Assets.Scripts.Model.GameBoard
         public int NumMoves { get; private set; }
         public bool Win { get; private set; }
         
-        private readonly HashSet<Inversion> _inversions = new HashSet<Inversion>();
-        private readonly HashSet<Reversion> _reversions = new HashSet<Reversion>();
+        private readonly HashSet<PullMove> _inversions = new HashSet<PullMove>();
+        private readonly HashSet<PushMove> _reversions = new HashSet<PushMove>();
         
-        public IEnumerable<Inversion> Inversions { get { return _inversions; } }
-        public IEnumerable<Reversion> Reversions { get { return _reversions; } }
+        public IEnumerable<PullMove> Inversions { get { return _inversions; } }
+        public IEnumerable<PushMove> Reversions { get { return _reversions; } }
 
         public Point BoardSize { get { return _gameBoard.Size; } }
 

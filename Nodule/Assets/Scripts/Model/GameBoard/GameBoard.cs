@@ -40,9 +40,13 @@ namespace Assets.Scripts.Model.GameBoard
         {
             if (!field.ValidPlacement(arc)) { return false; }
 
+            // Push the arc onto the field
             arc.Push(field);
             _arcs.Add(arc);
-            _islandSet.Connect(arc, field);
+
+            // Notify the island set of connected nodes
+            _islandSet.Connect(field);
+
             return true;
         }
 
@@ -51,9 +55,15 @@ namespace Assets.Scripts.Model.GameBoard
         /// </summary>
         public bool Pull(Arc arc)
         {
+            if (arc.IsPulled) { return false; }
+            
+            // Pull the arc from the field
             arc.Pull();
             _arcs.Remove(arc);
-            _islandSet.Disconnect(arc);
+
+            // Notify the island set of disconnected nodes
+            _islandSet.Disconnect(arc.Field);
+
             return true;
         }
 

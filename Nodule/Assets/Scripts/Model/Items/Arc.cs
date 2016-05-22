@@ -17,6 +17,9 @@ namespace Assets.Scripts.Model.Items
         public Node ConnectedNode { get { return Field.ConnectedNode; } }
         public Field Field { get; private set; }
 
+        /// <summary>
+        /// True if this arc is in its pulled state.
+        /// </summary>
         public bool IsPulled { get; private set; }
 
         public Arc(Field field)
