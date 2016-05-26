@@ -23,6 +23,7 @@ namespace Assets.Scripts.Model.GameBoard
         public IEnumerable<Field> PushFields { get { return _player.PushFields; } }
 
         public Arc PulledArc { get; private set; }
+        public bool IsPulled { get { return PulledArc != null; } }
 
         public Puzzle(GameBoard gameBoard)
         {
@@ -33,7 +34,7 @@ namespace Assets.Scripts.Model.GameBoard
 
         public bool PullArc(Arc arc, Direction direction)
         {
-            if (PulledArc != null) { return false; }
+            if (IsPulled) { return false; }
 
             var result = _player.PlayMove(new PullMove(_player, arc, direction));
             PulledArc = result ? arc : PulledArc;
@@ -42,6 +43,8 @@ namespace Assets.Scripts.Model.GameBoard
 
         public bool PushArc(Field field)
         {
+            if (!IsPulled) { return false; }
+
             var result = _player.PlayMove(new PushMove(_player, PulledArc, field));
             PulledArc = result ? null : PulledArc;
             return result;
