@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
-using Assets.Scripts.Model.Data;
-using Assets.Scripts.Model.Items;
+using Assets.Scripts.Core.Data;
+using Assets.Scripts.Core.Items;
 
-namespace Assets.Scripts.Model.GameBoard
+namespace Assets.Scripts.Core.GameBoard
 {
     /// <summary>
     /// A GameBoard is a <seealso cref="Grid"/> that keeps track of 

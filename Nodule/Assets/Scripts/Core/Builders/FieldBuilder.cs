@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Assets.Scripts.Model.Data;
-using Assets.Scripts.Model.GameBoard;
-using Assets.Scripts.Model.Items;
+using Assets.Scripts.Core.Data;
+using Assets.Scripts.Core.GameBoard;
+using Assets.Scripts.Core.Items;
 using Assets.Scripts.Utility;
 
-namespace Assets.Scripts.Model.Builders
+namespace Assets.Scripts.Core.Builders
 {
     /// <summary>
     /// A FieldBuilder takes nodes as input, and produces corresponding 

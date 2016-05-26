@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-namespace Assets.Scripts.Model.Data
+namespace Assets.Scripts.Core.Data
 {
     public partial struct Point
     {

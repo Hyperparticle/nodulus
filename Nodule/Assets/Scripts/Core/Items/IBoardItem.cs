@@ -1,6 +1,6 @@
-﻿using Assets.Scripts.Model.Data;
+﻿using Assets.Scripts.Core.Data;
 
-namespace Assets.Scripts.Model.Items
+namespace Assets.Scripts.Core.Items
 {
     /// <summary>
     /// Represents a main game item that is on the game board

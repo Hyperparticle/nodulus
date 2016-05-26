@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Assets.Scripts.Model.Data;
+using Assets.Scripts.Core.Data;
 
-namespace Assets.Scripts.Model.Items
+namespace Assets.Scripts.Core.Items
 {
     public class Field : IBoardItem
     {

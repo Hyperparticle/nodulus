@@ -1,4 +1,4 @@
-﻿namespace Assets.Scripts.Model.Moves
+﻿namespace Assets.Scripts.Core.Moves
 {
     public interface IMove
     {

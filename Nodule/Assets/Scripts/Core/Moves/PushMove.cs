@@ -1,7 +1,7 @@
-﻿using Assets.Scripts.Model.Data;
-using Assets.Scripts.Model.Items;
+﻿using Assets.Scripts.Core.Data;
+using Assets.Scripts.Core.Items;
 
-namespace Assets.Scripts.Model.Moves
+namespace Assets.Scripts.Core.Moves
 {
     public class PushMove : IMove
     {

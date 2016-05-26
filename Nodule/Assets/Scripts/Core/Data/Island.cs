@@ -1,9 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using Assets.Scripts.Model.Items;
+using Assets.Scripts.Core.Items;
 
-namespace Assets.Scripts.Model.Data
+namespace Assets.Scripts.Core.Data
 {
     /// <summary>
     /// An Island is a subgraph of the game board grid. It maintains a collection 

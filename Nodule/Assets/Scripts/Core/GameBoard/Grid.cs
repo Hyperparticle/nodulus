@@ -1,10 +1,9 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
-using Assets.Scripts.Model.Builders;
-using Assets.Scripts.Model.Data;
-using Assets.Scripts.Model.Items;
+using Assets.Scripts.Core.Builders;
+using Assets.Scripts.Core.Data;
+using Assets.Scripts.Core.Items;
 
-namespace Assets.Scripts.Model.GameBoard
+namespace Assets.Scripts.Core.GameBoard
 {
     /// <summary>
     /// A Grid is a collection of <seealso cref="Node"/>s in a 2D space. 

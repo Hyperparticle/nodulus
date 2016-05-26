@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
-using Assets.Scripts.Model.Items;
-using Assets.Scripts.Model.Moves;
+using Assets.Scripts.Core.Items;
+using Assets.Scripts.Core.Moves;
 
-namespace Assets.Scripts.Model.Data
+namespace Assets.Scripts.Core.Data
 {
     public class Player
     {

@@ -1,6 +1,6 @@
-﻿using Assets.Scripts.Model.Data;
+﻿using Assets.Scripts.Core.Data;
 
-namespace Assets.Scripts.Model.Items
+namespace Assets.Scripts.Core.Items
 {
     /// <summary>
     /// An Arc represents a visible connection between two nodes, allowing a traversible

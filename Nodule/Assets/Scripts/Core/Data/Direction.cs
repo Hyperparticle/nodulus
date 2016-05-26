@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-namespace Assets.Scripts.Model.Data
+namespace Assets.Scripts.Core.Data
 {
     public enum Direction
     {

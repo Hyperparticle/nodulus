@@ -1,9 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using Assets.Scripts.Model.Data;
+using Assets.Scripts.Core.Data;
 
-namespace Assets.Scripts.Model.Items
+namespace Assets.Scripts.Core.Items
 {
     /// <summary>
     /// A Node represents a point in grid space, allowing arcs to 
