@@ -3,7 +3,7 @@ using Assets.Scripts.Core.Builders;
 using Assets.Scripts.Core.Data;
 using Assets.Scripts.Core.Items;
 
-namespace Assets.Scripts.Core.GameBoard
+namespace Assets.Scripts.Core.Game
 {
     /// <summary>
     /// A Grid is a collection of <seealso cref="Node"/>s in a 2D space. 

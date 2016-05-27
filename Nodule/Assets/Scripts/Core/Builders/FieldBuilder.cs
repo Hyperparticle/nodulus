@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Assets.Scripts.Core.Data;
-using Assets.Scripts.Core.GameBoard;
+using Assets.Scripts.Core.Game;
 using Assets.Scripts.Core.Items;
 using Assets.Scripts.Utility;
 

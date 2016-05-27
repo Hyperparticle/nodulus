@@ -3,7 +3,7 @@ using Assets.Scripts.Core.Data;
 using Assets.Scripts.Core.Items;
 using Assets.Scripts.Core.Moves;
 
-namespace Assets.Scripts.Core.GameBoard
+namespace Assets.Scripts.Core.Game
 {
     /// <summary>
     /// A Puzzle specifies the rules and methods for interacting 
@@ -13,6 +13,10 @@ namespace Assets.Scripts.Core.GameBoard
     {
         private readonly GameBoard _gameBoard;
         private readonly Player _player;
+
+        public IEnumerable<Node> Nodes { get { return _gameBoard.Nodes; } }
+        public IEnumerable<Arc> Arcs { get { return _gameBoard.Arcs; } }
+        public IEnumerable<Field> Fields { get { return _gameBoard.Fields; } }
 
         public Node StartNode { get { return _gameBoard.StartNode; } }
         public bool Win { get { return _player.Win; } }

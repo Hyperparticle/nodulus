@@ -2,7 +2,7 @@
 using Assets.Scripts.Core.Data;
 using Assets.Scripts.Core.Items;
 
-namespace Assets.Scripts.Core.GameBoard
+namespace Assets.Scripts.Core.Game
 {
     /// <summary>
     /// A GameBoard is a <seealso cref="Grid"/> that keeps track of 
