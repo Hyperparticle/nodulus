@@ -34,9 +34,9 @@ namespace Assets.Scripts.Core.Game
 
                 var edgeArgs = new[]
                 {
-                    new EdgeArg(1, nodePositions[0], Direction.Right),
-                    new EdgeArg(3, nodePositions[1], Direction.Right),
-                    new EdgeArg(2, nodePositions[4], Direction.Right)
+                    new EdgeArg(nodePositions[0], Direction.Right),
+                    new EdgeArg(nodePositions[1], Direction.Right),
+                    new EdgeArg(nodePositions[4], Direction.Right)
                 };
 
                 var gameBoard = GameBoardBuilder.BuildBoard(nodePositions, edgeArgs);
@@ -64,9 +64,9 @@ namespace Assets.Scripts.Core.Game
 
                 var edgeArgs = new[]
                 {
-                    new EdgeArg(2, nodePositions[0], Direction.Right),
-                    new EdgeArg(3, nodePositions[7], Direction.Right),
-                    new EdgeArg(1, nodePositions[9], Direction.Down)
+                    new EdgeArg(nodePositions[0], Direction.Right),
+                    new EdgeArg(nodePositions[7], Direction.Right),
+                    new EdgeArg(nodePositions[9], Direction.Down)
                 };
 
                 var gameBoard = GameBoardBuilder.BuildBoard(nodePositions, edgeArgs);
@@ -94,9 +94,9 @@ namespace Assets.Scripts.Core.Game
 
                 var edgeArgs = new[]
                 {
-                    new EdgeArg(2, nodePositions[0], Direction.Right),
-                    new EdgeArg(3, nodePositions[2], Direction.Right),
-                    new EdgeArg(1, nodePositions[5], Direction.Down)
+                    new EdgeArg(nodePositions[0], Direction.Right),
+                    new EdgeArg(nodePositions[2], Direction.Right),
+                    new EdgeArg(nodePositions[5], Direction.Down)
                 };
 
                 var gameBoard = GameBoardBuilder.BuildBoard(nodePositions, edgeArgs);
@@ -125,9 +125,9 @@ namespace Assets.Scripts.Core.Game
 
                 var edgeArgs = new[]
                 {
-                    new EdgeArg(2, nodePositions[0], Direction.Right),
-                    new EdgeArg(3, nodePositions[1], Direction.Right),
-                    new EdgeArg(1, nodePositions[4], Direction.Down)
+                    new EdgeArg(nodePositions[0], Direction.Right),
+                    new EdgeArg(nodePositions[1], Direction.Right),
+                    new EdgeArg(nodePositions[4], Direction.Down)
                 };
 
                 var gameBoard = GameBoardBuilder.BuildBoard(nodePositions, edgeArgs);
@@ -155,9 +155,9 @@ namespace Assets.Scripts.Core.Game
 
                 var edgeArgs = new[]
                 {
-                    new EdgeArg(3, nodePositions[0], Direction.Right),
-                    new EdgeArg(2, nodePositions[1], Direction.Right),
-                    new EdgeArg(1, nodePositions[4], Direction.Down)
+                    new EdgeArg(nodePositions[0], Direction.Right),
+                    new EdgeArg(nodePositions[1], Direction.Right),
+                    new EdgeArg(nodePositions[4], Direction.Down)
                 };
 
                 var gameBoard = GameBoardBuilder.BuildBoard(nodePositions, edgeArgs);
@@ -189,9 +189,9 @@ namespace Assets.Scripts.Core.Game
 
                 var edgeArgs = new[]
                 {
-                    new EdgeArg(2, nodePositions[0], Direction.Right),
-                    new EdgeArg(1, nodePositions[1], Direction.Right),
-                    new EdgeArg(3, nodePositions[11], Direction.Down)
+                    new EdgeArg(nodePositions[0], Direction.Right),
+                    new EdgeArg(nodePositions[1], Direction.Right),
+                    new EdgeArg(nodePositions[11], Direction.Down)
                 };
 
                 var gameBoard = GameBoardBuilder.BuildBoard(nodePositions, edgeArgs);

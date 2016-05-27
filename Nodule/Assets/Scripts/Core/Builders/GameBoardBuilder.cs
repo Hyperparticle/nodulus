@@ -44,7 +44,7 @@ namespace Assets.Scripts.Core.Builders
         {
             // Place all edges on the board, and return sucess if all placements were valid
             var success = edgeArgs
-                .Select(edgeArg => gameBoard.CreateEdge(edgeArg.Position, edgeArg.Direction))
+                .Select(edgeArg => gameBoard.CreateArc(edgeArg.Position, edgeArg.Direction))
                 .All(valid => valid);
 
             return success;
@@ -53,13 +53,11 @@ namespace Assets.Scripts.Core.Builders
 
     public struct EdgeArg
     {
-        public int Length { get; private set; }
         public Direction Direction { get; private set; }
         public Point Position { get; private set; }
 
-        public EdgeArg(int length, Point position, Direction direction) : this()
+        public EdgeArg(Point position, Direction direction) : this()
         {
-            Length = length;
             Position = position;
             Direction = direction;
         }

@@ -89,7 +89,6 @@ namespace Assets.Scripts.View.Game
 
         public void PrevLevel()
         {
-            Init((Level.LevelCount + _currentLevel - 1) % Level.LevelCount);
             Init(_currentLevel == 0 ? 0 : _currentLevel - 1);
         }
 

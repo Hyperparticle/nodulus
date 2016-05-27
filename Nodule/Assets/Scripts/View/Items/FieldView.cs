@@ -1,4 +1,7 @@
-﻿using Assets.Scripts.View.Game;
+﻿using Assets.Scripts.Core.Data;
+using Assets.Scripts.Core.Items;
+using Assets.Scripts.Utility;
+using Assets.Scripts.View.Game;
 using UnityEngine;
 
 namespace Assets.Scripts.View.Items

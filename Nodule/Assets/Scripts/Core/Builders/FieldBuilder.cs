@@ -21,6 +21,8 @@ namespace Assets.Scripts.Core.Builders
         // Maps points to occupying fields
         private IDictionary<Point, Field> _occupiedFields = new Dictionary<Point, Field>();
 
+        public IEnumerable<Field> Fields { get { return _fields; } }
+
         public void BuildFields(Node node, IDictionary<Point, Node> nodeMap)
         {
             // Find and add fields in all directions

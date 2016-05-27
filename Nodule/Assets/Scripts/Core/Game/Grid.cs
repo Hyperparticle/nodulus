@@ -18,6 +18,8 @@ namespace Assets.Scripts.Core.Game
 
         private readonly FieldBuilder _fieldBuilder;
 
+        public IEnumerable<Node> Nodes { get { return _nodeMap.Values; } }
+        public IEnumerable<Field> Fields { get { return _fieldBuilder.Fields; } }
 
         public Grid()
         {

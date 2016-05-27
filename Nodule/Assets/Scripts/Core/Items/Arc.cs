@@ -25,7 +25,6 @@ namespace Assets.Scripts.Core.Items
         public Arc(Field field)
         {
             Length = field.Length;
-            Push(field);
         }
 
         public void Pull()
@@ -40,7 +39,6 @@ namespace Assets.Scripts.Core.Items
             {
                 Field.DisconnectArc(this);
             }
-                
 
             // Connect this Arc to the new field
             Field = field;

@@ -14,7 +14,11 @@ namespace Assets.Scripts.Core.Game
 
         private readonly ICollection<Arc> _arcs = new HashSet<Arc>();
         private readonly IslandSet _islandSet = new IslandSet();
-        
+
+        public IEnumerable<Node> Nodes { get { return _grid.Nodes; } }
+        public IEnumerable<Arc> Arcs { get { return _arcs; } }
+        public IEnumerable<Field> Fields { get { return _grid.Fields; } }
+
         public Node StartNode { get; set; }
         public IslandSet IslandSet { get { return _islandSet; } }
 
@@ -32,6 +36,23 @@ namespace Assets.Scripts.Core.Game
             Size = _grid.Size;
             _islandSet.Add(node);
             return added;
+        }
+
+        public bool CreateArc(Point pos, Direction direction)
+        {
+            var node = _grid.NodeAt(pos);
+            if (node == null) return false;
+
+            Field field;
+            return node.Fields.TryGetValue(direction, out field) && CreateArc(field);
+        }
+
+        public bool CreateArc(Field field)
+        {
+            if (field.HasArc) return false;
+            var arc = new Arc(field);
+            arc.Push(field);
+            return true;
         }
 
         /// <summary>
