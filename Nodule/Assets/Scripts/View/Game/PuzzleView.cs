@@ -77,7 +77,7 @@ namespace Assets.Scripts.View.Game
             //transform.localScale = Vector3.one * BoardScaling;
             //transform.localPosition = -Dimensions * BoardScaling / 2 + _initPosition;
 
-            transform.localPosition = -(Vector3)_puzzle.StartNode.Position * Scaling;
+            //transform.localPosition = -(Vector3)_puzzle.StartNode.Position * Scaling;
 
             HighlightFields();
         }

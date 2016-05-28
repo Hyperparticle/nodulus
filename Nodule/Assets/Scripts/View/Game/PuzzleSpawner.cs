@@ -24,9 +24,9 @@ namespace Assets.Scripts.View.Game
         {
             _puzzle = Level.BuildLevel(level);
         
-            InstantiateNodes();
-            InstantiateFields();
-            InstantiateArcs();
+            //InstantiateNodes();
+            //InstantiateFields();
+            //InstantiateArcs();
         
             return _puzzle;
         }
