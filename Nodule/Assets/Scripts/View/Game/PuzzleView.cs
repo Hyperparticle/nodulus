@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using Assets.Scripts.Core.Data;
 using Assets.Scripts.Core.Game;
-using Assets.Scripts.View.Builders;
 using Assets.Scripts.View.Items;
 using UnityEngine;
 using UnityEngine.UI;
@@ -29,6 +28,7 @@ namespace Assets.Scripts.View.Game
         public Color EdgeHighlightColor;
         public Color FieldHighlightColor;
         public Color NodeFinalColor;
+
         public float WinDelay = 1.0f;
     
         private Puzzle _puzzle;
@@ -71,7 +71,7 @@ namespace Assets.Scripts.View.Game
 
             //_moveText.text = _puzzle.NumMoves.ToString();
 
-            _puzzleSpawner.CreateBackdrop(this);
+            //_puzzleSpawner.CreateBackdrop(this);
 
             //BoardScaling = CameraScript.Fit(Dimensions, BoardPadding, BoardPadding + 2.0f);
             //transform.localScale = Vector3.one * BoardScaling;
@@ -92,16 +92,16 @@ namespace Assets.Scripts.View.Game
             Init(_currentLevel == 0 ? 0 : _currentLevel - 1);
         }
 
-        public void Invert(ArcView arcView, Direction direction)
+        public void Pull(ArcView arcView, Direction direction)
         {
-            if (arcView.Transitioning || !_puzzle.PullArc(arcView.Edge, direction))
-            {
-                _audioSources[InvalidAudio].Play();
-                return;
-            }
+            //if (arcView.Transitioning || !_puzzle.PullArc(arcView.Edge, direction))
+            //{
+            //    _audioSources[InvalidAudio].Play();
+            //    return;
+            //}
 
             _inversion = arcView;
-            _inversion.Invert(direction);
+            _inversion.Pull(direction);
         
             //_moveText.text = _puzzle.NumMoves.ToString();
             _audioSources[TakeAudio].Play();
@@ -109,16 +109,16 @@ namespace Assets.Scripts.View.Game
             HighlightNodes();
         }
 
-        public void Revert(FieldView fieldView)
+        public void Push(FieldView fieldView)
         {
-            if (_inversion == null || _inversion.Transitioning || !_puzzle.Revert(fieldView.Field))
-            {
-                _audioSources[InvalidAudio].Play();
-                return;
-            }
+            //if (_inversion == null || _inversion.Transitioning || !_puzzle.Push(fieldView.Field))
+            //{
+            //    _audioSources[InvalidAudio].Play();
+            //    return;
+            //}
 
-            var opposite = !_playerScript.Player.ParentInIsland(fieldView.Field);
-            _inversion.Revert(fieldView, opposite);
+            //var opposite = !_playerScript.Player.ParentInIsland(fieldView.Field);
+            //_inversion.Push(fieldView, opposite);
 
             //_moveText.text = _puzzle.NumMoves.ToString();
 
@@ -137,41 +137,41 @@ namespace Assets.Scripts.View.Game
 
         public void Play(NodeView node)
         {
-            var reversion = _puzzle.Reversions.FirstOrDefault(placeMove => placeMove.Field.ContainsNode(node.Node));
-            if (reversion != null)
-                Revert(reversion.Field.FieldScript);
+            //var reversion = _puzzle.Reversions.FirstOrDefault(placeMove => placeMove.Field.ContainsNode(node.Node));
+            //if (reversion != null)
+                //Push(reversion.Field.FieldScript);
 
             //var inversion = _puzzle.Inversions.FirstOrDefault(takeMove => takeMove.Edge.ContainsNode(node.Node));
             //if (reversion != null)
-            //    Revert(reversion.Field.FieldView);
+            //    Push(reversion.Field.FieldView);
         }
 
         private void HighlightFields()
         {
-            foreach (var field in _puzzle.Fields)
-                field.FieldScript.Highlight(false);
+            //foreach (var field in _puzzle.Fields)
+            //    field.FieldScript.Highlight(false);
 
-            foreach (var placeMove in _puzzle.Reversions)
-                placeMove.Field.FieldScript.Highlight(true);
+            //foreach (var placeMove in _puzzle.Reversions)
+            //    placeMove.Field.FieldScript.Highlight(true);
 
-            foreach (var edge in _puzzle.Edges)
-                edge.EdgeScript.Highlight = false;
+            //foreach (var edge in _puzzle.Edges)
+            //    edge.EdgeScript.Highlight = false;
 
-            foreach (var field in _playerScript.Player.Fields.Where(field => field.HasEdge))
-                field.Edge.EdgeScript.Highlight = true;
+            //foreach (var field in _playerScript.Player.Fields.Where(field => field.HasEdge))
+            //    field.Edge.EdgeScript.Highlight = true;
         }
 
         private void HighlightNodes()
         {
-            foreach (var node in _puzzle.Nodes)
-            {
-                node.NodeScript.Highlight = false;
-            }
+            //foreach (var node in _puzzle.Nodes)
+            //{
+            //    node.NodeScript.Highlight = false;
+            //}
 
-            foreach (var node in _puzzle.Player.Island)
-            {
-                node.NodeScript.Highlight = true;
-            }
+            //foreach (var node in _puzzle.Player.Island)
+            //{
+            //    node.NodeScript.Highlight = true;
+            //}
         }
 
         private IEnumerator WinBoard()
