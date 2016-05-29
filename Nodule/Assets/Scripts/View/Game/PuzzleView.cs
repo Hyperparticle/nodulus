@@ -15,16 +15,6 @@ namespace Assets.Scripts.View.Game
         private const int PlaceAudio    = 3;
         private const int CompleteAudio = 4;
 
-
-
-        public Color NodeColor;
-        public Color EdgeColor;
-        public Color FieldColor;
-        public Color NodeHighlightColor;
-        public Color EdgeHighlightColor;
-        public Color FieldHighlightColor;
-        public Color NodeFinalColor;
-
         public float WinDelay = 1.0f;
     
         private Puzzle _puzzle;

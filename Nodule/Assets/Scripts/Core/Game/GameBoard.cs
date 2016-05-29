@@ -52,9 +52,8 @@ namespace Assets.Scripts.Core.Game
         {
             if (field.HasArc) return false;
             var arc = new Arc(field);
-            arc.Push(field);
-            _arcs.Add(arc);
-            return true;
+
+            return Push(arc, field);
         }
 
         /// <summary>

@@ -11,17 +11,20 @@ namespace Assets.Scripts.View.Game
         public float BoardScaling = 1.0f;
         public float BoardPadding = 1.0f;
 
-        private Vector2 _dimensions;
+        public Vector2 Dimensions { get; private set; }
 
         public void Init(Point startNode, Point boardSize)
         {
-            _dimensions = new Vector2(boardSize.x, boardSize.y)*Scaling;
+            Dimensions = new Vector2(boardSize.x, boardSize.y)*Scaling;
 
             transform.localScale = Vector3.one;
 
-            //BoardScaling = CameraScript.Fit(_dimensions, BoardPadding, BoardPadding + 2.0f);
+            //BoardScaling = CameraScript.Fit(Dimensions, BoardPadding, BoardPadding + 2.0f);
             //transform.localScale = Vector3.one * BoardScaling;
-            transform.localPosition = -_dimensions * BoardScaling / 2 + (Vector2)transform.localPosition;
+            transform.localPosition = Vector3.zero;
+            transform.Translate(-Dimensions * BoardScaling / 2);
+
+            //transform.localPosition = -Dimensions * BoardScaling / 2 + (Vector2)transform.localPosition;
 
             //transform.localPosition = -(Vector3)startNode * Scaling;
         }
