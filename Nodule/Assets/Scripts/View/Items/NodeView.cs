@@ -11,6 +11,8 @@ namespace Assets.Scripts.View.Items
         public Transform Rotor;
 
         private PuzzleView _puzzleView;
+        private ScaleScript _nodeScale;
+        private Colorizer _colorizer;
 
         public Node Node { get; private set; }
 
@@ -29,56 +31,49 @@ namespace Assets.Scripts.View.Items
         //    }
         //}
 
-        public void Init(Node node)
+        public void Init(Node node, bool inStartIsland)
         {
-            _puzzleView = GetComponentInParent<PuzzleView>();
+            _puzzleView = PuzzleView.Get();
+            _nodeScale = GetComponent<ScaleScript>();
+            _colorizer = GetComponentInChildren<Colorizer>();
+
             Node = node;
+
+            _nodeScale.SetNode(node);
+
+            if (!inStartIsland) { _colorizer.Darken(); }
+            if (node.Final) { _colorizer.SetSecondary(); }
         }
 
-        void Start()
-        {
-            SetTransform();
-        }
 
-        void Update()
+        public void Pull(ArcView arc, Direction direction)
         {
-        }
+            SetRotor(arc);
 
-        private void SetTransform()
-        {
-            //transform.localPosition = (Vector3)Node.Position * _puzzleView.Scaling;
-            //transform.localScale = _initScale * _puzzleView.NodeScaling;
-            //transform.localRotation = Quaternion.identity;
-        }
-
-        public void Pull(ArcView edge, Direction direction)
-        {
-            SetRotor(edge);
-
-            // Find the axis to rotate about (dependent on edge direction and rotor rotation),
+            // Find the axis to rotate about (dependent on arc direction and rotor rotation),
             // and rotate a relative 90 degrees about that axis
 
             //var rotation = NextRotation(direction, true);
             //_rotationLerp.Begin(Rotor.localRotation, rotation);
         }
 
-        public void Push(ArcView edge, FieldView field, bool opposite)
+        public void Push(ArcView arc, FieldView field, bool opposite)
         {
-            //SetRotor(edge);
+            //SetRotor(arc);
 
-            //// Set the edge's parent and position of the new rotor
-            //// Push the edge in the correct direction (in front of the node)
+            //// Set the arc's parent and position of the new rotor
+            //// Push the arc in the correct direction (in front of the node)
 
             //var inverse = Quaternion.Inverse(Rotor.localRotation);
 
             //var dir = inverse*Vector3.back;
             //var pos = (dir * field.Field.Length / 2) * _puzzleView.Scaling;
-            //edge.MoveTo(pos);
+            //arc.MoveTo(pos);
 
-            //// Find the axis to rotate about (dependent on edge direction and rotor rotation),
+            //// Find the axis to rotate about (dependent on arc direction and rotor rotation),
             //// and rotate a relative -90 degrees about that axis
 
-            //var close = (pos - edge.transform.localPosition).magnitude < 0.1f;
+            //var close = (pos - arc.transform.localPosition).magnitude < 0.1f;
 
             //var fieldDirection = field.Field.Direction;
             //fieldDirection = opposite ? fieldDirection.Opposite() : fieldDirection;
@@ -96,21 +91,22 @@ namespace Assets.Scripts.View.Items
             return rotation;
         }
 
-        private void SetRotor(ArcView edge)
+        private void SetRotor(ArcView arc)
         {
             //foreach (var other in transform.GetComponentsInChildren<ArcView>())
             //{
             //    other.transform.parent = transform;
             //}
 
-            //var direction = edge.Edge.Direction.Rotated(1);
+            //var direction = arc.Arc.Direction.Rotated(1);
             //foreach (var perp in Node.Connections
             //    .Where(connection => connection.Direction == direction || connection.Direction == direction.Opposite()))
             //{
-            //    perp.Edge.EdgeScript.transform.parent = Rotor;
+            //    perp.Arc.ArcScript.transform.parent = Rotor;
             //}
 
-            //edge.transform.parent = Rotor;
+            //arc.transform.parent = Rotor;
         }
     }
 }
+

@@ -8,15 +8,15 @@ namespace Assets.Scripts.Core.Builders
 {
     public class GameBoardBuilder 
     {
-        public static GameBoard BuildBoard(IEnumerable<Point> nodePositions, IEnumerable<EdgeArg> edgeArgs)
+        public static GameBoard BuildBoard(IEnumerable<Point> nodePositions, IEnumerable<ArcArg> arcArgs)
         {
             var gameBoard = new GameBoard();
 
             var buildNodes = BuildNodes(gameBoard, nodePositions);
-            var buildEdges = BuildEdges(gameBoard, edgeArgs);
+            var buildArcs = BuildArcs(gameBoard, arcArgs);
 
             // Fail fast if something went wrong
-            if (!buildNodes || !buildEdges) return null;
+            if (!buildNodes || !buildArcs) return null;
 
             return gameBoard;
         }
@@ -40,23 +40,23 @@ namespace Assets.Scripts.Core.Builders
             return success;
         }
 
-        private static bool BuildEdges(GameBoard gameBoard, IEnumerable<EdgeArg> edgeArgs)
+        private static bool BuildArcs(GameBoard gameBoard, IEnumerable<ArcArg> arcArgs)
         {
-            // Place all edges on the board, and return sucess if all placements were valid
-            var success = edgeArgs
-                .Select(edgeArg => gameBoard.CreateArc(edgeArg.Position, edgeArg.Direction))
+            // Place all arcs on the board, and return sucess if all placements were valid
+            var success = arcArgs
+                .Select(arcArg => gameBoard.CreateArc(arcArg.Position, arcArg.Direction))
                 .All(valid => valid);
 
             return success;
         }
     }
 
-    public struct EdgeArg
+    public struct ArcArg
     {
         public Direction Direction { get; private set; }
         public Point Position { get; private set; }
 
-        public EdgeArg(Point position, Direction direction) : this()
+        public ArcArg(Point position, Direction direction) : this()
         {
             Position = position;
             Direction = direction;

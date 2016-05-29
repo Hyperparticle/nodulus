@@ -18,8 +18,9 @@ namespace Assets.Scripts.Core.Game
         public IEnumerable<Node> Nodes { get { return _grid.Nodes; } }
         public IEnumerable<Arc> Arcs { get { return _arcs; } }
         public IEnumerable<Field> Fields { get { return _grid.Fields; } }
-
         public Node StartNode { get; set; }
+
+        public Island StartIsland { get { return _islandSet.Get(StartNode); } }
         public IslandSet IslandSet { get { return _islandSet; } }
 
         public Point Size { get; private set; }
@@ -52,6 +53,7 @@ namespace Assets.Scripts.Core.Game
             if (field.HasArc) return false;
             var arc = new Arc(field);
             arc.Push(field);
+            _arcs.Add(arc);
             return true;
         }
 

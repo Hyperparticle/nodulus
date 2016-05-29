@@ -6,7 +6,7 @@ namespace Assets.Scripts.Core.Game
 {
     public class Level
     {
-        public static Puzzle BuildLevel(int level)
+        public static GameBoard BuildLevel(int level)
         {
             if (level < 0 || level >= Levels.Length) return null;
             return Levels[level]();
@@ -14,7 +14,7 @@ namespace Assets.Scripts.Core.Game
 
         public static int LevelCount { get { return Levels.Length; } }
 
-        private static readonly Func<Puzzle>[] Levels = new Func<Puzzle>[]
+        private static readonly Func<GameBoard>[] Levels = new Func<GameBoard>[]
         {
             delegate    // Level 1
             {
@@ -32,15 +32,14 @@ namespace Assets.Scripts.Core.Game
                     new Point(6, 1)
                 };
 
-                var edgeArgs = new[]
+                var arcArgs = new[]
                 {
-                    new EdgeArg(nodePositions[0], Direction.Right),
-                    new EdgeArg(nodePositions[1], Direction.Right),
-                    new EdgeArg(nodePositions[4], Direction.Right)
+                    new ArcArg(nodePositions[0], Direction.Right),
+                    new ArcArg(nodePositions[1], Direction.Right),
+                    new ArcArg(nodePositions[4], Direction.Right)
                 };
 
-                var gameBoard = GameBoardBuilder.BuildBoard(nodePositions, edgeArgs);
-                return new Puzzle(gameBoard);
+                return GameBoardBuilder.BuildBoard(nodePositions, arcArgs);
             },
 
             delegate    // Level 2
@@ -62,15 +61,14 @@ namespace Assets.Scripts.Core.Game
                     new Point(9, 1)
                 };
 
-                var edgeArgs = new[]
+                var arcArgs = new[]
                 {
-                    new EdgeArg(nodePositions[0], Direction.Right),
-                    new EdgeArg(nodePositions[7], Direction.Right),
-                    new EdgeArg(nodePositions[9], Direction.Down)
+                    new ArcArg(nodePositions[0], Direction.Right),
+                    new ArcArg(nodePositions[7], Direction.Right),
+                    new ArcArg(nodePositions[9], Direction.Down)
                 };
 
-                var gameBoard = GameBoardBuilder.BuildBoard(nodePositions, edgeArgs);
-                return new Puzzle(gameBoard);
+                return GameBoardBuilder.BuildBoard(nodePositions, arcArgs);;
             },
 
             delegate    // Level 3
@@ -92,15 +90,14 @@ namespace Assets.Scripts.Core.Game
                     new Point(9, 1)
                 };
 
-                var edgeArgs = new[]
+                var arcArgs = new[]
                 {
-                    new EdgeArg(nodePositions[0], Direction.Right),
-                    new EdgeArg(nodePositions[2], Direction.Right),
-                    new EdgeArg(nodePositions[5], Direction.Down)
+                    new ArcArg(nodePositions[0], Direction.Right),
+                    new ArcArg(nodePositions[2], Direction.Right),
+                    new ArcArg(nodePositions[5], Direction.Down)
                 };
 
-                var gameBoard = GameBoardBuilder.BuildBoard(nodePositions, edgeArgs);
-                return new Puzzle(gameBoard);
+                return GameBoardBuilder.BuildBoard(nodePositions, arcArgs);
             },
 
             delegate    // Level 4
@@ -123,15 +120,14 @@ namespace Assets.Scripts.Core.Game
                     new Point(9, 1)
                 };
 
-                var edgeArgs = new[]
+                var arcArgs = new[]
                 {
-                    new EdgeArg(nodePositions[0], Direction.Right),
-                    new EdgeArg(nodePositions[1], Direction.Right),
-                    new EdgeArg(nodePositions[4], Direction.Down)
+                    new ArcArg(nodePositions[0], Direction.Right),
+                    new ArcArg(nodePositions[1], Direction.Right),
+                    new ArcArg(nodePositions[4], Direction.Down)
                 };
 
-                var gameBoard = GameBoardBuilder.BuildBoard(nodePositions, edgeArgs);
-                return new Puzzle(gameBoard);
+                return GameBoardBuilder.BuildBoard(nodePositions, arcArgs);
             },
 
             delegate    // Level 5
@@ -153,15 +149,14 @@ namespace Assets.Scripts.Core.Game
                     new Point(9, 1)
                 };
 
-                var edgeArgs = new[]
+                var arcArgs = new[]
                 {
-                    new EdgeArg(nodePositions[0], Direction.Right),
-                    new EdgeArg(nodePositions[1], Direction.Right),
-                    new EdgeArg(nodePositions[4], Direction.Down)
+                    new ArcArg(nodePositions[0], Direction.Right),
+                    new ArcArg(nodePositions[1], Direction.Right),
+                    new ArcArg(nodePositions[4], Direction.Down)
                 };
 
-                var gameBoard = GameBoardBuilder.BuildBoard(nodePositions, edgeArgs);
-                return new Puzzle(gameBoard);
+                return GameBoardBuilder.BuildBoard(nodePositions, arcArgs);
             },
 
             delegate    // Level 6
@@ -187,15 +182,14 @@ namespace Assets.Scripts.Core.Game
                     new Point(6, 1)
                 };
 
-                var edgeArgs = new[]
+                var arcArgs = new[]
                 {
-                    new EdgeArg(nodePositions[0], Direction.Right),
-                    new EdgeArg(nodePositions[1], Direction.Right),
-                    new EdgeArg(nodePositions[11], Direction.Down)
+                    new ArcArg(nodePositions[0], Direction.Right),
+                    new ArcArg(nodePositions[1], Direction.Right),
+                    new ArcArg(nodePositions[11], Direction.Down)
                 };
 
-                var gameBoard = GameBoardBuilder.BuildBoard(nodePositions, edgeArgs);
-                return new Puzzle(gameBoard);
+                return GameBoardBuilder.BuildBoard(nodePositions, arcArgs);
             }
         };
     }

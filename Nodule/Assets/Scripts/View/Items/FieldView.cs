@@ -8,6 +8,8 @@ namespace Assets.Scripts.View.Items
     public class FieldView : MonoBehaviour
     {
         private PuzzleView _puzzleView;
+        private ScaleScript _fieldScale;
+        private Colorizer _colorizer;
 
         public Field Field { get; private set; }
 
@@ -20,22 +22,23 @@ namespace Assets.Scripts.View.Items
 
         public void Init(Field field, NodeView parent, NodeView connected)
         {
+            _puzzleView = PuzzleView.Get();
+            _fieldScale = GetComponent<ScaleScript>();
+            _colorizer = GetComponent<Colorizer>();
+
             Field = field;
             ParentNode = parent;
             ConnectedNode = connected;
-        
-            transform.localRotation = Field.Direction.Rotation();
+
+            _fieldScale.SetField(field);
+            _colorizer.SetInvisible();
         }
 
         void Start()
         {
-            _puzzleView = ParentNode.GetComponentInParent<PuzzleView>();
             //_initScale = transform.localScale;
 
             //_renderer = GetComponent<Renderer>();
-        
-            //transform.localScale = BoardScale;
-            transform.localPosition = BoardPosition;
 
             //_renderer.material.color = _puzzleView.FieldColor;
         }
@@ -44,25 +47,6 @@ namespace Assets.Scripts.View.Items
         {
             _puzzleView.Push(this);
         }
-
-        private Vector3 BoardPosition
-        {
-            get
-            {
-                var pos = Field.Direction.Vector() * Field.Length / 2;
-                return pos * _puzzleView.Scaling;
-            }
-        }
-
-        //private Vector3 BoardScale
-        //{
-        //    get
-        //    {
-        //        var lengthScale = new Vector3(Field.Length * _puzzleView.Scaling, 1, 1);
-        //        lengthScale -= Vector3.right * _puzzleView.NodeScaling;
-        //        return Vector3.Scale(_initScale, lengthScale);
-        //    }
-        //}
 
         public void Highlight(bool enable)
         {

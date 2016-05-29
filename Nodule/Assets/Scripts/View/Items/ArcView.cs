@@ -8,8 +8,9 @@ namespace Assets.Scripts.View.Items
     public class ArcView : MonoBehaviour
     {
         private PuzzleView _puzzleView;
+        private ScaleScript _arcScale;
+        private Colorizer _colorizer;
 
-        private Vector3 _initScale;
         private NodeView _invertedNode;
 
         //private readonly LerpV _moveLerp = new LerpV(TransitionTime, Lerp.SmootherStep);
@@ -31,25 +32,24 @@ namespace Assets.Scripts.View.Items
             }
         }
 
-        public void Init(Arc arc)
+        public void Init(Arc arc, bool inStartIsland)
         {
+            _puzzleView = PuzzleView.Get();
+            _arcScale = GetComponent<ScaleScript>();
+            _colorizer = GetComponent<Colorizer>();
+
             Arc = arc;
-            transform.rotation = arc.Direction.Rotation();
 
-            //_puzzleView = Arc.ParentNode.NodeScript.GetComponentInParent<PuzzleView>();
+            //Highlight = false;
 
-            Highlight = false;
+            _arcScale.SetArc(arc);
+
+            if (!inStartIsland) { _colorizer.Darken(); }
         }
 
         void Start()
         {
-            _initScale = transform.localScale;
-
-            transform.localPosition = Vector3.zero;
-
-
-            transform.localScale = BoardScale;
-            transform.localPosition = BoardPosition;
+            
         }
 
         void Update()
@@ -80,23 +80,5 @@ namespace Assets.Scripts.View.Items
         {
         }
 
-        private Vector3 BoardPosition
-        {
-            get
-            {
-                var pos = Arc.Direction.Vector() * Arc.Length / 2;
-                return pos * _puzzleView.Scaling;
-            }
-        }
-
-        private Vector3 BoardScale
-        {
-            get
-            {
-                var lengthScale = new Vector3(Arc.Length * _puzzleView.Scaling, 1, 1);
-                lengthScale -= Vector3.right * _puzzleView.NodeScaling;
-                return Vector3.Scale(_initScale, lengthScale);
-            }
-        }
     }
 }

@@ -14,10 +14,6 @@ namespace Assets.Scripts.Core.Game
         private readonly GameBoard _gameBoard;
         private readonly Player _player;
 
-        public IEnumerable<Node> Nodes { get { return _gameBoard.Nodes; } }
-        public IEnumerable<Arc> Arcs { get { return _gameBoard.Arcs; } }
-        public IEnumerable<Field> Fields { get { return _gameBoard.Fields; } }
-
         public Node StartNode { get { return _gameBoard.StartNode; } }
         public bool Win { get { return _player.Win; } }
         public Point BoardSize { get { return _gameBoard.Size; } }

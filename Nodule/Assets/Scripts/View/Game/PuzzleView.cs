@@ -15,11 +15,7 @@ namespace Assets.Scripts.View.Game
         private const int PlaceAudio    = 3;
         private const int CompleteAudio = 4;
 
-        public float Scaling = 2.5f;
-        public float NodeScaling = 1.0f;
-        public float EdgeScaling = 1.0f;
-        public float BoardScaling = 1.0f;
-        public float BoardPadding = 1.0f;
+
 
         public Color NodeColor;
         public Color EdgeColor;
@@ -36,25 +32,27 @@ namespace Assets.Scripts.View.Game
 
         //private PlayerScript _playerScript;
         private PuzzleSpawner _puzzleSpawner;
+        private PuzzleScale _puzzleScale;
         //private Animator _levelSelectAnimator;
-        private Text _moveText;
+        //private Text _moveText;
         private int _currentLevel;
 
-        private AudioSource[] _audioSources;
+        //private AudioSource[] _audioSources;
 
-        private Vector3 _initPosition;
+        //private Vector3 _initPosition;
 
+ 
         void Awake()
         {
             //_playerScript = GetComponentInChildren<PlayerScript>();
-            _puzzleSpawner = GetComponentInChildren<PuzzleSpawner>();
+            _puzzleSpawner = GetComponent<PuzzleSpawner>();
+            _puzzleScale = GetComponent<PuzzleScale>();
 
-            _audioSources = GetComponents<AudioSource>();
+            //_audioSources = GetComponents<AudioSource>();
 
             //_levelSelectAnimator = GameObject.FindGameObjectWithTag("LevelSelect").GetComponent<Animator>();
             //_moveText = GameObject.FindGameObjectWithTag("Moves").GetComponent<Text>();
-            _initPosition = transform.localPosition;
-
+            //_initPosition = transform.localPosition;
             Init(0);
         }
 
@@ -62,8 +60,6 @@ namespace Assets.Scripts.View.Game
         {
             _puzzleSpawner.DestroyBoard();
 
-            transform.localScale = Vector3.one;
-        
             _puzzle = _puzzleSpawner.SpawnBoard(level);
             _currentLevel = level;
 
@@ -72,12 +68,7 @@ namespace Assets.Scripts.View.Game
             //_moveText.text = _puzzle.NumMoves.ToString();
 
             //_puzzleSpawner.CreateBackdrop(this);
-
-            //BoardScaling = CameraScript.Fit(Dimensions, BoardPadding, BoardPadding + 2.0f);
-            //transform.localScale = Vector3.one * BoardScaling;
-            //transform.localPosition = -Dimensions * BoardScaling / 2 + _initPosition;
-
-            //transform.localPosition = -(Vector3)_puzzle.StartNode.Position * Scaling;
+            _puzzleScale.Init(_puzzle.StartNode.Position, _puzzle.BoardSize);
 
             HighlightFields();
         }
@@ -104,7 +95,7 @@ namespace Assets.Scripts.View.Game
             _inversion.Pull(direction);
         
             //_moveText.text = _puzzle.NumMoves.ToString();
-            _audioSources[TakeAudio].Play();
+            //_audioSources[TakeAudio].Play();
             HighlightFields();
             HighlightNodes();
         }
@@ -124,12 +115,12 @@ namespace Assets.Scripts.View.Game
 
             if (_puzzle.Win)
             {
-                _audioSources[CompleteAudio].Play();
+                //_audioSources[CompleteAudio].Play();
                 StartCoroutine(WinBoard());
             }
             else
             {
-                _audioSources[PlaceAudio].Play();
+                //_audioSources[PlaceAudio].Play();
                 HighlightFields();
                 HighlightNodes();
             }
@@ -181,14 +172,13 @@ namespace Assets.Scripts.View.Game
             _puzzleSpawner.DestroyBoard();
         }
     
-        private Vector3 Dimensions
+
+
+        private static PuzzleView _puzzleView;
+        public static PuzzleView Get()
         {
-            get
-            {
-                var width  = _puzzle.BoardSize.x*Scaling;
-                var height = _puzzle.BoardSize.y*Scaling;
-                return new Vector2(width, height);
-            }
+            return _puzzleView ??
+                   (_puzzleView = GameObject.FindGameObjectWithTag("PuzzleGame").GetComponent<PuzzleView>());
         }
     }
 }

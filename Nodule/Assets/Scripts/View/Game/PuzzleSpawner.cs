@@ -8,55 +8,53 @@ namespace Assets.Scripts.View.Game
 {
     public class PuzzleSpawner : MonoBehaviour {
     
-        public float DestroyDelay = 0.3f;
-
         public NodeView  NodeScript;
         public ArcView   ArcScript;
         public FieldView FieldScript;
 
         private readonly IDictionary<Point, NodeView> _nodeMap = new Dictionary<Point, NodeView>();
-        private readonly IDictionary<Point, ArcView> _arcMap = new Dictionary<Point, ArcView>();
-        private readonly IDictionary<Point, FieldView> _fieldMap = new Dictionary<Point, FieldView>();
+        private readonly ICollection<ArcView> _arcSet = new HashSet<ArcView>();
+        private readonly ICollection<FieldView> _fieldSet = new HashSet<FieldView>();
 
-        private Puzzle _puzzle;
+        private GameBoard _gameBoard;
 
         public Puzzle SpawnBoard(int level)
         {
-            _puzzle = Level.BuildLevel(level);
-        
-            //InstantiateNodes();
-            //InstantiateFields();
-            //InstantiateArcs();
-        
-            return _puzzle;
+            _gameBoard = Level.BuildLevel(level);
+
+            InstantiateNodes();
+            InstantiateFields();
+            InstantiateArcs();
+
+            return new Puzzle(_gameBoard);
         }
 
         public void DestroyBoard()
         {
-            if (_puzzle == null) return;
+            if (_gameBoard == null) return;
 
             // Destroy all objects in the game board
-            foreach (var node in _nodeMap.Values) { Destroy(node.gameObject, DestroyDelay); }
-            foreach (var edge in _arcMap.Values) { Destroy(edge.gameObject, DestroyDelay); }
-            foreach (var field in _fieldMap.Values) { Destroy(field.gameObject, DestroyDelay); }
+            foreach (var node in _nodeMap.Values) { Destroy(node.gameObject); }
+            foreach (var arc in _arcSet) { Destroy(arc.gameObject); }
+            foreach (var field in _fieldSet) { Destroy(field.gameObject); }
 
             _nodeMap.Clear();
-            _arcMap.Clear();
-            _fieldMap.Clear();
+            _arcSet.Clear();
+            _fieldSet.Clear();
         
-            _puzzle = null;
+            _gameBoard = null;
         }
 
         private void InstantiateNodes()
         {
             var i = 0;
-            foreach (var node in _puzzle.Nodes)
+            foreach (var node in _gameBoard.Nodes)
             {
                 var nodeView = Instantiate(NodeScript);
 
                 // Set the node's parent as this puzzle
                 nodeView.transform.SetParent(transform);
-                nodeView.Init(node);
+                nodeView.Init(node, _gameBoard.StartIsland.Contains(node));
                 nodeView.name = "Node " + i++;
                 _nodeMap.Add(node.Position, nodeView);
             }
@@ -65,7 +63,7 @@ namespace Assets.Scripts.View.Game
         private void InstantiateFields()
         {
             var i = 0;
-            foreach (var field in _puzzle.Fields)
+            foreach (var field in _gameBoard.Fields)
             {
                 var fieldView = Instantiate(FieldScript);
 
@@ -73,22 +71,22 @@ namespace Assets.Scripts.View.Game
                 fieldView.transform.SetParent(_nodeMap[field.Position].transform);
                 fieldView.Init(field, _nodeMap[field.Position], _nodeMap[field.ConnectedNode.Position]);
                 fieldView.name = "Field " + i++;
-                _fieldMap.Add(field.Position, fieldView);
+                _fieldSet.Add(fieldView);
             }
         }
 
         private void InstantiateArcs()
         {
             var i = 0;
-            foreach (var arc in _puzzle.Arcs)
+            foreach (var arc in _gameBoard.Arcs)
             {
                 var arcView = Instantiate(ArcScript);
 
                 // Find the node at the arc's position and set it as a perent of this arc
                 arcView.transform.SetParent(_nodeMap[arc.Position].transform);
-                arcView.Init(arc);
-                arcView.name = "Edge " + i++;
-                _arcMap.Add(arc.Position, arcView);
+                arcView.Init(arc, _gameBoard.StartIsland.Contains(arc.ParentNode));
+                arcView.name = "Arc " + i++;
+                _arcSet.Add(arcView);
             }
         }
     }
