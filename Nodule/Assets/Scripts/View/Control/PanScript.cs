@@ -1,6 +1,7 @@
-﻿using UnityEngine;
+﻿using Assets.Scripts.View.Game;
+using UnityEngine;
 
-namespace Assets.Scripts.View.Game
+namespace Assets.Scripts.View.Control
 {
     public class PanScript : MonoBehaviour
     {

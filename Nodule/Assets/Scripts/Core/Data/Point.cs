@@ -46,6 +46,11 @@ namespace Assets.Scripts.Core.Data
             unchecked { return (x * 397) ^ y; }
         }
 
+        public override string ToString()
+        {
+            return string.Format("({0},{1})", x, y);
+        }
+
         public static Point Zero { get { return new Point(0, 0); } }
         public static Point One { get { return new Point(1, 1); } }
 
@@ -99,6 +104,11 @@ namespace Assets.Scripts.Core.Data
         public static Point Abs(Point point)
         {
             return new Point(Math.Abs(point.x), Math.Abs(point.y));
+        }
+
+        public static Point Round(Vector2 pos)
+        {
+            return new Point((int)Math.Round(pos.x), (int)Math.Round(pos.y));
         }
 
         public static implicit operator Vector3(Point v)

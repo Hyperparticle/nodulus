@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using Assets.Scripts.Core.Data;
 using Assets.Scripts.Core.Game;
+using Assets.Scripts.View.Control;
 using Assets.Scripts.View.Items;
 using UnityEngine;
 using UnityEngine.UI;
@@ -23,6 +24,7 @@ namespace Assets.Scripts.View.Game
         //private PlayerScript _playerScript;
         private PuzzleSpawner _puzzleSpawner;
         private PuzzleScale _puzzleScale;
+        private BoardInput _boardInput;
         //private Animator _levelSelectAnimator;
         //private Text _moveText;
         private int _currentLevel;
@@ -37,13 +39,20 @@ namespace Assets.Scripts.View.Game
             //_playerScript = GetComponentInChildren<PlayerScript>();
             _puzzleSpawner = GetComponent<PuzzleSpawner>();
             _puzzleScale = GetComponent<PuzzleScale>();
+            _boardInput = GetComponent<BoardInput>();
 
             //_audioSources = GetComponents<AudioSource>();
 
             //_levelSelectAnimator = GameObject.FindGameObjectWithTag("LevelSelect").GetComponent<Animator>();
             //_moveText = GameObject.FindGameObjectWithTag("Moves").GetComponent<Text>();
             //_initPosition = transform.localPosition;
+
+            // Start with level 0
             Init(0);
+
+            // Init all scripts that require additional information on startup
+            _puzzleScale.Init(_puzzle.StartNode.Position, _puzzle.BoardSize);
+            _boardInput.Init(_puzzleSpawner.NodeMap);
         }
 
         public void Init(int level)
@@ -58,7 +67,7 @@ namespace Assets.Scripts.View.Game
             //_moveText.text = _puzzle.NumMoves.ToString();
 
             //_puzzleSpawner.CreateBackdrop(this);
-            _puzzleScale.Init(_puzzle.StartNode.Position, _puzzle.BoardSize);
+
 
             HighlightFields();
         }
@@ -71,6 +80,14 @@ namespace Assets.Scripts.View.Game
         public void PrevLevel()
         {
             Init(_currentLevel == 0 ? 0 : _currentLevel - 1);
+        }
+
+        public void Swipe(NodeView nodeView, Direction direction)
+        {
+            if (direction == Direction.None) return;
+            
+            Debug.Log(nodeView);
+            Debug.Log(direction);
         }
 
         public void Pull(ArcView arcView, Direction direction)

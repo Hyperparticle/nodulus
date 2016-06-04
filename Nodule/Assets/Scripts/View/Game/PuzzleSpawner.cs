@@ -18,6 +18,8 @@ namespace Assets.Scripts.View.Game
 
         private GameBoard _gameBoard;
 
+        public IDictionary<Point, NodeView> NodeMap { get { return _nodeMap; } }
+
         public Puzzle SpawnBoard(int level)
         {
             _gameBoard = Level.BuildLevel(level);

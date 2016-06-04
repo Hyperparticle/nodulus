@@ -108,6 +108,31 @@ namespace Assets.Scripts.Core.Data
         {
             return direction == Direction.Down || direction == Direction.Left;
         }
+
+        public static Direction ToDirection(this TKSwipeDirection direction)
+        {
+            if ((direction & TKSwipeDirection.Left) != 0)
+            {
+                return Direction.Left;
+            }
+
+            if ((direction & TKSwipeDirection.Right) != 0)
+            {
+                return Direction.Right;
+            }
+
+            if ((direction & TKSwipeDirection.Up) != 0)
+            {
+                return Direction.Up;
+            }
+
+            if ((direction & TKSwipeDirection.Down) != 0)
+            {
+                return Direction.Down;
+            }
+
+            return Direction.None;
+        }
     }
 
     public static class Directions
