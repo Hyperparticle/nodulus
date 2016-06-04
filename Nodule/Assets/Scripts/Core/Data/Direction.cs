@@ -54,6 +54,16 @@ namespace Assets.Scripts.Core.Data
                 { Direction.None, Quaternion.Euler(0, 0, 0) }
             };
 
+        private static readonly IDictionary<Direction, Vector3> Axes =
+            new Dictionary<Direction, Vector3>
+            {
+                { Direction.Up, Vector3.right },
+                { Direction.Down, Vector3.left },
+                { Direction.Left, Vector3.up },
+                { Direction.Right, Vector3.down },
+                { Direction.None, Vector3.zero }
+            };
+
         private static readonly IDictionary<Direction, Direction> RotatedDirections =
             new Dictionary<Direction, Direction>
             {
@@ -92,6 +102,11 @@ namespace Assets.Scripts.Core.Data
         public static Quaternion Rotation(this Direction direction)
         {
             return Rotations[direction];
+        }
+
+        public static Vector3 Axis(this Direction direction)
+        {
+            return Axes[direction];
         }
 
         public static bool IsHorizontal(this Direction direction)

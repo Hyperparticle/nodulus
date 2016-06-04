@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using Assets.Scripts.Core.Data;
 using Assets.Scripts.Core.Game;
 using Assets.Scripts.View.Control;
@@ -84,10 +85,13 @@ namespace Assets.Scripts.View.Game
 
         public void Swipe(NodeView nodeView, Direction direction)
         {
-            if (direction == Direction.None) return;
-            
-            Debug.Log(nodeView);
-            Debug.Log(direction);
+            if (direction == Direction.None || nodeView == null) return;
+
+            // TODO: validation
+            nodeView.Rotate(direction);
+
+            //Debug.Log(nodeView);
+            //Debug.Log(direction);
         }
 
         public void Pull(ArcView arcView, Direction direction)
@@ -99,7 +103,6 @@ namespace Assets.Scripts.View.Game
             //}
 
             _inversion = arcView;
-            _inversion.Pull(direction);
         
             //_moveText.text = _puzzle.NumMoves.ToString();
             //_audioSources[TakeAudio].Play();
