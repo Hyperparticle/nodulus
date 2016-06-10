@@ -44,9 +44,9 @@ namespace Assets.Scripts.View.Control
             //Debug.Log(recognizer);
 
             // Find the nearest node to the tap (within 1 grid unit)
-            var node = GetNearest(recognizer);
+            var field = GetNearestField(recognizer);
 
-            // TODO
+            _puzzleView.Tap(field);
         }
 
         /// <summary>
@@ -57,14 +57,14 @@ namespace Assets.Scripts.View.Control
             //Debug.Log(recognizer);
 
             // Find the nearest node to the swipe (within 1 grid unit)
-            var node = GetNearest(recognizer);
+            var node = GetNearestNode(recognizer);
 
             // Notify the puzzle of the swipe
-            var swipe = recognizer.completedSwipeDirection.ToDirection();
-            _puzzleView.Swipe(node, swipe);
+            var swipeDirection = recognizer.completedSwipeDirection.ToDirection();
+            _puzzleView.Swipe(node, swipeDirection);
         }
 
-        private NodeView GetNearest(TKAbstractGestureRecognizer recognizer)
+        private NodeView GetNearestNode(TKAbstractGestureRecognizer recognizer)
         {
             // Obtain the gesture position
             var touch = recognizer.touchLocation();
@@ -78,6 +78,23 @@ namespace Assets.Scripts.View.Control
             NodeView node;
             _nodeMap.TryGetValue(point, out node);
             return node;
+        }
+
+        private FieldView GetNearestField(TKAbstractGestureRecognizer recognizer)
+        {
+            // Obtain the gesture position
+            var touch = recognizer.touchLocation();
+            var scaledPos = (Vector2) Camera.main.ScreenToWorldPoint(touch);
+
+            // Remove any scaling, and round the position to the nearest integer
+            var pos = (scaledPos + _puzzleScale.Dimensions / 2f) / _puzzleScale.Scaling;
+            var point = Point.Round(pos);
+
+            // Retrieve the node, if it exists
+            NodeView node;
+            _nodeMap.TryGetValue(point, out node);
+            return null;
+            // TODO
         }
     }
 }

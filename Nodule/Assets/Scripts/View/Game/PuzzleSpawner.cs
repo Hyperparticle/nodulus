@@ -13,12 +13,13 @@ namespace Assets.Scripts.View.Game
         public FieldView FieldScript;
 
         private readonly IDictionary<Point, NodeView> _nodeMap = new Dictionary<Point, NodeView>();
-        private readonly ICollection<ArcView> _arcSet = new HashSet<ArcView>();
+        private readonly IDictionary<PointDir, ArcView> _arcMap = new Dictionary<PointDir, ArcView>();
         private readonly ICollection<FieldView> _fieldSet = new HashSet<FieldView>();
 
         private GameBoard _gameBoard;
 
         public IDictionary<Point, NodeView> NodeMap { get { return _nodeMap; } }
+        public IDictionary<PointDir, ArcView> ArcMap { get { return _arcMap; } }
 
         public Puzzle SpawnBoard(int level)
         {
@@ -37,11 +38,11 @@ namespace Assets.Scripts.View.Game
 
             // Destroy all objects in the game board
             foreach (var node in _nodeMap.Values) { Destroy(node.gameObject); }
-            foreach (var arc in _arcSet) { Destroy(arc.gameObject); }
+            foreach (var arc in _arcMap.Values) { Destroy(arc.gameObject); }
             foreach (var field in _fieldSet) { Destroy(field.gameObject); }
 
             _nodeMap.Clear();
-            _arcSet.Clear();
+            _arcMap.Clear();
             _fieldSet.Clear();
         
             _gameBoard = null;
@@ -65,13 +66,14 @@ namespace Assets.Scripts.View.Game
         private void InstantiateFields()
         {
             var i = 0;
+
             foreach (var field in _gameBoard.Fields)
             {
                 var fieldView = Instantiate(FieldScript);
 
                 // Find the node at the field's position and set it as a parent of this field
                 fieldView.transform.SetParent(_nodeMap[field.Position].transform);
-                fieldView.Init(field, _nodeMap[field.Position], _nodeMap[field.ConnectedNode.Position]);
+                fieldView.Init(field, _nodeMap[field.Position], _nodeMap[field.ConnectedPosition]);
                 fieldView.name = "Field " + i++;
                 _fieldSet.Add(fieldView);
             }
@@ -85,10 +87,17 @@ namespace Assets.Scripts.View.Game
                 var arcView = Instantiate(ArcScript);
 
                 // Find the node at the arc's position and set it as a perent of this arc
-                arcView.transform.SetParent(_nodeMap[arc.Position].transform);
-                arcView.Init(arc, _gameBoard.StartIsland.Contains(arc.ParentNode));
+                var parent = _nodeMap[arc.Position].transform;
+                arcView.transform.SetParent(parent);
+                arcView.Init(arc, parent, _gameBoard.StartIsland.Contains(arc.ParentNode));
                 arcView.name = "Arc " + i++;
-                _arcSet.Add(arcView);
+
+                // Add the arc to the map
+                _arcMap.Add(new PointDir(arc.Position, arc.Direction), arcView);
+
+                // Since arcs are undirected, we should add the opposite direction as well
+                var opposite = new PointDir(arc.ConnectedPosition, arc.Direction.Opposite());
+                _arcMap.Add(opposite, arcView);
             }
         }
     }

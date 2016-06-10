@@ -22,7 +22,6 @@ namespace Assets.Scripts.View.Game
         private Puzzle _puzzle;
         private ArcView _inversion;
 
-        //private PlayerScript _playerScript;
         private PuzzleSpawner _puzzleSpawner;
         private PuzzleScale _puzzleScale;
         private BoardInput _boardInput;
@@ -32,12 +31,8 @@ namespace Assets.Scripts.View.Game
 
         //private AudioSource[] _audioSources;
 
-        //private Vector3 _initPosition;
-
- 
         void Awake()
         {
-            //_playerScript = GetComponentInChildren<PlayerScript>();
             _puzzleSpawner = GetComponent<PuzzleSpawner>();
             _puzzleScale = GetComponent<PuzzleScale>();
             _boardInput = GetComponent<BoardInput>();
@@ -46,7 +41,6 @@ namespace Assets.Scripts.View.Game
 
             //_levelSelectAnimator = GameObject.FindGameObjectWithTag("LevelSelect").GetComponent<Animator>();
             //_moveText = GameObject.FindGameObjectWithTag("Moves").GetComponent<Text>();
-            //_initPosition = transform.localPosition;
 
             // Start with level 0
             Init(0);
@@ -67,9 +61,6 @@ namespace Assets.Scripts.View.Game
 
             //_moveText.text = _puzzle.NumMoves.ToString();
 
-            //_puzzleSpawner.CreateBackdrop(this);
-
-
             HighlightFields();
         }
 
@@ -85,66 +76,33 @@ namespace Assets.Scripts.View.Game
 
         public void Swipe(NodeView nodeView, Direction direction)
         {
-            if (direction == Direction.None || nodeView == null) return;
+            if (nodeView == null || direction == Direction.None) { return; }
+
+            // Try to obtain an arc corresponding to the node's position and the 
+            // swipe's (opposite) direction.
+            ArcView arcView;
+            var pointDir = new PointDir(nodeView.Position, direction.Opposite());
+            if (!_puzzleSpawner.ArcMap.TryGetValue(pointDir, out arcView)) { return; }
+
+            arcView.transform.parent = nodeView.Rotor;
+
+            var result = _puzzle.PullArc(arcView.Arc, direction.Opposite());
 
             // TODO: validation
-            nodeView.Rotate(direction);
-
-            //Debug.Log(nodeView);
-            //Debug.Log(direction);
-        }
-
-        public void Pull(ArcView arcView, Direction direction)
-        {
-            //if (arcView.Transitioning || !_puzzle.PullArc(arcView.Edge, direction))
-            //{
-            //    _audioSources[InvalidAudio].Play();
-            //    return;
-            //}
-
-            _inversion = arcView;
-        
-            //_moveText.text = _puzzle.NumMoves.ToString();
-            //_audioSources[TakeAudio].Play();
-            HighlightFields();
-            HighlightNodes();
-        }
-
-        public void Push(FieldView fieldView)
-        {
-            //if (_inversion == null || _inversion.Transitioning || !_puzzle.Push(fieldView.Field))
-            //{
-            //    _audioSources[InvalidAudio].Play();
-            //    return;
-            //}
-
-            //var opposite = !_playerScript.Player.ParentInIsland(fieldView.Field);
-            //_inversion.Push(fieldView, opposite);
-
-            //_moveText.text = _puzzle.NumMoves.ToString();
-
-            if (_puzzle.Win)
+            if (!result)
             {
-                //_audioSources[CompleteAudio].Play();
-                StartCoroutine(WinBoard());
+                Debug.Log("Failed");
+                return;
             }
-            else
-            {
-                //_audioSources[PlaceAudio].Play();
-                HighlightFields();
-                HighlightNodes();
-            }
+
+            nodeView.Rotate(direction, () => arcView.ResetParent());
         }
 
-        public void Play(NodeView node)
+        public void Tap(FieldView fieldView)
         {
-            //var reversion = _puzzle.Reversions.FirstOrDefault(placeMove => placeMove.Field.ContainsNode(node.Node));
-            //if (reversion != null)
-                //Push(reversion.Field.FieldScript);
+            if (fieldView == null) { return; }
 
-            //var inversion = _puzzle.Inversions.FirstOrDefault(takeMove => takeMove.Edge.ContainsNode(node.Node));
-            //if (reversion != null)
-            //    Push(reversion.Field.FieldView);
+
         }
 
         private void HighlightFields()

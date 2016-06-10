@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using Assets.Scripts.Core.Data;
 using Assets.Scripts.Core.Items;
 using Assets.Scripts.View.Game;
@@ -14,7 +15,9 @@ namespace Assets.Scripts.View.Items
         private Colorizer _colorizer;
         private GameObject _rotor;
 
-        public Node Node { get; private set; }
+        private Node Node {  get; set; }
+
+        public Point Position { get { return Node.Position; } }
 
         public void Init(Node node, bool inStartIsland)
         {
@@ -30,18 +33,21 @@ namespace Assets.Scripts.View.Items
             if (node.Final) { _colorizer.SetSecondary(); }
         }
 
-        public bool Rotate(Direction direction)
+        public bool Rotate(Direction direction, Action onComplete)
         {
             if (LeanTween.isTweening(_colorizer.gameObject)) { return false; }
 
+            // Rotate 90 degrees in the direction specified
             LeanTween.rotateAroundLocal(_rotor, direction.Axis(), 90f, 0.5f)
                .setEase(LeanTweenType.easeInOutSine)
                .setOnComplete(() => {
+                   onComplete();
                    _rotor.transform.localRotation = Quaternion.identity;
                });
 
             return true;
         }
+
     }
 }
 

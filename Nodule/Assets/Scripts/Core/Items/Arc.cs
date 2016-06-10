@@ -9,6 +9,7 @@ namespace Assets.Scripts.Core.Items
     public class Arc : IBoardItem
     {
         public Point Position { get { return ParentNode.Position; } }
+        public Point ConnectedPosition { get { return ConnectedNode.Position; } }
         public bool IsEnabled { get { return true; } }
         public int Length { get; private set; }
         public Direction Direction { get { return Field.Direction; } }
