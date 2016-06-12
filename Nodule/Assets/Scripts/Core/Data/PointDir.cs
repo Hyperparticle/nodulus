@@ -9,6 +9,8 @@
         private readonly Point _point;
         private readonly Direction _direction;
 
+        public PointDir Opposite { get { return new PointDir(_point, _direction.Opposite()); } }
+
         public PointDir(Point point, Direction direction)
         {
             _point = point;

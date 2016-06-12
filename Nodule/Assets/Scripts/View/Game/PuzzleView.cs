@@ -18,9 +18,8 @@ namespace Assets.Scripts.View.Game
         private const int CompleteAudio = 4;
 
         public float WinDelay = 1.0f;
-    
-        private Puzzle _puzzle;
-        private ArcView _inversion;
+
+        public Puzzle Puzzle { get; private set; }
 
         private PuzzleSpawner _puzzleSpawner;
         private PuzzleScale _puzzleScale;
@@ -46,7 +45,7 @@ namespace Assets.Scripts.View.Game
             Init(0);
 
             // Init all scripts that require additional information on startup
-            _puzzleScale.Init(_puzzle.StartNode.Position, _puzzle.BoardSize);
+            _puzzleScale.Init(Puzzle.StartNode.Position, Puzzle.BoardSize);
             _boardInput.Init(_puzzleSpawner.NodeMap);
         }
 
@@ -54,7 +53,7 @@ namespace Assets.Scripts.View.Game
         {
             _puzzleSpawner.DestroyBoard();
 
-            _puzzle = _puzzleSpawner.SpawnBoard(level);
+            Puzzle = _puzzleSpawner.SpawnBoard(level);
             _currentLevel = level;
 
             //_playerScript.Init(_puzzle.Player);
@@ -74,63 +73,14 @@ namespace Assets.Scripts.View.Game
             Init(_currentLevel == 0 ? 0 : _currentLevel - 1);
         }
 
-        public void Swipe(NodeView nodeView, Direction direction)
-        {
-            if (nodeView == null || direction == Direction.None) { return; }
-
-            // Try to obtain an arc corresponding to the node's position and the 
-            // swipe's (opposite) direction.
-            ArcView arcView;
-            var pointDir = new PointDir(nodeView.Position, direction.Opposite());
-            if (!_puzzleSpawner.ArcMap.TryGetValue(pointDir, out arcView)) { return; }
-
-            arcView.transform.parent = nodeView.Rotor;
-
-            var result = _puzzle.PullArc(arcView.Arc, direction.Opposite());
-
-            // TODO: validation
-            if (!result)
-            {
-                Debug.Log("Failed");
-                return;
-            }
-
-            nodeView.Rotate(direction, () => arcView.ResetParent());
-        }
-
-        public void Tap(FieldView fieldView)
-        {
-            if (fieldView == null) { return; }
-
-
-        }
+        
 
         private void HighlightFields()
         {
-            //foreach (var field in _puzzle.Fields)
-            //    field.FieldScript.Highlight(false);
-
-            //foreach (var placeMove in _puzzle.Reversions)
-            //    placeMove.Field.FieldScript.Highlight(true);
-
-            //foreach (var edge in _puzzle.Edges)
-            //    edge.EdgeScript.Highlight = false;
-
-            //foreach (var field in _playerScript.Player.Fields.Where(field => field.HasEdge))
-            //    field.Edge.EdgeScript.Highlight = true;
         }
 
         private void HighlightNodes()
         {
-            //foreach (var node in _puzzle.Nodes)
-            //{
-            //    node.NodeScript.Highlight = false;
-            //}
-
-            //foreach (var node in _puzzle.Player.Island)
-            //{
-            //    node.NodeScript.Highlight = true;
-            //}
         }
 
         private IEnumerator WinBoard()

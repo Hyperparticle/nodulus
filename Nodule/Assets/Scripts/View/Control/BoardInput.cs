@@ -10,7 +10,7 @@ namespace Assets.Scripts.View.Control
     {
         public float MinSwipeDistanceCm = 3f;
 
-        private PuzzleView _puzzleView;
+        private BoardActions _boardActions;
         private PuzzleScale _puzzleScale;
 
         private IDictionary<Point, NodeView> _nodeMap;
@@ -28,7 +28,7 @@ namespace Assets.Scripts.View.Control
             TouchKit.addGestureRecognizer(tapRecognizer);
 
             _puzzleScale = GetComponent<PuzzleScale>();
-            _puzzleView = GetComponent<PuzzleView>();
+            _boardActions = GetComponent<BoardActions>();
         }
 
         public void Init(IDictionary<Point, NodeView> nodeMap)
@@ -46,7 +46,7 @@ namespace Assets.Scripts.View.Control
             // Find the nearest node to the tap (within 1 grid unit)
             var field = GetNearestField(recognizer);
 
-            _puzzleView.Tap(field);
+            _boardActions.Tap(field);
         }
 
         /// <summary>
@@ -61,7 +61,7 @@ namespace Assets.Scripts.View.Control
 
             // Notify the puzzle of the swipe
             var swipeDirection = recognizer.completedSwipeDirection.ToDirection();
-            _puzzleView.Swipe(node, swipeDirection);
+            _boardActions.Swipe(node, swipeDirection);
         }
 
         private NodeView GetNearestNode(TKAbstractGestureRecognizer recognizer)

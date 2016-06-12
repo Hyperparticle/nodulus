@@ -143,17 +143,17 @@ namespace Assets.Scripts.Core.Data
         }
     }
 
-    public static class PointExtension
-    {
-        public static Direction ToDirection(this Vector3 vector)
-        {
-            Direction direction;
-            return Point.Directions.TryGetValue(GetSign(vector), out direction) ? direction : Direction.None;
-        }
+    //public static class PointExtension
+    //{
+    //    public static Direction ToDirection(this Vector3 vector)
+    //    {
+    //        Direction direction;
+    //        return Point.Directions.TryGetValue(GetSign(vector), out direction) ? direction : Direction.None;
+    //    }
 
-        private static Point GetSign(Vector3 vector)
-        {
-            return new Point(Math.Sign(vector.x), Math.Sign(vector.y));
-        }
-    }
+    //    private static Point GetSign(Vector3 vector)
+    //    {
+    //        return new Point(Math.Sign(vector.x), Math.Sign(vector.y));
+    //    }
+    //}
 }

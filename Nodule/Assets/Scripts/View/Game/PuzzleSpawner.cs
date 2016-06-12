@@ -14,12 +14,28 @@ namespace Assets.Scripts.View.Game
 
         private readonly IDictionary<Point, NodeView> _nodeMap = new Dictionary<Point, NodeView>();
         private readonly IDictionary<PointDir, ArcView> _arcMap = new Dictionary<PointDir, ArcView>();
+        private readonly IDictionary<Point, HashSet<ArcView>> _arcSet = new Dictionary<Point, HashSet<ArcView>>();
         private readonly ICollection<FieldView> _fieldSet = new HashSet<FieldView>();
 
         private GameBoard _gameBoard;
 
         public IDictionary<Point, NodeView> NodeMap { get { return _nodeMap; } }
-        public IDictionary<PointDir, ArcView> ArcMap { get { return _arcMap; } }
+
+        public bool HasArcAt(PointDir pointDir)
+        {
+            return _arcMap.ContainsKey(pointDir);
+        }
+
+        public ArcView GetArc(PointDir pointDir)
+        {
+            return _arcMap[pointDir];
+        }
+
+        // TODO: streamline this
+        public IEnumerable<ArcView> GetArcs(Point point)
+        {
+            return _arcSet[point];
+        }
 
         public Puzzle SpawnBoard(int level)
         {
@@ -60,6 +76,8 @@ namespace Assets.Scripts.View.Game
                 nodeView.Init(node, _gameBoard.StartIsland.Contains(node));
                 nodeView.name = "Node " + i++;
                 _nodeMap.Add(node.Position, nodeView);
+
+                AddPointSet(node.Position);
             }
         }
 
@@ -98,7 +116,20 @@ namespace Assets.Scripts.View.Game
                 // Since arcs are undirected, we should add the opposite direction as well
                 var opposite = new PointDir(arc.ConnectedPosition, arc.Direction.Opposite());
                 _arcMap.Add(opposite, arcView);
+
+                AddArcSet(arc.Position, arcView);
+                AddArcSet(arc.ConnectedPosition, arcView);
             }
+        }
+
+        private void AddPointSet(Point pos)
+        {
+            _arcSet.Add(pos, new HashSet<ArcView>());
+        }
+
+        private void AddArcSet(Point pos, ArcView arcView)
+        {
+            _arcSet[pos].Add(arcView);
         }
     }
 }

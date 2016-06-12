@@ -33,7 +33,7 @@ namespace Assets.Scripts.View.Items
             if (node.Final) { _colorizer.SetSecondary(); }
         }
 
-        public bool Rotate(Direction direction, Action onComplete)
+        public bool Rotate(Direction direction)
         {
             if (LeanTween.isTweening(_colorizer.gameObject)) { return false; }
 
@@ -41,13 +41,24 @@ namespace Assets.Scripts.View.Items
             LeanTween.rotateAroundLocal(_rotor, direction.Axis(), 90f, 0.5f)
                .setEase(LeanTweenType.easeInOutSine)
                .setOnComplete(() => {
-                   onComplete();
+                   ResetArcs();
                    _rotor.transform.localRotation = Quaternion.identity;
                });
 
             return true;
         }
 
+        /// <summary>
+        /// Reset all arcs' parents to their fields
+        /// </summary>
+        private void ResetArcs()
+        {
+            var arcViews = GetComponentsInChildren<ArcView>();
+            foreach (var arcView in arcViews)
+            {
+                arcView.ResetParent();
+            }
+        }
     }
 }
 
