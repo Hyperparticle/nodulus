@@ -9,6 +9,9 @@ using UnityEngine.UI;
 
 namespace Assets.Scripts.View.Game
 {
+    /// <summary>
+    /// Handles all basic initialization logic to create and destroy the gameboard
+    /// </summary>
     public class PuzzleView : MonoBehaviour
     {
         private const int InvalidAudio  = 0;
@@ -77,6 +80,10 @@ namespace Assets.Scripts.View.Game
 
         private void HighlightFields()
         {
+            foreach (var field in Puzzle.PullFields)
+            {
+                
+            }
         }
 
         private void HighlightNodes()

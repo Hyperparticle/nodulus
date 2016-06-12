@@ -1,50 +1,56 @@
 ﻿using System.Collections.Generic;
 using Assets.Scripts.Core.Data;
 using Assets.Scripts.Core.Game;
+using Assets.Scripts.Utility;
 using Assets.Scripts.View.Items;
 using UnityEngine;
 
 namespace Assets.Scripts.View.Game
 {
-    public class PuzzleSpawner : MonoBehaviour {
-    
+    public class PuzzleSpawner : MonoBehaviour
+    {
         public NodeView  NodeScript;
         public ArcView   ArcScript;
         public FieldView FieldScript;
 
         private readonly IDictionary<Point, NodeView> _nodeMap = new Dictionary<Point, NodeView>();
-        private readonly IDictionary<PointDir, ArcView> _arcMap = new Dictionary<PointDir, ArcView>();
-        private readonly IDictionary<Point, HashSet<ArcView>> _arcSet = new Dictionary<Point, HashSet<ArcView>>();
-        private readonly ICollection<FieldView> _fieldSet = new HashSet<FieldView>();
+        //private readonly IDictionary<PointDir, ArcView> _arcMap = new Dictionary<PointDir, ArcView>();
+        //private readonly IDictionary<Point, HashSet<ArcView>> _arcSet = new Dictionary<Point, HashSet<ArcView>>();
+
+        // TODO
+        private readonly MultiMap<Point, Direction, FieldView> _fieldMap = new MultiMap<Point, Direction, FieldView>();
+        private readonly MultiMap<Point, Direction, ArcView> _arcMap = new MultiMap<Point, Direction, ArcView>();
 
         private GameBoard _gameBoard;
 
         public IDictionary<Point, NodeView> NodeMap { get { return _nodeMap; } }
 
-        public bool HasArcAt(PointDir pointDir)
+        public bool HasArcAt(Point pos, Direction direction)
         {
-            return _arcMap.ContainsKey(pointDir);
+            return _arcMap.ContainsKeys(pos, direction);
         }
 
-        public ArcView GetArc(PointDir pointDir)
+        public ArcView GetArc(Point pos, Direction direction)
         {
-            return _arcMap[pointDir];
+            return _arcMap[pos, direction];
         }
 
-        // TODO: streamline this
-        public IEnumerable<ArcView> GetArcs(Point point)
+        public IEnumerable<ArcView> GetArcs(Point pos)
         {
-            return _arcSet[point];
+            return _arcMap.GetValues(pos);
         }
 
         public Puzzle SpawnBoard(int level)
         {
+            // Create the game board model
             _gameBoard = Level.BuildLevel(level);
 
+            // Instantiate all the necessary components to view the board
             InstantiateNodes();
             InstantiateFields();
             InstantiateArcs();
 
+            // Wrap a puzzle around the gameboard and return it
             return new Puzzle(_gameBoard);
         }
 
@@ -54,12 +60,12 @@ namespace Assets.Scripts.View.Game
 
             // Destroy all objects in the game board
             foreach (var node in _nodeMap.Values) { Destroy(node.gameObject); }
-            foreach (var arc in _arcMap.Values) { Destroy(arc.gameObject); }
-            foreach (var field in _fieldSet) { Destroy(field.gameObject); }
+            foreach (var arc in _arcMap.AllValues) { Destroy(arc.gameObject); }
+            foreach (var field in _fieldMap.AllValues) { Destroy(field.gameObject); }
 
             _nodeMap.Clear();
             _arcMap.Clear();
-            _fieldSet.Clear();
+            _fieldMap.Clear();
         
             _gameBoard = null;
         }
@@ -76,8 +82,6 @@ namespace Assets.Scripts.View.Game
                 nodeView.Init(node, _gameBoard.StartIsland.Contains(node));
                 nodeView.name = "Node " + i++;
                 _nodeMap.Add(node.Position, nodeView);
-
-                AddPointSet(node.Position);
             }
         }
 
@@ -93,7 +97,11 @@ namespace Assets.Scripts.View.Game
                 fieldView.transform.SetParent(_nodeMap[field.Position].transform);
                 fieldView.Init(field, _nodeMap[field.Position], _nodeMap[field.ConnectedPosition]);
                 fieldView.name = "Field " + i++;
-                _fieldSet.Add(fieldView);
+
+                // Keep track of the field in grid space
+                // Since fields are undirected, we should add the opposite direction as well
+                _fieldMap.Add(field.Position, field.Direction, fieldView);
+                _fieldMap.Add(field.ConnectedPosition, field.Direction.Opposite(), fieldView);
             }
         }
 
@@ -110,26 +118,13 @@ namespace Assets.Scripts.View.Game
                 arcView.Init(arc, parent, _gameBoard.StartIsland.Contains(arc.ParentNode));
                 arcView.name = "Arc " + i++;
 
-                // Add the arc to the map
-                _arcMap.Add(new PointDir(arc.Position, arc.Direction), arcView);
-
+                // Keep track of the arc in grid space
                 // Since arcs are undirected, we should add the opposite direction as well
-                var opposite = new PointDir(arc.ConnectedPosition, arc.Direction.Opposite());
-                _arcMap.Add(opposite, arcView);
-
-                AddArcSet(arc.Position, arcView);
-                AddArcSet(arc.ConnectedPosition, arcView);
+                _arcMap.Add(arc.Position, arc.Direction, arcView);
+                _arcMap.Add(arc.ConnectedPosition, arc.Direction.Opposite(), arcView);
             }
         }
 
-        private void AddPointSet(Point pos)
-        {
-            _arcSet.Add(pos, new HashSet<ArcView>());
-        }
 
-        private void AddArcSet(Point pos, ArcView arcView)
-        {
-            _arcSet[pos].Add(arcView);
-        }
     }
 }

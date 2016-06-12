@@ -6,6 +6,10 @@ using UnityEngine;
 
 namespace Assets.Scripts.View.Control
 {
+    /// <summary>
+    /// Handles all initial inputs to the game board (i.e., screen swipes and taps)
+    /// and converts them to an action.
+    /// </summary>
     public class BoardInput : MonoBehaviour
     {
         public float MinSwipeDistanceCm = 3f;
@@ -43,7 +47,7 @@ namespace Assets.Scripts.View.Control
         {
             //Debug.Log(recognizer);
 
-            // Find the nearest node to the tap (within 1 grid unit)
+            // Find the nearest field to the tap
             var field = GetNearestField(recognizer);
 
             _boardActions.Tap(field);

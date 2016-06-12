@@ -6,6 +6,10 @@ using UnityEngine;
 
 namespace Assets.Scripts.Core.Data
 {
+    /// <summary>
+    /// A Point represents a position in 2D grid space. Useful for identifying nodes and arcs 
+    /// in the game board grid.
+    /// </summary>
     public partial struct Point
     {
         public readonly int x;
@@ -61,6 +65,7 @@ namespace Assets.Scripts.Core.Data
         public static Point Right { get { return new Point(1, 0); } }
     }
 
+    #region Extensions
     public partial struct Point
     {
         public static readonly Dictionary<Point, Direction> Directions =
@@ -156,4 +161,6 @@ namespace Assets.Scripts.Core.Data
     //        return new Point(Math.Sign(vector.x), Math.Sign(vector.y));
     //    }
     //}
+
+    #endregion Extensions
 }

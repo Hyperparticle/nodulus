@@ -4,6 +4,9 @@ using UnityEngine;
 
 namespace Assets.Scripts.View.Game
 {
+    /// <summary>
+    /// Given an action, this component modifies the game board model and view accordingly
+    /// </summary>
     public class BoardActions : MonoBehaviour
     {
         private PuzzleSpawner _puzzleSpawner;
@@ -21,11 +24,12 @@ namespace Assets.Scripts.View.Game
 
             // Try to obtain an arc corresponding to the node's position and the 
             // swipe's (opposite) direction.
-            var pointDir = new PointDir(nodeView.Position, direction.Opposite());
+            var pos = nodeView.Position;
+            var dir = direction.Opposite();
 
-            if (_puzzleSpawner.HasArcAt(pointDir))
+            if (_puzzleSpawner.HasArcAt(pos, dir))
             {
-                var arcView = _puzzleSpawner.GetArc(pointDir);
+                var arcView = _puzzleSpawner.GetArc(pos, dir);
                 var result = _puzzleView.Puzzle.PullArc(arcView.Arc, direction.Opposite());
 
                 if (!result)
@@ -34,7 +38,7 @@ namespace Assets.Scripts.View.Game
                     return;
                 }
             }
-            else if (_puzzleSpawner.HasArcAt(pointDir.Opposite)) { return; }
+            else if (_puzzleSpawner.HasArcAt(pos, dir.Opposite())) { return; }
 
             var arcs = _puzzleSpawner.GetArcs(nodeView.Position);
             foreach (var arc in arcs)

@@ -5,6 +5,10 @@ using UnityEngine;
 
 namespace Assets.Scripts.View.Items
 {
+    /// <summary>
+    /// An ArcView represents the view for an arc in the gameboard. It is responsible
+    /// for visualizing arcs rotating and sliding across the gameboard.
+    /// </summary>
     public class ArcView : MonoBehaviour
     {
         private ScaleScript _arcScale;

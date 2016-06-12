@@ -7,6 +7,10 @@ using UnityEngine;
 
 namespace Assets.Scripts.View.Items
 {
+    /// <summary>
+    /// A NodeView represents the view for an node in the gameboard. It is responsible
+    /// for visualizing nodes that connect and rotate arcs.
+    /// </summary>
     public class NodeView : MonoBehaviour
     {
         public Transform Rotor;

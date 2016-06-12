@@ -5,6 +5,10 @@ using UnityEngine;
 
 namespace Assets.Scripts.View.Items
 {
+    /// <summary>
+    /// A FieldView represents the view for an field in the gameboard. It is responsible
+    /// for visualizing fields that highlight the moves that are available.
+    /// </summary>
     public class FieldView : MonoBehaviour
     {
         private ScaleScript _fieldScale;
