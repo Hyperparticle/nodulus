@@ -1,57 +1,68 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using Assets.Scripts.Core.Data;
+using System.Collections.Generic;
 
 namespace Assets.Scripts.Utility
 {
-    public class MultiMap<K1, K2, V>
+    public class MultiMap<TKey1, TKey2, TValue>
     {
-        private readonly IDictionary<K1, IDictionary<K2, V>> _multimap = new Dictionary<K1, IDictionary<K2, V>>();
-        private readonly ICollection<V> _valueSet = new HashSet<V>();
+        private readonly IDictionary<TKey1, IDictionary<TKey2, TValue>> _multimap = new Dictionary<TKey1, IDictionary<TKey2, TValue>>();
+        private readonly ICollection<TValue> _valueSet = new HashSet<TValue>();
 
-        public void Add(K1 key1, K2 key2, V value)
+        public void Add(TKey1 key1, TKey2 key2, TValue value)
         {
             this[key1].Add(key2, value);
             _valueSet.Add(value);
         }
 
-        public bool ContainsKeys(K1 key1, K2 key2)
+        public void AddAll(MultiMap<TKey1, TKey2, TValue> map)
+        {
+            foreach (var pair in map._multimap)
+            {
+                _multimap.Add(pair.Key, pair.Value);
+            }
+        }
+
+        public bool Remove(TKey1 key1)
+        {
+            return _multimap.Remove(key1);
+        }
+
+        public bool ContainsKeys(TKey1 key1, TKey2 key2)
         {
             return this[key1].ContainsKey(key2);
         }
 
-        public IEnumerable<V> GetValues(K1 key1)
+        public IEnumerable<TValue> GetValues(TKey1 key1)
         {
             return this[key1].Values;
         }
 
-        public IEnumerable<K1> Keys
+        public IEnumerable<TKey1> Keys
         {
             get { return _multimap.Keys; }
         }
 
-        public IEnumerable<IDictionary<K2, V>> Values
+        public IEnumerable<IDictionary<TKey2, TValue>> Values
         {
             get { return _multimap.Values; }
         }
 
-        public IEnumerable<V> AllValues
+        public IEnumerable<TValue> AllValues
         {
-            get { return new HashSet<V>(_valueSet); }
+            get { return new HashSet<TValue>(_valueSet); }
         }
 
-        public IDictionary<K2, V> this[K1 key1]
+        public IDictionary<TKey2, TValue> this[TKey1 key1]
         {
             get
             {
-                IDictionary<K2, V> map;
-                map = _multimap.TryGetValue(key1, out map) ? map : new Dictionary<K2, V>();
+                IDictionary<TKey2, TValue> map;
+                map = _multimap.TryGetValue(key1, out map) ? map : new Dictionary<TKey2, TValue>();
                 _multimap[key1] = map;
                 return map;
             }
         }
 
-        public V this[K1 key1, K2 key2]
+        public TValue this[TKey1 key1, TKey2 key2]
         {
             get { return this[key1][key2]; }
         }

@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using Assets.Scripts.Core.Items;
 
 namespace Assets.Scripts.Core.Data
@@ -25,34 +25,36 @@ namespace Assets.Scripts.Core.Data
 
         public void Connect(Field field)
         {
-            var parent    = field.ParentNode;
+            var parent = field.ParentNode;
             var connected = field.ConnectedNode;
-            var start     = _islandMap[parent];
-            var end       = _islandMap[connected];
+            var start = _islandMap[parent];
+            var end = _islandMap[connected];
 
             // Join the islands into one
             var joinedIsland = start.Join(end);
 
-            _islandMap[parent]    = joinedIsland;
+            _islandMap[parent] = joinedIsland;
             _islandMap[connected] = joinedIsland;
         }
 
         public void Disconnect(Field field)
         {
-            var parent    = field.ParentNode;
+            var parent = field.ParentNode;
             var connected = field.ConnectedNode;
-            var start     = _islandMap[parent];
-            var end       = _islandMap[connected];
+            var start = _islandMap[parent];
+            var end = _islandMap[connected];
 
             // if the nodes' islands are not equal, they are already disconnected
-            if (!start.Equals(end)) { return; }
+            if (!start.Equals(end)) {
+                return;
+            }
 
             // Try to split the islands (but can result in no split)
             var newIsland = start.Split(field);
-            
+
             _islandMap[connected] = newIsland;
         }
-        
+
         /// <summary>
         /// True if the two nodes are connected (i.e., in the same island)
         /// </summary>

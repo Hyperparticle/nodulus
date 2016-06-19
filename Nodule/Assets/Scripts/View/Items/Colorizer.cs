@@ -1,4 +1,4 @@
-﻿using Assets.Scripts.Utility;
+using Assets.Scripts.Utility;
 using UnityEngine;
 
 namespace Assets.Scripts.View.Items
@@ -15,7 +15,7 @@ namespace Assets.Scripts.View.Items
 
         private Renderer _renderer;
 
-        void Awake()
+        void Start()
         {
             // Precalculate colors here
             var hsb = new HsbColor(PrimaryColor);

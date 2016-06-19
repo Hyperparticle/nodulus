@@ -1,6 +1,4 @@
-﻿using Assets.Scripts.Core.Data;
 using Assets.Scripts.Core.Items;
-using Assets.Scripts.View.Game;
 using UnityEngine;
 
 namespace Assets.Scripts.View.Items
@@ -14,7 +12,7 @@ namespace Assets.Scripts.View.Items
         private ScaleScript _arcScale;
         private Colorizer _colorizer;
 
-        private Transform _parent;
+        public Transform Parent { private get; set; }
 
         public Arc Arc { get; private set; }
 
@@ -24,17 +22,18 @@ namespace Assets.Scripts.View.Items
             _colorizer = GetComponent<Colorizer>();
 
             Arc = arc;
-            _parent = parent;
+            Parent = parent;
 
             _arcScale.SetArc(arc);
 
-            if (!inStartIsland) { _colorizer.Darken(); }
+            if (!inStartIsland) {
+                _colorizer.Darken();
+            }
         }
 
         public void ResetParent()
         {
-            transform.parent = _parent;
+            transform.parent = Parent;
         }
-
     }
 }

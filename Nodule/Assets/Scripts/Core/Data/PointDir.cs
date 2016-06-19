@@ -1,4 +1,4 @@
-﻿namespace Assets.Scripts.Core.Data
+namespace Assets.Scripts.Core.Data
 {
     /// <summary>
     /// A Point with a direction. Useful for uniquely identifying 
@@ -35,7 +35,7 @@
                 return (point.GetHashCode() * 397) ^ (int)direction;
             }
         }
-
+        
         public override string ToString()
         {
             return string.Format("{{{0}, {1}}}", point, direction);

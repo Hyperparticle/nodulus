@@ -1,9 +1,9 @@
-﻿using Assets.Scripts.Core.Data;
+using Assets.Scripts.Core.Data;
 using UnityEngine;
 
 namespace Assets.Scripts.View.Game
 {
-    public class PuzzleScale: MonoBehaviour
+    public class PuzzleScale : MonoBehaviour
     {
         public float Scaling = 2.5f;
         public float NodeScaling = 1.0f;
@@ -19,11 +19,11 @@ namespace Assets.Scripts.View.Game
         {
             Dimensions = new Vector2(boardSize.x, boardSize.y)*Scaling;
 
-            transform.localScale    = Vector3.one;
+            transform.localScale = Vector3.one;
             transform.localPosition = Vector3.zero;
             transform.localRotation = Quaternion.identity;
 
-            transform.Translate(-Dimensions * BoardScaling / 2);
+            transform.Translate(-Dimensions*BoardScaling/2);
 
             transform.localEulerAngles = BoardRotation;
 
@@ -34,6 +34,7 @@ namespace Assets.Scripts.View.Game
         }
 
         private static PuzzleScale _puzzleScale;
+
         public static PuzzleScale Get()
         {
             return _puzzleScale ??

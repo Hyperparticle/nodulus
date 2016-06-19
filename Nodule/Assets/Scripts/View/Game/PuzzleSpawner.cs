@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using Assets.Scripts.Core.Data;
 using Assets.Scripts.Core.Game;
 using Assets.Scripts.Utility;
@@ -9,35 +9,29 @@ namespace Assets.Scripts.View.Game
 {
     public class PuzzleSpawner : MonoBehaviour
     {
-        public NodeView  NodeScript;
-        public ArcView   ArcScript;
+        public NodeView NodeScript;
+        public ArcView ArcScript;
         public FieldView FieldScript;
 
         private readonly IDictionary<Point, NodeView> _nodeMap = new Dictionary<Point, NodeView>();
-        //private readonly IDictionary<PointDir, ArcView> _arcMap = new Dictionary<PointDir, ArcView>();
-        //private readonly IDictionary<Point, HashSet<ArcView>> _arcSet = new Dictionary<Point, HashSet<ArcView>>();
-
-        // TODO
         private readonly MultiMap<Point, Direction, FieldView> _fieldMap = new MultiMap<Point, Direction, FieldView>();
         private readonly MultiMap<Point, Direction, ArcView> _arcMap = new MultiMap<Point, Direction, ArcView>();
 
         private GameBoard _gameBoard;
 
-        public IDictionary<Point, NodeView> NodeMap { get { return _nodeMap; } }
-
-        public bool HasArcAt(Point pos, Direction direction)
+        public IDictionary<Point, NodeView> NodeMap
         {
-            return _arcMap.ContainsKeys(pos, direction);
+            get { return _nodeMap; }
         }
 
-        public ArcView GetArc(Point pos, Direction direction)
+        public MultiMap<Point, Direction, FieldView> FieldMap
         {
-            return _arcMap[pos, direction];
+            get { return _fieldMap; }
         }
 
-        public IEnumerable<ArcView> GetArcs(Point pos)
+        public MultiMap<Point, Direction, ArcView> ArcMap
         {
-            return _arcMap.GetValues(pos);
+            get { return _arcMap; }
         }
 
         public Puzzle SpawnBoard(int level)
@@ -59,22 +53,27 @@ namespace Assets.Scripts.View.Game
             if (_gameBoard == null) return;
 
             // Destroy all objects in the game board
-            foreach (var node in _nodeMap.Values) { Destroy(node.gameObject); }
-            foreach (var arc in _arcMap.AllValues) { Destroy(arc.gameObject); }
-            foreach (var field in _fieldMap.AllValues) { Destroy(field.gameObject); }
+            foreach (var node in _nodeMap.Values) {
+                Destroy(node.gameObject);
+            }
+            foreach (var arc in _arcMap.AllValues) {
+                Destroy(arc.gameObject);
+            }
+            foreach (var field in _fieldMap.AllValues) {
+                Destroy(field.gameObject);
+            }
 
             _nodeMap.Clear();
             _arcMap.Clear();
             _fieldMap.Clear();
-        
+
             _gameBoard = null;
         }
 
         private void InstantiateNodes()
         {
             var i = 0;
-            foreach (var node in _gameBoard.Nodes)
-            {
+            foreach (var node in _gameBoard.Nodes) {
                 var nodeView = Instantiate(NodeScript);
 
                 // Set the node's parent as this puzzle
@@ -89,8 +88,7 @@ namespace Assets.Scripts.View.Game
         {
             var i = 0;
 
-            foreach (var field in _gameBoard.Fields)
-            {
+            foreach (var field in _gameBoard.Fields) {
                 var fieldView = Instantiate(FieldScript);
 
                 // Find the node at the field's position and set it as a parent of this field
@@ -108,8 +106,7 @@ namespace Assets.Scripts.View.Game
         private void InstantiateArcs()
         {
             var i = 0;
-            foreach (var arc in _gameBoard.Arcs)
-            {
+            foreach (var arc in _gameBoard.Arcs) {
                 var arcView = Instantiate(ArcScript);
 
                 // Find the node at the arc's position and set it as a perent of this arc
@@ -124,7 +121,5 @@ namespace Assets.Scripts.View.Game
                 _arcMap.Add(arc.ConnectedPosition, arc.Direction.Opposite(), arcView);
             }
         }
-
-
     }
 }

@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using Assets.Scripts.Core.Data;
 using Assets.Scripts.Core.Items;
 
@@ -15,16 +15,35 @@ namespace Assets.Scripts.Core.Game
         private readonly ICollection<Arc> _arcs = new HashSet<Arc>();
         private readonly IslandSet _islandSet = new IslandSet();
 
-        public IEnumerable<Node> Nodes { get { return _grid.Nodes; } }
-        public IEnumerable<Arc> Arcs { get { return _arcs; } }
-        public IEnumerable<Field> Fields { get { return _grid.Fields; } }
+        public IEnumerable<Node> Nodes
+        {
+            get { return _grid.Nodes; }
+        }
+
+        public IEnumerable<Arc> Arcs
+        {
+            get { return _arcs; }
+        }
+
+        public IEnumerable<Field> Fields
+        {
+            get { return _grid.Fields; }
+        }
+
         public Node StartNode { get; set; }
 
-        public Island StartIsland { get { return _islandSet.Get(StartNode); } }
-        public IslandSet IslandSet { get { return _islandSet; } }
+        public Island StartIsland
+        {
+            get { return _islandSet.Get(StartNode); }
+        }
+
+        public IslandSet IslandSet
+        {
+            get { return _islandSet; }
+        }
 
         public Point Size { get; private set; }
-        
+
         public GameBoard()
         {
             _grid = new Grid();
@@ -61,7 +80,9 @@ namespace Assets.Scripts.Core.Game
         /// </summary>
         public bool Push(Arc arc, Field field)
         {
-            if (!field.ValidPlacement(arc)) { return false; }
+            if (!field.ValidPlacement(arc)) {
+                return false;
+            }
 
             // Push the arc onto the field
             arc.Push(field);
@@ -78,8 +99,10 @@ namespace Assets.Scripts.Core.Game
         /// </summary>
         public bool Pull(Arc arc)
         {
-            if (arc.IsPulled) { return false; }
-            
+            if (arc.IsPulled) {
+                return false;
+            }
+
             // Pull the arc from the field
             arc.Pull();
             _arcs.Remove(arc);

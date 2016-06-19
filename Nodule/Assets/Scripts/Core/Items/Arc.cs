@@ -1,4 +1,4 @@
-﻿using Assets.Scripts.Core.Data;
+using Assets.Scripts.Core.Data;
 
 namespace Assets.Scripts.Core.Items
 {
@@ -36,8 +36,7 @@ namespace Assets.Scripts.Core.Items
         public void Push(Field field)
         {
             // Disconnect this Arc from an existing field
-            if (Field != null)
-            {
+            if (Field != null) {
                 Field.DisconnectArc(this);
             }
 

@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using Assets.Scripts.Core.Data;
 using Assets.Scripts.View.Game;
 using Assets.Scripts.View.Items;
@@ -14,13 +14,16 @@ namespace Assets.Scripts.View.Control
     {
         public float MinSwipeDistanceCm = 3f;
 
-        private BoardActions _boardActions;
+        private BoardAction _boardAction;
         private PuzzleScale _puzzleScale;
 
         private IDictionary<Point, NodeView> _nodeMap;
 
         void Start()
         {
+            _puzzleScale = GetComponent<PuzzleScale>();
+            _boardAction = GetComponent<BoardAction>();
+
             // Add an event handler for swiping the screen
             var swipeRecognizer = new TKSwipeRecognizer(MinSwipeDistanceCm);
             swipeRecognizer.gestureRecognizedEvent += OnSwipe;
@@ -30,9 +33,6 @@ namespace Assets.Scripts.View.Control
             var tapRecognizer = new TKTapRecognizer();
             tapRecognizer.gestureRecognizedEvent += OnTap;
             TouchKit.addGestureRecognizer(tapRecognizer);
-
-            _puzzleScale = GetComponent<PuzzleScale>();
-            _boardActions = GetComponent<BoardActions>();
         }
 
         public void Init(IDictionary<Point, NodeView> nodeMap)
@@ -43,31 +43,29 @@ namespace Assets.Scripts.View.Control
         /// <summary>
         /// Called every time the screen is tapped
         /// </summary>
-        private void OnTap(TKTapRecognizer recognizer)
-        {
-            //Debug.Log(recognizer);
-
-            // Find the nearest field to the tap
-            var field = GetNearestField(recognizer);
-
-            _boardActions.Tap(field);
-        }
+        private void OnTap(TKTapRecognizer recognizer) {}
 
         /// <summary>
         /// Called every time the screen is swiped
         /// </summary>
         private void OnSwipe(TKSwipeRecognizer recognizer)
         {
-            //Debug.Log(recognizer);
-
-            // Find the nearest node to the swipe (within 1 grid unit)
+            // Find the nearest node to the swipe (within 1 grid unit), and the swipe direction
             var node = GetNearestNode(recognizer);
-
-            // Notify the puzzle of the swipe
             var swipeDirection = recognizer.completedSwipeDirection.ToDirection();
-            _boardActions.Swipe(node, swipeDirection);
+
+            // If the swipe is invalid, don't do anything
+            if (node == null || swipeDirection == Direction.None) {
+                return;
+            }
+
+            // Otherwise, play the move
+            _boardAction.Play(node, swipeDirection);
         }
 
+        /// <summary>
+        /// Finds the nearest node to the gesture
+        /// </summary>
         private NodeView GetNearestNode(TKAbstractGestureRecognizer recognizer)
         {
             // Obtain the gesture position
@@ -75,30 +73,13 @@ namespace Assets.Scripts.View.Control
             var scaledPos = (Vector2) Camera.main.ScreenToWorldPoint(touch);
 
             // Remove any scaling, and round the position to the nearest integer
-            var pos = (scaledPos + _puzzleScale.Dimensions / 2f) / _puzzleScale.Scaling;
+            var pos = (scaledPos + _puzzleScale.Dimensions/2f)/_puzzleScale.Scaling;
             var point = Point.Round(pos);
 
             // Retrieve the node, if it exists
             NodeView node;
             _nodeMap.TryGetValue(point, out node);
             return node;
-        }
-
-        private FieldView GetNearestField(TKAbstractGestureRecognizer recognizer)
-        {
-            // Obtain the gesture position
-            var touch = recognizer.touchLocation();
-            var scaledPos = (Vector2) Camera.main.ScreenToWorldPoint(touch);
-
-            // Remove any scaling, and round the position to the nearest integer
-            var pos = (scaledPos + _puzzleScale.Dimensions / 2f) / _puzzleScale.Scaling;
-            var point = Point.Round(pos);
-
-            // Retrieve the node, if it exists
-            NodeView node;
-            _nodeMap.TryGetValue(point, out node);
-            return null;
-            // TODO
         }
     }
 }

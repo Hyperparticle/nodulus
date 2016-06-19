@@ -1,6 +1,4 @@
-﻿using Assets.Scripts.Core.Data;
 using Assets.Scripts.Core.Items;
-using Assets.Scripts.View.Game;
 using UnityEngine;
 
 namespace Assets.Scripts.View.Items
@@ -21,10 +19,7 @@ namespace Assets.Scripts.View.Items
 
         public Vector2 HitRect
         {
-            get
-            {
-                return new Vector3(transform.localScale.x, 1) + transform.localPosition;
-            }
+            get { return new Vector3(transform.localScale.x, 1) + transform.localPosition; }
         }
 
         public void Init(Field field, NodeView parent, NodeView connected)
@@ -39,6 +34,5 @@ namespace Assets.Scripts.View.Items
             _fieldScale.SetField(field);
             _colorizer.SetInvisible();
         }
-
     }
 }

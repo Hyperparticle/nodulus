@@ -1,4 +1,4 @@
-﻿namespace Assets.Scripts.Utility
+namespace Assets.Scripts.Utility
 {
     /// <summary>
     /// Contains helper methods for dealing with pairs of items

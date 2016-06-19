@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using Assets.Scripts.Core.Data;
 using Assets.Scripts.Core.Items;
 using Assets.Scripts.Core.Moves;
@@ -28,12 +28,13 @@ namespace Assets.Scripts.Core.Game
         {
             _gameBoard = gameBoard;
             _player = new Player(_gameBoard.IslandSet, _gameBoard.StartNode);
-
         }
 
         public bool PullArc(Arc arc, Direction direction)
         {
-            if (IsPulled) { return false; }
+            if (IsPulled || arc == null) {
+                return false;
+            }
 
             var result = _player.PlayMove(new PullMove(_player, arc, direction));
             PulledArc = result ? arc : PulledArc;
@@ -42,12 +43,13 @@ namespace Assets.Scripts.Core.Game
 
         public bool PushArc(Field field)
         {
-            if (!IsPulled) { return false; }
+            if (!IsPulled || field == null) {
+                return false;
+            }
 
             var result = _player.PlayMove(new PushMove(_player, PulledArc, field));
             PulledArc = result ? null : PulledArc;
             return result;
         }
- 
     }
 }
