@@ -12,7 +12,7 @@ namespace Assets.Scripts.View.Control
     /// </summary>
     public class BoardInput : MonoBehaviour
     {
-        public float MinSwipeDistanceCm = 3f;
+        public float MinSwipeDistanceCm = 2f;
 
         private BoardAction _boardAction;
         private PuzzleScale _puzzleScale;

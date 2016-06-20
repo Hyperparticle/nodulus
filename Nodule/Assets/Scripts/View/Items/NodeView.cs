@@ -1,6 +1,8 @@
 using System;
+using System.Collections.Generic;
 using Assets.Scripts.Core.Data;
 using Assets.Scripts.Core.Items;
+using Assets.Scripts.View.Data;
 using UnityEngine;
 
 namespace Assets.Scripts.View.Items
@@ -16,6 +18,8 @@ namespace Assets.Scripts.View.Items
         private ScaleScript _nodeScale;
         private Colorizer _colorizer;
         private GameObject _rotor;
+
+        private readonly Queue<RotateRequest> _rotateQueue = new Queue<RotateRequest>();
 
         private Node Node { get; set; }
 
@@ -51,21 +55,38 @@ namespace Assets.Scripts.View.Items
             }
         }
 
-        public bool Rotate(Direction direction, Action onComplete)
+        public void Rotate(Direction direction, Action onComplete)
         {
             if (LeanTween.isTweening(_colorizer.gameObject)) {
-                return false;
+                // Queue the request, which will get completed after this one is complete
+                // TODO: set parent objects
+                _rotateQueue.Enqueue(new RotateRequest(direction, onComplete));
+                return;
             }
 
+            Rotate90(direction, onComplete);
+        }
+
+        private void Rotate90(Direction direction, Action onComplete)
+        {
             // Rotate 90 degrees in the direction specified
             LeanTween.rotateAroundLocal(_rotor, direction.Axis(), 90f, 0.5f)
                 .setEase(LeanTweenType.easeInOutSine)
                 .setOnComplete(() => {
                     onComplete();
                     _rotor.transform.localRotation = Quaternion.identity;
+                    OnRotateComplete();
                 });
+        }
 
-            return true;
+        private void OnRotateComplete()
+        {
+            if (_rotateQueue.Count == 0) {
+                return;
+            }
+
+            var request = _rotateQueue.Dequeue();
+            Rotate90(request.Direction, request.OnComplete);
         }
     }
 }
