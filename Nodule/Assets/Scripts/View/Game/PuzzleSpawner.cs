@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using Assets.Scripts.Core.Data;
 using Assets.Scripts.Core.Game;
 using Assets.Scripts.Utility;
+using Assets.Scripts.View.Data;
 using Assets.Scripts.View.Items;
 using UnityEngine;
 
@@ -14,8 +15,8 @@ namespace Assets.Scripts.View.Game
         public FieldView FieldScript;
 
         private readonly IDictionary<Point, NodeView> _nodeMap = new Dictionary<Point, NodeView>();
-        private readonly MultiMap<Point, Direction, FieldView> _fieldMap = new MultiMap<Point, Direction, FieldView>();
-        private readonly MultiMap<Point, Direction, ArcView> _arcMap = new MultiMap<Point, Direction, ArcView>();
+        private readonly FieldViewMap _fieldMap = new FieldViewMap();
+        private readonly ArcViewMap _arcMap = new ArcViewMap();
 
         private GameBoard _gameBoard;
 
@@ -24,12 +25,12 @@ namespace Assets.Scripts.View.Game
             get { return _nodeMap; }
         }
 
-        public MultiMap<Point, Direction, FieldView> FieldMap
+        public FieldViewMap FieldMap
         {
             get { return _fieldMap; }
         }
 
-        public MultiMap<Point, Direction, ArcView> ArcMap
+        public ArcViewMap ArcMap
         {
             get { return _arcMap; }
         }
@@ -56,10 +57,10 @@ namespace Assets.Scripts.View.Game
             foreach (var node in _nodeMap.Values) {
                 Destroy(node.gameObject);
             }
-            foreach (var arc in _arcMap.AllValues) {
+            foreach (var arc in _arcMap.Arcs) {
                 Destroy(arc.gameObject);
             }
-            foreach (var field in _fieldMap.AllValues) {
+            foreach (var field in _fieldMap.Fields) {
                 Destroy(field.gameObject);
             }
 

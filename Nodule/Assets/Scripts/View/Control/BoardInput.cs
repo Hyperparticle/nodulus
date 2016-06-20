@@ -19,11 +19,14 @@ namespace Assets.Scripts.View.Control
 
         private IDictionary<Point, NodeView> _nodeMap;
 
-        void Start()
+        void Awake()
         {
             _puzzleScale = GetComponent<PuzzleScale>();
             _boardAction = GetComponent<BoardAction>();
+        }
 
+        void Start()
+        {
             // Add an event handler for swiping the screen
             var swipeRecognizer = new TKSwipeRecognizer(MinSwipeDistanceCm);
             swipeRecognizer.gestureRecognizedEvent += OnSwipe;

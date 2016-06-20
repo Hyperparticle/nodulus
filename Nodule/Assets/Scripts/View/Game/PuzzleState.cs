@@ -1,8 +1,8 @@
+using System.Collections.Generic;
 using Assets.Scripts.Core.Data;
 using Assets.Scripts.Core.Game;
-using Assets.Scripts.Core.Items;
-using Assets.Scripts.Utility;
 using Assets.Scripts.View.Control;
+using Assets.Scripts.View.Data;
 using Assets.Scripts.View.Items;
 using UnityEngine;
 
@@ -10,8 +10,8 @@ namespace Assets.Scripts.View.Game
 {
     public class PuzzleState : MonoBehaviour
     {
-        private readonly MultiMap<Point, Direction, FieldView> _fieldMap = new MultiMap<Point, Direction, FieldView>();
-        private readonly MultiMap<Point, Direction, ArcView> _arcMap = new MultiMap<Point, Direction, ArcView>();
+        private readonly FieldViewMap _fieldMap = new FieldViewMap();
+        private readonly ArcViewMap _arcMap = new ArcViewMap();
 
         private PuzzleSpawner _puzzleSpawner;
         private PuzzleView _puzzleView;
@@ -22,15 +22,24 @@ namespace Assets.Scripts.View.Game
 
         private ArcView _pulledArcView;
 
-        // TODO
-        //public bool IsPulled { get { return _puzzle.IsPulled; } }
+        public bool IsPulled { get { return _puzzle.IsPulled; } }
 
-        void Start()
+        public bool HasArcAt(Point pos, Direction direction) { return _arcMap.ContainsArc(pos, direction); }
+
+        public ICollection<ArcView> GetArcs(Point pos)
+        {
+            return _arcMap.GetArcs(pos);
+        }
+
+        void Awake()
         {
             _puzzleSpawner = GetComponent<PuzzleSpawner>();
             _puzzleView = GetComponent<PuzzleView>();
             _boardInput = GetComponent<BoardInput>();
+        }
 
+        void Start()
+        {
             // Start with level 0
             Init(0);
 
@@ -52,8 +61,8 @@ namespace Assets.Scripts.View.Game
             _currentLevel = level;
 
             // Reset the puzzle view state
-            _arcMap.Reset(_puzzleSpawner.ArcMap); // TODO
-            _fieldMap.Reset(_puzzleSpawner.ArcMap);
+            _arcMap.Reset(_puzzleSpawner.ArcMap);
+            _fieldMap.Reset(_puzzleSpawner.FieldMap);
         }
 
         public void NextLevel()
@@ -66,45 +75,59 @@ namespace Assets.Scripts.View.Game
             Init(_currentLevel == 0 ? 0 : _currentLevel - 1);
         }
 
-        // TODO
         public bool Play(NodeView nodeView, Direction direction)
         {
-            // Play the corresponding move and modify the game view accordingly
-            if (_puzzle.IsPulled)
-            {
-                // Check if there is a field at the position and direction
-                var fieldExists = _fieldMap.ContainsKeys(pos, direction);
-                if (fieldExists)
-                {
-                    var fieldView = _fieldMap[pos, direction];
-                    return _puzzleView.PushArc(fieldView.Field);
-                }
-
-                PushNode(nodeView, direction, movePlayed);
+            // Push move
+            if (IsPulled) {
+                FieldView fieldView;
+                return _fieldMap.TryGetField(nodeView.Position, direction, out fieldView) &&
+                       PushArc(fieldView);
             }
-            else
-            {
-                // Check if there is an arc at the position and direction
-                var arcExists = _arcMap.ContainsKeys(pos, direction);
-                if (arcExists)
-                {
-                    var arcView = _arcMap[pos, direction];
-                    movePlayed = _puzzleView.PullArc(arcView.Arc, direction);
-                }
 
-                PullNode(nodeView, direction, movePlayed);
-            }
+            // Pull move
+            ArcView arcView;
+            return _arcMap.TryGetArc(nodeView.Position, direction.Opposite(), out arcView) &&
+                   PullArc(arcView, direction);
         }
 
-        // TODO
-        public bool PullArc(Arc arc, Direction direction)
+        public bool PushArc(FieldView fieldView)
         {
-            return Puzzle.PullArc(arc, direction);
+            // If a field exists, try to play the move
+            var movePlayed = _puzzle.PushArc(fieldView.Field);
+
+            if (!movePlayed) {
+                return false;
+            }
+
+            Debug.Log("Push");
+
+            // If the move was played, update the arc map
+            var arc = _pulledArcView.Arc;
+            _arcMap.Add(arc.Position, arc.Direction, _pulledArcView);
+            _arcMap.Add(arc.ConnectedPosition, arc.Direction.Opposite(), _pulledArcView);
+
+            _pulledArcView = null;
+
+            return true;
         }
 
-        public bool PushArc(Field field)
+        public bool PullArc(ArcView arcView, Direction direction)
         {
-            return Puzzle.PushArc(field);
+            // If an arc exists, try to play the move
+            var movedPlayed = _puzzle.PullArc(arcView.Arc, direction);
+
+            if (!movedPlayed) {
+                return false;
+            }
+
+            Debug.Log("Pull");
+
+            // If the move was played, update the arc map
+            _pulledArcView = arcView;
+            _arcMap.Remove(_pulledArcView.Arc.Position);
+            _arcMap.Remove(_pulledArcView.Arc.ConnectedPosition);
+
+            return true;
         }
     }
 }

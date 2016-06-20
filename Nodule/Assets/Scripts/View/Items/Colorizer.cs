@@ -15,8 +15,10 @@ namespace Assets.Scripts.View.Items
 
         private Renderer _renderer;
 
-        void Start()
+        void Awake()
         {
+            _renderer = GetComponent<Renderer>();
+
             // Precalculate colors here
             var hsb = new HsbColor(PrimaryColor);
 
@@ -25,8 +27,6 @@ namespace Assets.Scripts.View.Items
 
             var invisibleHsb = new HsbColor(hsb.h, hsb.s, hsb.b, 0f);
             _invisibleColor = invisibleHsb.ToColor();
-
-            _renderer = GetComponent<Renderer>();
 
             Highlight();
         }

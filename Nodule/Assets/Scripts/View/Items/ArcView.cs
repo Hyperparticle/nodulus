@@ -16,11 +16,14 @@ namespace Assets.Scripts.View.Items
 
         public Arc Arc { get; private set; }
 
-        public void Init(Arc arc, Transform parent, bool inStartIsland)
+        void Awake()
         {
             _arcScale = GetComponent<ScaleScript>();
             _colorizer = GetComponent<Colorizer>();
+        }
 
+        public void Init(Arc arc, Transform parent, bool inStartIsland)
+        {
             Arc = arc;
             Parent = parent;
 

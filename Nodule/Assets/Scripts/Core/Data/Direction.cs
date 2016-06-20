@@ -3,6 +3,9 @@ using UnityEngine;
 
 namespace Assets.Scripts.Core.Data
 {
+    /// <summary>
+    /// Represents the four cardinal directions (but can be extended to allow more)
+    /// </summary>
     public enum Direction
     {
         Up,

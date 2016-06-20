@@ -29,10 +29,14 @@ namespace Assets.Scripts.View.Items
             return Node.Fields[direction];
         }
 
-        public void Init(Node node, bool inStartIsland)
+        void Awake()
         {
             _nodeScale = GetComponent<ScaleScript>();
             _colorizer = GetComponentInChildren<Colorizer>();
+        }
+
+        public void Init(Node node, bool inStartIsland)
+        {
             _rotor = _colorizer.gameObject;
 
             Node = node;

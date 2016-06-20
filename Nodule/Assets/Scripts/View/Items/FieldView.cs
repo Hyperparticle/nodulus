@@ -22,11 +22,14 @@ namespace Assets.Scripts.View.Items
             get { return new Vector3(transform.localScale.x, 1) + transform.localPosition; }
         }
 
-        public void Init(Field field, NodeView parent, NodeView connected)
+        void Awake()
         {
             _fieldScale = GetComponent<ScaleScript>();
             _colorizer = GetComponent<Colorizer>();
+        }
 
+        public void Init(Field field, NodeView parent, NodeView connected)
+        {
             Field = field;
             ParentNode = parent;
             ConnectedNode = connected;
