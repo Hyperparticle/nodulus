@@ -20,8 +20,7 @@ namespace Assets.Scripts.View.Game
         private Puzzle _puzzle;
         private int _currentLevel;
 
-        private ArcView _pulledArcView;
-
+        public ArcView PulledArcView { get; private set; }
         public bool IsPulled { get { return _puzzle.IsPulled; } }
 
         public bool HasArcAt(Point pos, Direction direction) { return _arcMap.ContainsArc(pos, direction); }
@@ -102,11 +101,9 @@ namespace Assets.Scripts.View.Game
             Debug.Log("Push");
 
             // If the move was played, update the arc map
-            var arc = _pulledArcView.Arc;
-            _arcMap.Add(arc.Position, arc.Direction, _pulledArcView);
-            _arcMap.Add(arc.ConnectedPosition, arc.Direction.Opposite(), _pulledArcView);
-
-            _pulledArcView = null;
+            var arc = PulledArcView.Arc;
+            _arcMap.Add(arc.Position, arc.Direction, PulledArcView);
+            _arcMap.Add(arc.ConnectedPosition, arc.Direction.Opposite(), PulledArcView);
 
             return true;
         }
@@ -123,9 +120,9 @@ namespace Assets.Scripts.View.Game
             Debug.Log("Pull");
 
             // If the move was played, update the arc map
-            _pulledArcView = arcView;
-            _arcMap.Remove(_pulledArcView.Arc.Position);
-            _arcMap.Remove(_pulledArcView.Arc.ConnectedPosition);
+            PulledArcView = arcView;
+            _arcMap.Remove(PulledArcView.Arc.Position);
+            _arcMap.Remove(PulledArcView.Arc.ConnectedPosition);
 
             return true;
         }

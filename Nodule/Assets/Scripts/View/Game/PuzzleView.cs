@@ -1,3 +1,4 @@
+using System;
 using Assets.Scripts.Core.Data;
 using Assets.Scripts.View.Items;
 using UnityEngine;
@@ -57,27 +58,39 @@ namespace Assets.Scripts.View.Game
         //    _puzzleSpawner.DestroyBoard();
         //}
 
+        public void Rotate(NodeView nodeView, ArcView arcView, Direction direction)
+        {
+            arcView.transform.parent = nodeView.Rotor;
+
+            Rotate(nodeView, direction, arcView.ResetParent);
+        }
+
         public void Rotate(NodeView nodeView, Direction direction)
+        {
+            Rotate(nodeView, direction, () => { });
+        }
+
+        private void Rotate(NodeView nodeView, Direction direction, Action onComplete)
         {
             // Set all connecting arcs as the parent of this node
             // so that all arcs will rotate accordingly
             var arcViews = _puzzleState.GetArcs(nodeView.Position);
 
-            foreach (var arc in arcViews)
-            {
+            foreach (var arc in arcViews) {
                 arc.transform.parent = nodeView.Rotor;
             }
 
             // Finally, rotate the node!
             nodeView.Rotate(direction, () => {
-                foreach (var arc in arcViews)
-                {
+                foreach (var arc in arcViews) {
                     arc.ResetParent();
                 }
+
+                onComplete();
             });
         }
 
-        public void MoveArc(NodeView nodeView, Direction direction)
+        public void MoveArc(NodeView nodeView, ArcView arcView)
         {
             // TODO
             //var arcs = _puzzleSpawner.GetArcs(nodeView.Position);

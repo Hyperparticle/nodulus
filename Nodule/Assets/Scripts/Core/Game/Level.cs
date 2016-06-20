@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Assets.Scripts.Core.Builders;
 using Assets.Scripts.Core.Data;
 
