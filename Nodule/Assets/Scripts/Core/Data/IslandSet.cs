@@ -52,7 +52,10 @@ namespace Assets.Scripts.Core.Data
             // Try to split the islands (but can result in no split)
             var newIsland = start.Split(field);
 
-            _islandMap[connected] = newIsland;
+            // Update the map with all nodes that are pointing to the new island
+            foreach (var node in newIsland.ConnectedNodes) {
+                _islandMap[node] = newIsland;
+            }
         }
 
         /// <summary>

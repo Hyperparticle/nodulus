@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using Assets.Scripts.Core.Builders;
 using Assets.Scripts.Core.Data;
 using Assets.Scripts.Core.Items;
 
@@ -67,6 +69,16 @@ namespace Assets.Scripts.Core.Game
             return node.Fields.TryGetValue(dir, out field) && CreateArc(field);
         }
 
+        public Arc GetArcAt(Point arcPos, Direction arcDir)
+        {
+            return _grid.GetArcAt(arcPos, arcDir);
+        }
+
+        public Field GetFieldAt(Point fieldPos, Direction fieldDir)
+        {
+            return _grid.GetFieldAt(fieldPos, fieldDir);
+        }
+
         public bool CreateArc(Field field)
         {
             if (field.HasArc) return false;
@@ -104,11 +116,12 @@ namespace Assets.Scripts.Core.Game
             }
 
             // Pull the arc from the field
+            var field = arc.Field;
             arc.Pull();
             _arcs.Remove(arc);
 
             // Notify the island set of disconnected nodes
-            _islandSet.Disconnect(arc.Field);
+            _islandSet.Disconnect(field);
 
             return true;
         }
@@ -119,6 +132,14 @@ namespace Assets.Scripts.Core.Game
         public bool IsConnected(Node start, Node end)
         {
             return _islandSet.IsConnected(start, end);
+        }
+
+        /// <summary>
+        /// Obtain a string representation of the game board
+        /// </summary>
+        public string GetBoard(IEnumerable<Field> fields)
+        {
+            return BoardPrinter.GetBoard(Size, Nodes, Arcs, fields);
         }
     }
 }

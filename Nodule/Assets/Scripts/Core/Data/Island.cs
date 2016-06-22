@@ -1,5 +1,6 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using Assets.Scripts.Core.Items;
 
 namespace Assets.Scripts.Core.Data
@@ -10,15 +11,22 @@ namespace Assets.Scripts.Core.Data
     /// </summary>
     public class Island {
 
-        private readonly HashSet<Node> _connectedNodes;
         private readonly HashSet<Field> _connectedFields;
 
+        public HashSet<Node> ConnectedNodes { get; private set; }
         /// <summary>
         /// True if this island contains a final node
         /// </summary>
-        public bool IsFinal { get { return _connectedNodes.Any(node => node.Final); } }
+        public bool IsFinal { get { return ConnectedNodes.Any(node => node.Final); } }
         
+        /// <summary>
+        /// All directly connected fields with arcs
+        /// </summary>
         public IEnumerable<Field> Inskirts { get { return _connectedFields.Where(field => field.HasArc); } }
+
+        /// <summary>
+        /// All directly connected fields without arcs
+        /// </summary>
         public IEnumerable<Field> Outskirts { get { return _connectedFields.Where(field => !field.HasArc); } }
 
         /// <summary>
@@ -26,7 +34,7 @@ namespace Assets.Scripts.Core.Data
         /// </summary>
         public Island(Node node)
         {
-            _connectedNodes = new HashSet<Node> { node };
+            ConnectedNodes = new HashSet<Node> { node };
             _connectedFields = new HashSet<Field>(node.Fields.Values);
         }
 
@@ -35,7 +43,7 @@ namespace Assets.Scripts.Core.Data
         /// </summary>
         private Island(HashSet<Node> connectedNodes, HashSet<Field> connectedFields) 
         {
-            _connectedNodes = connectedNodes;
+            ConnectedNodes = connectedNodes;
             _connectedFields = connectedFields;
         }
 
@@ -44,7 +52,7 @@ namespace Assets.Scripts.Core.Data
         /// </summary>
         public bool Contains(Node node)
         {
-            return _connectedNodes.Contains(node);
+            return ConnectedNodes.Contains(node);
         }
 
         /// <summary>
@@ -56,7 +64,7 @@ namespace Assets.Scripts.Core.Data
         /// </returns>
         public Island Join(Island island)
         {
-            island._connectedNodes.UnionWith(_connectedNodes);
+            island.ConnectedNodes.UnionWith(ConnectedNodes);
             island._connectedFields.UnionWith(_connectedFields);
             return island;
         }
@@ -76,9 +84,9 @@ namespace Assets.Scripts.Core.Data
             var connected = field.ConnectedNode;
 
             // Find all current connections with the parent node
-            _connectedNodes.Clear();
+            ConnectedNodes.Clear();
             _connectedFields.Clear();
-            FindConnected(parent, _connectedNodes, _connectedFields);              
+            FindConnected(parent, ConnectedNodes, _connectedFields);              
 
             // Find all current connections with the connected node
             var splitNodes = new HashSet<Node>();
@@ -112,6 +120,12 @@ namespace Assets.Scripts.Core.Data
             {
                 FindConnected(connection.ConnectedNode, nodes, fields);
             }
+        }
+
+        public override string ToString()
+        {
+            var join = string.Join(",", ConnectedNodes.Select(node => node.ToString()).ToArray());
+            return string.Format("[{0}]", join);
         }
     }
 }

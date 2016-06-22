@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Assets.Scripts.Core.Builders;
 using Assets.Scripts.Core.Data;
@@ -100,5 +101,15 @@ namespace Assets.Scripts.Core.Game
             return nodeMap.TryGetValue(pos, out node) ? node : null;
         }
 
+        public Field GetFieldAt(Point fieldPos, Direction fieldDir)
+        {
+            return _fieldBuilder.GetFieldAt(fieldPos, fieldDir);
+        }
+
+        public Arc GetArcAt(Point arcPos, Direction arcDir)
+        {
+            var field = GetFieldAt(arcPos, arcDir);
+            return field == null ? null : field.Arc;
+        }
     }
 }

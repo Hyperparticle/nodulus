@@ -15,9 +15,9 @@ namespace Assets.Scripts.Core.Builders
     /// </summary>
     public class FieldBuilder {
 
-        // Keep a simple collection of fields
         private readonly ICollection<Field> _fields = new HashSet<Field>();
-        
+        private readonly IDictionary<PointDir, Field> _fieldMap = new Dictionary<PointDir, Field>();
+
         // Maps points to occupying fields
         private IDictionary<Point, Field> _occupiedFields = new Dictionary<Point, Field>();
 
@@ -53,7 +53,11 @@ namespace Assets.Scripts.Core.Builders
 
             // Create a new field, and add it to the list
             var field = new Field(length, node, nearest);
+
+            _fieldMap.Add(field.PointDir, field);
+            _fieldMap.Add(field.ConnectedPointDir, field);
             _fields.Add(field);
+
             AddOccupied(field);
         }
 
@@ -78,7 +82,11 @@ namespace Assets.Scripts.Core.Builders
             if (field == null) return;
 
             field.DisconnectNodes();
+
+            _fieldMap.Remove(field.PointDir);
+            _fieldMap.Remove(field.ConnectedPointDir);
             _fields.Remove(field);
+
             RemoveOccupied(field);
             RemoveOverlap(field);
         }
@@ -122,6 +130,12 @@ namespace Assets.Scripts.Core.Builders
         {
             foreach (var overlap in field.Overlap)
                 overlap.Overlap.Remove(field);
+        }
+
+        public Field GetFieldAt(Point fieldPos, Direction fieldDir)
+        {
+            Field field;
+            return _fieldMap.TryGetValue(new PointDir(fieldPos, fieldDir), out field) ? field : null;
         }
     }
 }

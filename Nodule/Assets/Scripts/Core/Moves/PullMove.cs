@@ -1,10 +1,12 @@
 using Assets.Scripts.Core.Data;
+using Assets.Scripts.Core.Game;
 using Assets.Scripts.Core.Items;
 
 namespace Assets.Scripts.Core.Moves
 {
     public class PullMove : IMove
     {
+        private readonly GameBoard _gameBoard;
         private readonly Player _player;
         private readonly Arc _arc;
         private readonly Direction _direction;
@@ -12,8 +14,9 @@ namespace Assets.Scripts.Core.Moves
 
         //private bool _played;
 
-        public PullMove(Player player, Arc arc, Direction dir)
+        public PullMove(GameBoard gameBoard, Player player, Arc arc, Direction dir)
         {
+            _gameBoard = gameBoard;
             _player = player;
             _arc = arc;
             _direction = dir;
@@ -28,6 +31,7 @@ namespace Assets.Scripts.Core.Moves
 
             get
             {
+                // TODO: create an enum to show validation status
                 if (_player == null || _arc == null) return false;
                 return !_arc.IsPulled && _player.IsProximal(_arc.Field);
             }
@@ -37,8 +41,9 @@ namespace Assets.Scripts.Core.Moves
         {
             if (!IsValid) return false;
 
-            _arc.Pull();
-            _player.MoveTo(_arc.Field.Root(_direction));
+            var field = _arc.Field;
+            _gameBoard.Pull(_arc);
+            _player.MoveTo(field.Root(_direction));
             //_played = true;
 
             return true;

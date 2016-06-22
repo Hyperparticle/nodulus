@@ -108,10 +108,10 @@ namespace Assets.Scripts.View.Game
             return true;
         }
 
-        public bool PullArc(ArcView arcView, Direction direction)
+        public bool PullArc(ArcView arcView, Direction dir)
         {
             // If an arc exists, try to play the move
-            var movedPlayed = _puzzle.PullArc(arcView.Arc, direction);
+            var movedPlayed = _puzzle.PullArc(arcView.Arc, dir);
 
             if (!movedPlayed) {
                 return false;

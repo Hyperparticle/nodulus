@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using Assets.Scripts.Core.Items;
 using Assets.Scripts.Core.Moves;
 
@@ -15,13 +15,9 @@ namespace Assets.Scripts.Core.Data
         public IEnumerable<Field> PullFields { get { return _pullFields; } }
         public IEnumerable<Field> PushFields { get { return _pushFields; } }
 
-        public Arc PulledArc { get; private set; }
         public int NumMoves { get; private set; }
 
-        public bool Win
-        {
-            get { return _island.IsFinal; }
-        }
+        public bool Win { get { return _island.IsFinal; } }
 
         public Player(IslandSet islandSet, Node start)
         {
@@ -56,7 +52,7 @@ namespace Assets.Scripts.Core.Data
             _pushFields.Clear();
 
             _pullFields.UnionWith(_island.Inskirts);
-            _pushFields.UnionWith(_island.Inskirts);
+            _pushFields.UnionWith(_island.Outskirts);
         }
     }
 }

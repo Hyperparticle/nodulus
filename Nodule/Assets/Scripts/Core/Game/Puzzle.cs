@@ -18,6 +18,7 @@ namespace Assets.Scripts.Core.Game
         public bool Win { get { return _player.Win; } }
         public Point BoardSize { get { return _gameBoard.Size; } }
 
+
         public IEnumerable<Field> PullFields { get { return _player.PullFields; } }
         public IEnumerable<Field> PushFields { get { return _player.PushFields; } }
 
@@ -30,15 +31,21 @@ namespace Assets.Scripts.Core.Game
             _player = new Player(_gameBoard.IslandSet, _gameBoard.StartNode);
         }
 
-        public bool PullArc(Arc arc, Direction dir)
+        public bool PullArc(Arc arc, Direction pullDir)
         {
             if (IsPulled || arc == null) {
                 return false;
             }
 
-            var result = _player.PlayMove(new PullMove(_player, arc, dir));
+            var result = _player.PlayMove(new PullMove(_gameBoard, _player, arc, pullDir));
             PulledArc = result ? arc : PulledArc;
             return result;
+        }
+
+        public bool PullArc(Point nodePos, Direction pullDir)
+        {
+            var arc = _gameBoard.GetArcAt(nodePos, pullDir.Opposite());
+            return PullArc(arc, pullDir);
         }
 
         public bool PushArc(Field field)
@@ -47,15 +54,15 @@ namespace Assets.Scripts.Core.Game
                 return false;
             }
 
-            var result = _player.PlayMove(new PushMove(_player, PulledArc, field));
+            var result = _player.PlayMove(new PushMove(_gameBoard, _player, PulledArc, field));
             PulledArc = result ? null : PulledArc;
             return result;
         }
 
-        public bool PullArc(Point pos, Direction dir)
+        public bool PushArc(Point nodePos, Direction pushDir)
         {
-            // TODO
-            return false;
+            var field = _gameBoard.GetFieldAt(nodePos, pushDir);
+            return PushArc(field);
         }
     }
 }

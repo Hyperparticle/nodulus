@@ -14,6 +14,7 @@ namespace Assets.Scripts.Core.Items
         public bool IsEnabled { get { return true; } }
         public int Length { get; private set; }
         public Direction Direction { get; private set; }
+        public PointDir PointDir { get; private set; }
 
         public Node ParentNode { get; private set; }
         public Node ConnectedNode { get; private set; }
@@ -22,6 +23,8 @@ namespace Assets.Scripts.Core.Items
         public bool HasArc { get { return Arc != null; } }
         
         public ICollection<Field> Overlap { get; private set; }
+        public PointDir ConnectedPointDir { get; private set; }
+
 
         // Note: parent should be the top left node
         public Field(int length, Node parentNode, Node connectedNode)
@@ -35,6 +38,9 @@ namespace Assets.Scripts.Core.Items
             Direction = parentNode.GetDirection(connectedNode);
             parentNode.Fields.Add(Direction, this);
             connectedNode.Fields.Add(Direction.Opposite(), this);
+
+            PointDir = new PointDir(Position, Direction);
+            ConnectedPointDir = new PointDir(ConnectedPosition, Direction.Opposite());
         }
 
         public bool ValidPlacement(Arc arc)
@@ -67,12 +73,17 @@ namespace Assets.Scripts.Core.Items
 
         public Node Root(Direction dir)
         {
-            return dir == Direction.Opposite() ? ConnectedNode : ParentNode;
+            return dir == Direction ? ConnectedNode : ParentNode;
         }
 
         public bool ContainsNode(Node node)
         {
             return ParentNode.Equals(node) || ConnectedNode.Equals(node);
+        }
+
+        public override string ToString()
+        {
+            return string.Format("{0} -> {1}", Position, ConnectedPosition);
         }
     }
 }

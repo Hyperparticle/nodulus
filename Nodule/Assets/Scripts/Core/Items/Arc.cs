@@ -12,7 +12,7 @@ namespace Assets.Scripts.Core.Items
         public Point ConnectedPosition { get { return ConnectedNode.Position; } }
         public bool IsEnabled { get { return true; } }
         public int Length { get; private set; }
-        public Direction Direction { get { return Field.Direction; } }
+        public Direction Direction { get { return Field == null ? Direction.None : Field.Direction; } }
 
         public Node ParentNode { get { return Field.ParentNode; } }
         public Node ConnectedNode { get { return Field.ConnectedNode; } }
@@ -31,14 +31,24 @@ namespace Assets.Scripts.Core.Items
         public void Pull()
         {
             IsPulled = true;
-        }
 
-        public void Push(Field field)
-        {
             // Disconnect this Arc from an existing field
             if (Field != null) {
                 Field.DisconnectArc(this);
             }
+
+            Field = null;
+        }
+
+        public void Push(Field field)
+        {
+            //if (field == null) {
+            //    // TODO: logging
+            //    return;
+            //}
+
+            // Pull before pushing
+            Pull();
 
             // Connect this Arc to the new field
             Field = field;
@@ -49,6 +59,12 @@ namespace Assets.Scripts.Core.Items
         public Node Root(Direction dir)
         {
             return Field.Root(dir);
+        }
+
+
+        public override string ToString()
+        {
+            return IsPulled ? "PULLED" : string.Format("{0} -> {1}", Position, ConnectedPosition);
         }
     }
 }

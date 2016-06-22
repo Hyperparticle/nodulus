@@ -1,20 +1,22 @@
-﻿using Assets.Scripts.Core.Data;
+using Assets.Scripts.Core.Data;
+using Assets.Scripts.Core.Game;
 using Assets.Scripts.Core.Items;
 
 namespace Assets.Scripts.Core.Moves
 {
     public class PushMove : IMove
     {
+        private readonly GameBoard _gameBoard;
         private readonly Player _player;
         private readonly Arc _arc;
+        private readonly Field _field;
 
-        public Field Field { get; private set; } 
-
-        public PushMove(Player player, Arc arc, Field field)
+        public PushMove(GameBoard gameBoard, Player player, Arc arc, Field field)
         {
+            _gameBoard = gameBoard;
             _player = player;
             _arc = arc;
-            Field = field;
+            _field = field;
         }
 
         public bool IsValid
@@ -28,8 +30,9 @@ namespace Assets.Scripts.Core.Moves
 
             get
             {
-                if (_player == null || _arc == null || Field == null) return false;
-                return _arc.IsPulled && _player.IsProximal(Field) && Field.ValidPlacement(_arc);
+                // TODO: create an enum to show validation status
+                if (_player == null || _arc == null || _field == null) return false;
+                return _arc.IsPulled && _player.IsProximal(_field) && _field.ValidPlacement(_arc);
             }
         }
 
@@ -37,8 +40,8 @@ namespace Assets.Scripts.Core.Moves
         {
             if (!IsValid) return false;
 
-            _arc.Push(Field);
-            _player.MoveTo(Field.ParentNode);
+            _gameBoard.Push(_arc, _field);
+            _player.MoveTo(_field.ParentNode);
 
             return true;
         }

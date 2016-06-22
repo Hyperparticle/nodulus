@@ -59,5 +59,10 @@ namespace Assets.Scripts.Core.Items
             var diff = end.Position - Position;
             return diff.x != 0 ? diff.x : diff.y;
         }
+
+        public override string ToString()
+        {
+            return Position.ToString();
+        }
     }
 }
