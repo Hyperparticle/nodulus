@@ -1,4 +1,4 @@
-﻿using Assets.Scripts.Core.Data;
+using Assets.Scripts.Core.Data;
 using Assets.Scripts.Core.Items;
 
 namespace Assets.Scripts.Core.Moves
@@ -12,11 +12,11 @@ namespace Assets.Scripts.Core.Moves
 
         //private bool _played;
 
-        public PullMove(Player player, Arc arc, Direction direction)
+        public PullMove(Player player, Arc arc, Direction dir)
         {
             _player = player;
             _arc = arc;
-            _direction = direction;
+            _direction = dir;
             //_field = arc.Field;
         }
 

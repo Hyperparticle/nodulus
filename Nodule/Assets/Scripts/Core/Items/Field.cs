@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Assets.Scripts.Core.Data;
@@ -65,9 +65,9 @@ namespace Assets.Scripts.Core.Items
             ConnectedNode.Fields.Remove(Direction.Opposite());
         }
 
-        public Node Root(Direction direction)
+        public Node Root(Direction dir)
         {
-            return direction == Direction.Opposite() ? ConnectedNode : ParentNode;
+            return dir == Direction.Opposite() ? ConnectedNode : ParentNode;
         }
 
         public bool ContainsNode(Node node)

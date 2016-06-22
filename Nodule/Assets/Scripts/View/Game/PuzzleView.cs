@@ -58,19 +58,19 @@ namespace Assets.Scripts.View.Game
         //    _puzzleSpawner.DestroyBoard();
         //}
 
-        public void Rotate(NodeView nodeView, ArcView arcView, Direction direction)
+        public void Rotate(NodeView nodeView, ArcView arcView, Direction dir)
         {
             arcView.transform.parent = nodeView.Rotor;
 
-            Rotate(nodeView, direction, arcView.ResetParent);
+            Rotate(nodeView, dir, arcView.ResetParent);
         }
 
-        public void Rotate(NodeView nodeView, Direction direction)
+        public void Rotate(NodeView nodeView, Direction dir)
         {
-            Rotate(nodeView, direction, () => { });
+            Rotate(nodeView, dir, () => { });
         }
 
-        private void Rotate(NodeView nodeView, Direction direction, Action onComplete)
+        private void Rotate(NodeView nodeView, Direction dir, Action onComplete)
         {
             // Set all connecting arcs as the parent of this node
             // so that all arcs will rotate accordingly
@@ -81,7 +81,7 @@ namespace Assets.Scripts.View.Game
             }
 
             // Finally, rotate the node!
-            nodeView.Rotate(direction, () => {
+            nodeView.Rotate(dir, () => {
                 foreach (var arc in arcViews) {
                     arc.ResetParent();
                 }

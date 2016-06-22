@@ -22,14 +22,14 @@ namespace Assets.Scripts.View.Data
             }
         }
 
-        public bool TryGetField(Point position, Direction direction, out FieldView fieldView)
+        public bool TryGetField(Point pos, Direction dir, out FieldView fieldView)
         {
-            return _fieldMap.TryGetValue(new PointDir(position, direction), out fieldView);
+            return _fieldMap.TryGetValue(new PointDir(pos, dir), out fieldView);
         }
 
-        public void Add(Point position, Direction direction, FieldView fieldView)
+        public void Add(Point pos, Direction dir, FieldView fieldView)
         {
-            _fieldMap.Add(new PointDir(position, direction), fieldView);
+            _fieldMap.Add(new PointDir(pos, dir), fieldView);
         }
 
         public void Clear()

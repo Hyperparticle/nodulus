@@ -23,7 +23,7 @@ namespace Assets.Scripts.View.Game
         public ArcView PulledArcView { get; private set; }
         public bool IsPulled { get { return _puzzle.IsPulled; } }
 
-        public bool HasArcAt(Point pos, Direction direction) { return _arcMap.ContainsArc(pos, direction); }
+        public bool HasArcAt(Point pos, Direction dir) { return _arcMap.ContainsArc(pos, dir); }
 
         public ICollection<ArcView> GetArcs(Point pos)
         {
@@ -74,19 +74,19 @@ namespace Assets.Scripts.View.Game
             Init(_currentLevel == 0 ? 0 : _currentLevel - 1);
         }
 
-        public bool Play(NodeView nodeView, Direction direction)
+        public bool Play(NodeView nodeView, Direction dir)
         {
             // Push move
             if (IsPulled) {
                 FieldView fieldView;
-                return _fieldMap.TryGetField(nodeView.Position, direction, out fieldView) &&
+                return _fieldMap.TryGetField(nodeView.Position, dir, out fieldView) &&
                        PushArc(fieldView);
             }
 
             // Pull move
             ArcView arcView;
-            return _arcMap.TryGetArc(nodeView.Position, direction.Opposite(), out arcView) &&
-                   PullArc(arcView, direction);
+            return _arcMap.TryGetArc(nodeView.Position, dir.Opposite(), out arcView) &&
+                   PullArc(arcView, dir);
         }
 
         public bool PushArc(FieldView fieldView)

@@ -11,9 +11,9 @@ namespace Assets.Scripts.View.Data
         public readonly Direction Direction;
         public readonly Action OnComplete;
 
-        public RotateRequest(Direction direction, Action action)
+        public RotateRequest(Direction dir, Action action)
         {
-            Direction = direction;
+            Direction = dir;
             OnComplete = action;
         }
     }

@@ -56,10 +56,10 @@ namespace Assets.Scripts.Core.Builders
         public Direction Direction { get; private set; }
         public Point Position { get; private set; }
 
-        public ArcArg(Point position, Direction direction) : this()
+        public ArcArg(Point pos, Direction dir) : this()
         {
-            Position = position;
-            Direction = direction;
+            Position = pos;
+            Direction = dir;
         }
     }
 }

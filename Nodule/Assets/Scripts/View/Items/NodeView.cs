@@ -28,9 +28,9 @@ namespace Assets.Scripts.View.Items
             get { return Node.Position; }
         }
 
-        public Field GetField(Direction direction)
+        public Field GetField(Direction dir)
         {
-            return Node.Fields[direction];
+            return Node.Fields[dir];
         }
 
         void Awake()
@@ -55,22 +55,22 @@ namespace Assets.Scripts.View.Items
             }
         }
 
-        public void Rotate(Direction direction, Action onComplete)
+        public void Rotate(Direction dir, Action onComplete)
         {
             if (LeanTween.isTweening(_colorizer.gameObject)) {
                 // Queue the request, which will get completed after this one is complete
                 // TODO: set parent objects
-                _rotateQueue.Enqueue(new RotateRequest(direction, onComplete));
+                _rotateQueue.Enqueue(new RotateRequest(dir, onComplete));
                 return;
             }
 
-            Rotate90(direction, onComplete);
+            Rotate90(dir, onComplete);
         }
 
-        private void Rotate90(Direction direction, Action onComplete)
+        private void Rotate90(Direction dir, Action onComplete)
         {
             // Rotate 90 degrees in the direction specified
-            LeanTween.rotateAroundLocal(_rotor, direction.Axis(), 90f, 0.5f)
+            LeanTween.rotateAroundLocal(_rotor, dir.Axis(), 90f, 0.5f)
                 .setEase(LeanTweenType.easeInOutSine)
                 .setOnComplete(() => {
                     onComplete();

@@ -30,13 +30,13 @@ namespace Assets.Scripts.Core.Game
             _player = new Player(_gameBoard.IslandSet, _gameBoard.StartNode);
         }
 
-        public bool PullArc(Arc arc, Direction direction)
+        public bool PullArc(Arc arc, Direction dir)
         {
             if (IsPulled || arc == null) {
                 return false;
             }
 
-            var result = _player.PlayMove(new PullMove(_player, arc, direction));
+            var result = _player.PlayMove(new PullMove(_player, arc, dir));
             PulledArc = result ? arc : PulledArc;
             return result;
         }
@@ -50,6 +50,12 @@ namespace Assets.Scripts.Core.Game
             var result = _player.PlayMove(new PushMove(_player, PulledArc, field));
             PulledArc = result ? null : PulledArc;
             return result;
+        }
+
+        public bool PullArc(Point pos, Direction dir)
+        {
+            // TODO
+            return false;
         }
     }
 }

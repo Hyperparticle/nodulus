@@ -58,13 +58,13 @@ namespace Assets.Scripts.Core.Game
             return added;
         }
 
-        public bool CreateArc(Point pos, Direction direction)
+        public bool CreateArc(Point pos, Direction dir)
         {
             var node = _grid.NodeAt(pos);
             if (node == null) return false;
 
             Field field;
-            return node.Fields.TryGetValue(direction, out field) && CreateArc(field);
+            return node.Fields.TryGetValue(dir, out field) && CreateArc(field);
         }
 
         public bool CreateArc(Field field)

@@ -30,9 +30,9 @@ namespace Assets.Scripts.View.Data
             }
         }
 
-        public bool ContainsArc(Point pos, Direction direction)
+        public bool ContainsArc(Point pos, Direction dir)
         {
-            return _arcMap.ContainsKey(new PointDir(pos, direction));
+            return _arcMap.ContainsKey(new PointDir(pos, dir));
         }
 
         public ICollection<ArcView> GetArcs(Point pos)
@@ -47,23 +47,23 @@ namespace Assets.Scripts.View.Data
             return arcViews;
         }
 
-        public bool TryGetArc(Point position, Direction direction, out ArcView arcView)
+        public bool TryGetArc(Point pos, Direction dir, out ArcView arcView)
         {
-            return _arcMap.TryGetValue(new PointDir(position, direction), out arcView);
+            return _arcMap.TryGetValue(new PointDir(pos, dir), out arcView);
         }
 
-        public void Add(Point position, Direction direction, ArcView arcView)
+        public void Add(Point pos, Direction dir, ArcView arcView)
         {
-            _arcMap.Add(new PointDir(position, direction), arcView);
+            _arcMap.Add(new PointDir(pos, dir), arcView);
 
             HashSet<ArcView> arcs;
-            if (_arcSet.TryGetValue(position, out arcs)) {
+            if (_arcSet.TryGetValue(pos, out arcs)) {
                 arcs.Add(arcView);
                 return;
             }
 
             arcs = new HashSet<ArcView> {arcView};
-            _arcSet.Add(position, arcs);
+            _arcSet.Add(pos, arcs);
         }
 
         public bool Remove(Point pos)

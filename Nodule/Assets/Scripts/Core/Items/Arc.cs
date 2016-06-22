@@ -46,9 +46,9 @@ namespace Assets.Scripts.Core.Items
             IsPulled = false;
         }
 
-        public Node Root(Direction direction)
+        public Node Root(Direction dir)
         {
-            return Field.Root(direction);
+            return Field.Root(dir);
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using Assets.Scripts.Core.Data;
 
@@ -30,22 +30,22 @@ namespace Assets.Scripts.Core.Items
         
         public bool Final { get; set; }
 
-        public Node(Point position, bool final = false)
+        public Node(Point pos, bool final = false)
         {
-            Position = position;
+            Position = pos;
             Final = final;
         }
 
-        public bool HasConnection(Direction direction)
+        public bool HasConnection(Direction dir)
         {
             Field field;
-            if (!_fields.TryGetValue(direction, out field)) return false;
+            if (!_fields.TryGetValue(dir, out field)) return false;
             return !field.HasArc;
         }
 
-        public void DisconnectField(Direction direction)
+        public void DisconnectField(Direction dir)
         {
-            Fields[direction].DisconnectNodes();
+            Fields[dir].DisconnectNodes();
         }
         
         public Direction GetDirection(Node end)

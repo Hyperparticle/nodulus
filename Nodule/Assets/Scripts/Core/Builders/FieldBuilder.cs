@@ -26,30 +26,30 @@ namespace Assets.Scripts.Core.Builders
         public void BuildFields(Node node, IDictionary<Point, Node> nodeMap)
         {
             // Find and add fields in all directions
-            Directions.All.ForEach(direction => AddField(node, direction, nodeMap));
+            Directions.All.ForEach(dir => AddField(node, dir, nodeMap));
         }
 
         public void DestroyFields(Node node)
         {
             node.Fields.Values.ToList()
-                .ForEach(field => RemoveField(field));
+                .ForEach(RemoveField);
         }
 
-        private void AddField(Node node, Direction direction, IDictionary<Point, Node> nodeMap)
+        private void AddField(Node node, Direction dir, IDictionary<Point, Node> nodeMap)
         {
             // Find the nearest node in the given direction
-            var nearest = NearestNode(node, direction, nodeMap);
+            var nearest = NearestNode(node, dir, nodeMap);
             if (nearest == null) return;
 
             var length = node.GetDistance(nearest);
 
             // If an existing field is found, remove it
             Field existingField;
-            if (node.Fields.TryGetValue(direction, out existingField))
+            if (node.Fields.TryGetValue(dir, out existingField))
                 RemoveField(existingField);
 
             // Ensure that fields always point either up or right
-            Pair.Swap(ref node, ref nearest, direction.IsDownLeft());
+            Pair.Swap(ref node, ref nearest, dir.IsDownLeft());
 
             // Create a new field, and add it to the list
             var field = new Field(length, node, nearest);
@@ -60,9 +60,9 @@ namespace Assets.Scripts.Core.Builders
         /// <summary>
         /// Finds the nearest node to another in a given direction
         /// </summary>
-        private static Node NearestNode(Node start, Direction direction, IDictionary<Point, Node> nodeMap)
+        private static Node NearestNode(Node start, Direction dir, IDictionary<Point, Node> nodeMap)
         {
-            var dirPoint = direction.ToPoint();
+            var dirPoint = dir.ToPoint();
 
             for (var i = 1; i < Field.MaxLength; i++)
             {
