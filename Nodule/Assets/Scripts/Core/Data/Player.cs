@@ -23,6 +23,8 @@ namespace Assets.Scripts.Core.Data
         {
             _islandSet = islandSet;
             _island = islandSet.Get(start);
+
+            UpdateFields();
         }
 
         public void MoveTo(Node node)

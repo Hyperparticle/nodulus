@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using Assets.Scripts.Core.Data;
 using Assets.Scripts.Core.Items;
 using Assets.Scripts.Core.Moves;
@@ -13,14 +14,15 @@ namespace Assets.Scripts.Core.Game
     {
         private readonly GameBoard _gameBoard;
         private readonly Player _player;
+        private readonly List<IMove> _moveHistory = new List<IMove>();
 
         public Node StartNode { get { return _gameBoard.StartNode; } }
         public bool Win { get { return _player.Win; } }
         public Point BoardSize { get { return _gameBoard.Size; } }
 
-
-        public IEnumerable<Field> PullFields { get { return _player.PullFields; } }
-        public IEnumerable<Field> PushFields { get { return _player.PushFields; } }
+        private readonly IEnumerable<Field> _empty = new List<Field>();
+        public IEnumerable<Field> PullFields { get { return IsPulled ? _empty : _player.PullFields; } }
+        public IEnumerable<Field> PushFields { get { return IsPulled ? _player.PushFields.Where(field => field.Length == PulledArc.Length) : _empty; } }
 
         public Arc PulledArc { get; private set; }
         public bool IsPulled { get { return PulledArc != null; } }
@@ -37,7 +39,12 @@ namespace Assets.Scripts.Core.Game
                 return false;
             }
 
-            var result = _player.PlayMove(new PullMove(_gameBoard, _player, arc, pullDir));
+            var move = new PullMove(_gameBoard, _player, arc, pullDir);
+            var result = _player.PlayMove(move);
+            if (result) {
+                _moveHistory.Add(move);
+            }
+
             PulledArc = result ? arc : PulledArc;
             return result;
         }
@@ -54,7 +61,12 @@ namespace Assets.Scripts.Core.Game
                 return false;
             }
 
-            var result = _player.PlayMove(new PushMove(_gameBoard, _player, PulledArc, field));
+            var move = new PushMove(_gameBoard, _player, PulledArc, field);
+            var result = _player.PlayMove(move);
+            if (result) {
+                _moveHistory.Add(move);
+            }
+
             PulledArc = result ? null : PulledArc;
             return result;
         }

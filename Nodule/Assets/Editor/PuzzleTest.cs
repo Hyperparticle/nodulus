@@ -12,7 +12,7 @@ public class PuzzleTest
         var gameBoard = Level.BuildLevel(0);
         var puzzle = new Puzzle(gameBoard);
 
-        Debug.Log(gameBoard.GetBoard(puzzle.PullFields));
+        Debug.Log(gameBoard.GetBoard(puzzle.PullFields, puzzle.PushFields));
 
         Pull(1, 1, Direction.Right, puzzle, gameBoard);
         Push(1, 1, Direction.Down,  puzzle, gameBoard);
@@ -26,14 +26,14 @@ public class PuzzleTest
         Push(1, 2, Direction.Down, puzzle, gameBoard);
         Pull(4, 2, Direction.Up, puzzle, gameBoard);
         Push(1, 1, Direction.Right, puzzle, gameBoard);
-        Pull(1, 2, Direction.Right, puzzle, gameBoard);
-        //Push(3, 1, Direction.Right, puzzle, gameBoard);
+        Pull(1, 2, Direction.Left, puzzle, gameBoard);
+        Push(3, 1, Direction.Right, puzzle, gameBoard);
     }
 
     private static void Pull(int x, int y, Direction dir, Puzzle puzzle, GameBoard gameBoard)
     {
         var status = puzzle.PullArc(new Point(x, y), dir); ;
-        Debug.Log(gameBoard.GetBoard(puzzle.PushFields));
+        Debug.Log(gameBoard.GetBoard(puzzle.PullFields, puzzle.PushFields));
         Assert.IsTrue(status);
         Assert.IsTrue(puzzle.IsPulled);
     }
@@ -41,7 +41,7 @@ public class PuzzleTest
     private static void Push(int x, int y, Direction dir, Puzzle puzzle, GameBoard gameBoard)
     {
         var status = puzzle.PushArc(new Point(x, y), dir);
-        Debug.Log(gameBoard.GetBoard(puzzle.PullFields));
+        Debug.Log(gameBoard.GetBoard(puzzle.PullFields, puzzle.PushFields));
         Assert.IsTrue(status);
         Assert.IsTrue(!puzzle.IsPulled);
     }

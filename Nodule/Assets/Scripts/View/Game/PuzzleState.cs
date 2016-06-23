@@ -110,6 +110,9 @@ namespace Assets.Scripts.View.Game
 
         public bool PullArc(ArcView arcView, Direction dir)
         {
+            var arcPos = arcView.Arc.Position;
+            var arcConnPos = arcView.Arc.ConnectedPosition;
+
             // If an arc exists, try to play the move
             var movedPlayed = _puzzle.PullArc(arcView.Arc, dir);
 
@@ -121,8 +124,8 @@ namespace Assets.Scripts.View.Game
 
             // If the move was played, update the arc map
             PulledArcView = arcView;
-            _arcMap.Remove(PulledArcView.Arc.Position);
-            _arcMap.Remove(PulledArcView.Arc.ConnectedPosition);
+            _arcMap.Remove(arcPos);
+            _arcMap.Remove(arcConnPos);
 
             return true;
         }

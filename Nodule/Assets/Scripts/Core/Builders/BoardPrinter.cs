@@ -8,21 +8,20 @@ namespace Assets.Scripts.Core.Builders
 {
     public static class BoardPrinter
     {
-        private const char Player = '#';
         private const char Node = 'O';
         private const char ArcH = '-';
         private const char ArcV = '|';
         private const char Empty = ' ';
-        private const char Field = 'x';
+        private const char PullField = '*';
+        private const char PushField = '#';
 
         public static string GetBoard(Point size, IEnumerable<Node> nodes, IEnumerable<Arc> arcs,
-            IEnumerable<Field> fields)
+            IEnumerable<Field> pullFields, IEnumerable<Field> pushFields)
         {
             // Represent the board as an array of chars
             var grid = new char[2*size.x + 1, 2*size.y + 1];
             Reset(grid);
 
-            // TODO: player
             foreach (var node in nodes) {
                 grid[2*node.Position.x, 2*node.Position.y] = Node;
             }
@@ -43,14 +42,26 @@ namespace Assets.Scripts.Core.Builders
                 }
             }
 
-            foreach (var field in fields) {
+            foreach (var field in pullFields) {
                 if (field.Direction.IsHorizontal()) {
                     for (var i = 1; i < 2*field.Length; i++) {
-                        grid[2*field.Position.x + i, 2*field.Position.y] = Field;
+                        grid[2*field.Position.x + i, 2*field.Position.y] = PullField;
                     }
                 } else {
                     for (var i = 1; i < 2*field.Length; i++) {
-                        grid[2*field.Position.x, 2*field.Position.y + i] = Field;
+                        grid[2*field.Position.x, 2*field.Position.y + i] = PullField;
+                    }
+                }
+            }
+
+            foreach (var field in pushFields) {
+                if (field.Direction.IsHorizontal()) {
+                    for (var i = 1; i < 2*field.Length; i++) {
+                        grid[2*field.Position.x + i, 2*field.Position.y] = PushField;
+                    }
+                } else {
+                    for (var i = 1; i < 2*field.Length; i++) {
+                        grid[2*field.Position.x, 2*field.Position.y + i] = PushField;
                     }
                 }
             }

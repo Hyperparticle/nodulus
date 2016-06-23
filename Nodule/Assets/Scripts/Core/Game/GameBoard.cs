@@ -137,9 +137,9 @@ namespace Assets.Scripts.Core.Game
         /// <summary>
         /// Obtain a string representation of the game board
         /// </summary>
-        public string GetBoard(IEnumerable<Field> fields)
+        public string GetBoard(IEnumerable<Field> pullFields, IEnumerable<Field> pushFields)
         {
-            return BoardPrinter.GetBoard(Size, Nodes, Arcs, fields);
+            return BoardPrinter.GetBoard(Size, Nodes, Arcs, pullFields, pushFields);
         }
     }
 }

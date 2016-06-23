@@ -21,7 +21,7 @@ namespace Assets.Scripts.Core.Items
         /// <summary>
         /// True if this arc is in its pulled state.
         /// </summary>
-        public bool IsPulled { get; private set; }
+        public bool IsPulled { get { return Field == null; } }
 
         public Arc(Field field)
         {
@@ -30,8 +30,6 @@ namespace Assets.Scripts.Core.Items
 
         public void Pull()
         {
-            IsPulled = true;
-
             // Disconnect this Arc from an existing field
             if (Field != null) {
                 Field.DisconnectArc(this);
@@ -53,7 +51,6 @@ namespace Assets.Scripts.Core.Items
             // Connect this Arc to the new field
             Field = field;
             field.ConnectArc(this);
-            IsPulled = false;
         }
 
         public Node Root(Direction dir)
@@ -64,7 +61,7 @@ namespace Assets.Scripts.Core.Items
 
         public override string ToString()
         {
-            return IsPulled ? "PULLED" : string.Format("{0} -> {1}", Position, ConnectedPosition);
+            return IsPulled ? string.Format("PULLED [{0}]", Length) : Field.ToString();
         }
     }
 }

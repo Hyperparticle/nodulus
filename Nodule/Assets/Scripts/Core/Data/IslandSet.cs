@@ -33,8 +33,10 @@ namespace Assets.Scripts.Core.Data
             // Join the islands into one
             var joinedIsland = start.Join(end);
 
-            _islandMap[parent] = joinedIsland;
-            _islandMap[connected] = joinedIsland;
+            // Update the map with all nodes that are pointing to the new island
+            foreach (var node in joinedIsland.ConnectedNodes) {
+                _islandMap[node] = joinedIsland;
+            }
         }
 
         public void Disconnect(Field field)
