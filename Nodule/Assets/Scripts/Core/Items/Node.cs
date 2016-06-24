@@ -64,5 +64,21 @@ namespace Assets.Scripts.Core.Items
         {
             return Position.ToString();
         }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            return obj is Node && Equals((Node) obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return Position.GetHashCode();
+        }
+
+        public bool Equals(Node other)
+        {
+            return Position.Equals(other.Position);
+        }
     }
 }

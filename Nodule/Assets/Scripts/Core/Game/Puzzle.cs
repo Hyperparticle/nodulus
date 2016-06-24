@@ -23,6 +23,8 @@ namespace Assets.Scripts.Core.Game
         private readonly IEnumerable<Field> _empty = new List<Field>();
         public IEnumerable<Field> PullFields { get { return IsPulled ? _empty : _player.PullFields; } }
         public IEnumerable<Field> PushFields { get { return IsPulled ? _player.PushFields.Where(field => field.Length == PulledArc.Length) : _empty; } }
+        //public IEnumerable<Node> PlayerNodes { get { return _player.Nodes; } }
+        public Point PullPosition { get { return _player.PullNode.Position; } }
 
         public Arc PulledArc { get; private set; }
         public bool IsPulled { get { return PulledArc != null; } }

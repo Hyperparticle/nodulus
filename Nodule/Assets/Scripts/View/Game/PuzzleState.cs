@@ -12,6 +12,7 @@ namespace Assets.Scripts.View.Game
     {
         private readonly FieldViewMap _fieldMap = new FieldViewMap();
         private readonly ArcViewMap _arcMap = new ArcViewMap();
+        private IDictionary<Point, NodeView> _nodeMap;
 
         private PuzzleSpawner _puzzleSpawner;
         private PuzzleView _puzzleView;
@@ -22,6 +23,9 @@ namespace Assets.Scripts.View.Game
 
         public ArcView PulledArcView { get; private set; }
         public bool IsPulled { get { return _puzzle.IsPulled; } }
+        public Point PullPosition { get { return _puzzle.PullPosition; } }
+
+        // TODO: get nodes, arcs, and fields of player
 
         public bool HasArcAt(Point pos, Direction dir) { return _arcMap.ContainsArc(pos, dir); }
 
@@ -62,6 +66,7 @@ namespace Assets.Scripts.View.Game
             // Reset the puzzle view state
             _arcMap.Reset(_puzzleSpawner.ArcMap);
             _fieldMap.Reset(_puzzleSpawner.FieldMap);
+            _nodeMap = _puzzleSpawner.NodeMap;
         }
 
         public void NextLevel()

@@ -26,15 +26,18 @@ namespace Assets.Scripts.View.Game
             // Try to play the move
             var movePlayed = _puzzleState.Play(nodeView, dir);
 
-            // Check for special rotation case
+            // Check for special rotation case:
+            //
+            // TODO: 
             var canRotate = !_puzzleState.HasArcAt(nodeView.Position, dir) &&
-                            !_puzzleState.HasArcAt(nodeView.Position, dir.Opposite());// && 
-                            //!(_puzzleState.IsPulled && _puzzleState.PulledArcView.Arc.Position.Equals(nodeView.Position));
+                            !_puzzleState.HasArcAt(nodeView.Position, dir.Opposite()) &&
+                            !(_puzzleState.IsPulled && nodeView.Position.Equals(_puzzleState.PullPosition));
 
             // Modify the game view accordingly
             if (!movePlayed && canRotate) {
                 // Even though no move has been played, if there are no arcs parallel 
-                // to the swipe, we can have the nodes/arcs rotate for effect 
+                // to the swipe, we can have the nodes/arcs rotate for effect,
+                // but not in the case where there is a pulled arc on the node
                 _puzzleView.Rotate(nodeView, dir);
             } else if (movePlayed && _puzzleState.IsPulled) {
                 // If a pull move has been played, rotate the node
@@ -44,6 +47,12 @@ namespace Assets.Scripts.View.Game
                 _puzzleView.MoveArc(nodeView, _puzzleState.PulledArcView);
                 _puzzleView.Rotate(nodeView, _puzzleState.PulledArcView, dir);
             }
+
+            // TODO
+
+            // Update node highlighting
+
+            // Update edge highlighting
         }
     }
 }

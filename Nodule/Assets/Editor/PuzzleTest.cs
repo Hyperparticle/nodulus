@@ -14,6 +14,7 @@ public class PuzzleTest
 
         Debug.Log(gameBoard.GetBoard(puzzle.PullFields, puzzle.PushFields));
 
+        // Play the entire level
         Pull(1, 1, Direction.Right, puzzle, gameBoard);
         Push(1, 1, Direction.Down,  puzzle, gameBoard);
         Pull(1, 0, Direction.Down, puzzle, gameBoard);
@@ -28,14 +29,17 @@ public class PuzzleTest
         Push(1, 1, Direction.Right, puzzle, gameBoard);
         Pull(1, 2, Direction.Left, puzzle, gameBoard);
         Push(3, 1, Direction.Right, puzzle, gameBoard);
+
+        Assert.IsTrue(puzzle.Win);
     }
 
     private static void Pull(int x, int y, Direction dir, Puzzle puzzle, GameBoard gameBoard)
     {
-        var status = puzzle.PullArc(new Point(x, y), dir); ;
+        var status = puzzle.PullArc(new Point(x, y), dir);
         Debug.Log(gameBoard.GetBoard(puzzle.PullFields, puzzle.PushFields));
         Assert.IsTrue(status);
         Assert.IsTrue(puzzle.IsPulled);
+        Assert.IsTrue(!puzzle.Win);
     }
 
     private static void Push(int x, int y, Direction dir, Puzzle puzzle, GameBoard gameBoard)
@@ -46,8 +50,3 @@ public class PuzzleTest
         Assert.IsTrue(!puzzle.IsPulled);
     }
 }
-//  OxOxxxO-O
-//        x
-//O O   O x   O
-//        x
-//  O-----O

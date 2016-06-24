@@ -63,5 +63,21 @@ namespace Assets.Scripts.Core.Items
         {
             return IsPulled ? string.Format("PULLED [{0}]", Length) : Field.ToString();
         }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            return obj is Arc && Equals((Arc) obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return (Field != null ? Field.GetHashCode() : 0);
+        }
+
+        public bool Equals(Arc other)
+        {
+            return IsPulled || Field.Equals(other.Field);
+        }
     }
 }

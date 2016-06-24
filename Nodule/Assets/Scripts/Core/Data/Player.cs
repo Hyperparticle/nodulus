@@ -14,6 +14,8 @@ namespace Assets.Scripts.Core.Data
 
         public IEnumerable<Field> PullFields { get { return _pullFields; } }
         public IEnumerable<Field> PushFields { get { return _pushFields; } }
+        public IEnumerable<Node> Nodes { get { return _island.ConnectedNodes; } }
+        public Node PullNode { get; private set; }
 
         public int NumMoves { get; private set; }
 
@@ -22,13 +24,12 @@ namespace Assets.Scripts.Core.Data
         public Player(IslandSet islandSet, Node start)
         {
             _islandSet = islandSet;
-            _island = islandSet.Get(start);
-
-            UpdateFields();
+            MoveTo(start);
         }
 
         public void MoveTo(Node node)
         {
+            PullNode = node;
             _island = _islandSet.Get(node);
             UpdateFields();
         }

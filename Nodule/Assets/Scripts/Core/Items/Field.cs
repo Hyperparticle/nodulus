@@ -85,5 +85,21 @@ namespace Assets.Scripts.Core.Items
         {
             return string.Format("{0} -> {1} [{2}]", Position, ConnectedPosition, Length);
         }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            return obj is Field && Equals((Field) obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return PointDir.GetHashCode();
+        }
+
+        public bool Equals(Field other)
+        {
+            return PointDir.Equals(other.PointDir);
+        }
     }
 }
