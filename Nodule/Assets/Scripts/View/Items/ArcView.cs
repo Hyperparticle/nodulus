@@ -30,13 +30,25 @@ namespace Assets.Scripts.View.Items
             _arcScale.SetArc(arc);
 
             if (!inStartIsland) {
-                _colorizer.Darken();
+                _colorizer.Darken(true);
             }
         }
 
         public void ResetParent()
         {
             transform.parent = Parent;
+        }
+
+        public void Highlight(bool enable)
+        {
+            if (enable)
+            {
+                _colorizer.Highlight();
+            }
+            else
+            {
+                _colorizer.Darken();
+            }
         }
     }
 }

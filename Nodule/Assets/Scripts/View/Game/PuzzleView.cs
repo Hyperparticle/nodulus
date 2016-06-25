@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using Assets.Scripts.Core.Data;
 using Assets.Scripts.View.Items;
 using UnityEngine;
@@ -61,16 +63,10 @@ namespace Assets.Scripts.View.Game
         public void Rotate(NodeView nodeView, ArcView arcView, Direction dir)
         {
             arcView.transform.parent = nodeView.Rotor;
-
-            Rotate(nodeView, dir, arcView.ResetParent);
+            Rotate(nodeView, dir);
         }
 
         public void Rotate(NodeView nodeView, Direction dir)
-        {
-            Rotate(nodeView, dir, () => { });
-        }
-
-        private void Rotate(NodeView nodeView, Direction dir, Action onComplete)
         {
             // Set all connecting arcs as the parent of this node
             // so that all arcs will rotate accordingly
@@ -81,27 +77,35 @@ namespace Assets.Scripts.View.Game
             }
 
             // Finally, rotate the node!
-            nodeView.Rotate(dir, () => {
-                foreach (var arc in arcViews) {
-                    arc.ResetParent();
-                }
-
-                onComplete();
-            });
+            nodeView.Rotate(dir);
         }
 
         public void MoveArc(NodeView nodeView, ArcView arcView)
         {
             // TODO
-            //var arcs = _puzzleSpawner.GetArcs(nodeView.Position);
+        }
 
-            //nodeView.Rotate(direction, () =>
-            //{
-            //    foreach (var arcView in arcViews)
-            //    {
-            //        arcView.ResetParent();
-            //    }
-            //});
+        public void Highlight(IEnumerable<NodeView> nodes, bool enable)
+        {
+            foreach (var nodeView in nodes) {
+                nodeView.Highlight(enable);
+            }
+        }
+
+        public void Highlight(IEnumerable<ArcView> arcs, bool enable)
+        {
+            foreach (var arcView in arcs)
+            {
+                arcView.Highlight(enable);
+            }
+        }
+
+        public void Highlight(IEnumerable<FieldView> fields, bool enable)
+        {
+            foreach (var fieldView in fields)
+            {
+                fieldView.Highlight(enable);
+            }
         }
     }
 }

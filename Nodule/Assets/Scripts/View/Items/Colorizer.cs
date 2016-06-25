@@ -15,6 +15,8 @@ namespace Assets.Scripts.View.Items
 
         private Renderer _renderer;
 
+        private bool _highlighted;
+
         void Awake()
         {
             _renderer = GetComponent<Renderer>();
@@ -28,22 +30,32 @@ namespace Assets.Scripts.View.Items
             var invisibleHsb = new HsbColor(hsb.h, hsb.s, hsb.b, 0f);
             _invisibleColor = invisibleHsb.ToColor();
 
-            Highlight();
+            Highlight(true);
         }
 
-        public void Highlight()
+        public void Highlight(bool immediate = false)
         {
-            _renderer.material.color = PrimaryColor;
+            if (_highlighted) {
+                return;
+            }
+
+            _highlighted = true;
+            LeanTween.color(gameObject, PrimaryColor, immediate ? 0f : 0.5f);
         }
 
-        public void Darken()
+        public void Darken(bool immediate = false)
         {
-            _renderer.material.color = _darkColor;
+            if (!_highlighted) {
+                return;
+            }
+
+            _highlighted = false;
+            LeanTween.color(gameObject, _darkColor, immediate ? 0f : 0.5f);
         }
 
-        public void SetInvisible()
+        public void SetInvisible(bool immediate = false)
         {
-            _renderer.material.color = _invisibleColor;
+            LeanTween.color(gameObject, _invisibleColor, immediate ? 0f : 0.5f);
         }
 
         public void SetSecondary()

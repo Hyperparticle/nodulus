@@ -14,20 +14,20 @@ namespace Assets.Scripts.Core.Game
     {
         private readonly Grid _grid;
 
-        private readonly ICollection<Arc> _arcs = new HashSet<Arc>();
+        private readonly HashSet<Arc> _arcs = new HashSet<Arc>();
         private readonly IslandSet _islandSet = new IslandSet();
 
-        public IEnumerable<Node> Nodes
+        public HashSet<Node> Nodes
         {
             get { return _grid.Nodes; }
         }
 
-        public IEnumerable<Arc> Arcs
+        public HashSet<Arc> Arcs
         {
             get { return _arcs; }
         }
 
-        public IEnumerable<Field> Fields
+        public HashSet<Field> Fields
         {
             get { return _grid.Fields; }
         }

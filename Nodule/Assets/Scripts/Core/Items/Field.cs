@@ -50,8 +50,8 @@ namespace Assets.Scripts.Core.Items
             // 2. Arc length is equal to field length
             // 3. Arcs do not overlap
 
+            var noArc = !HasArc;// || Arc.Equals(arc);
             var overlap = Overlap.Any(field => field.HasArc);
-            var noArc = !HasArc || Arc.Equals(arc);
             return noArc && arc.Length == Length && !overlap;
         }
 

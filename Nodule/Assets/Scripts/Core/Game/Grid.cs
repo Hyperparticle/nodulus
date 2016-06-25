@@ -16,11 +16,12 @@ namespace Assets.Scripts.Core.Game
     {
         // Map the positions of nodes
         private readonly IDictionary<Point, Node> _nodeMap = new Dictionary<Point, Node>();
+        private readonly HashSet<Node> _nodes = new HashSet<Node>();
 
         private readonly FieldBuilder _fieldBuilder;
 
-        public IEnumerable<Node> Nodes { get { return _nodeMap.Values; } }
-        public IEnumerable<Field> Fields { get { return _fieldBuilder.Fields; } }
+        public HashSet<Node> Nodes { get { return _nodes; } }
+        public HashSet<Field> Fields { get { return _fieldBuilder.Fields; } }
 
         public Grid()
         {
@@ -67,6 +68,7 @@ namespace Assets.Scripts.Core.Game
             
             // Add the node based on its position
             _nodeMap.Add(node.Position, node);
+            _nodes.Add(node);
 
             // Build fields
             _fieldBuilder.BuildFields(node, _nodeMap);
@@ -88,6 +90,7 @@ namespace Assets.Scripts.Core.Game
 
             // Remove the node itself
             _nodeMap.Remove(node.Position);
+            _nodes.Remove(node);
 
             // Destroy fields
             _fieldBuilder.DestroyFields(node);

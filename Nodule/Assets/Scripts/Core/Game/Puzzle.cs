@@ -20,11 +20,7 @@ namespace Assets.Scripts.Core.Game
         public bool Win { get { return _player.Win; } }
         public Point BoardSize { get { return _gameBoard.Size; } }
 
-        private readonly IEnumerable<Field> _empty = new List<Field>();
-        public IEnumerable<Field> PullFields { get { return IsPulled ? _empty : _player.PullFields; } }
-        public IEnumerable<Field> PushFields { get { return IsPulled ? _player.PushFields.Where(field => field.Length == PulledArc.Length) : _empty; } }
-        //public IEnumerable<Node> PlayerNodes { get { return _player.Nodes; } }
-        public Point PullPosition { get { return _player.PullNode.Position; } }
+        public PlayerState PlayerState { get { return _player.PlayerState; } }
 
         public Arc PulledArc { get; private set; }
         public bool IsPulled { get { return PulledArc != null; } }
@@ -32,7 +28,7 @@ namespace Assets.Scripts.Core.Game
         public Puzzle(GameBoard gameBoard)
         {
             _gameBoard = gameBoard;
-            _player = new Player(_gameBoard.IslandSet, _gameBoard.StartNode);
+            _player = new Player(gameBoard);
         }
 
         public bool PullArc(Arc arc, Direction pullDir)

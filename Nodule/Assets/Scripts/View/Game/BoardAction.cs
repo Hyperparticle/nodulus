@@ -1,3 +1,4 @@
+using System.Linq;
 using Assets.Scripts.Core.Data;
 using Assets.Scripts.View.Items;
 using UnityEngine;
@@ -51,8 +52,16 @@ namespace Assets.Scripts.View.Game
             // TODO
 
             // Update node highlighting
+            _puzzleView.Highlight(_puzzleState.NonPlayerNodes, false);
+            _puzzleView.Highlight(_puzzleState.PlayerNodes, true);
 
-            // Update edge highlighting
+            // Update arc highlighting
+            _puzzleView.Highlight(_puzzleState.NonPlayerArcs, false);
+            _puzzleView.Highlight(_puzzleState.PlayerArcs, true);
+
+            // Update field highlighting
+            _puzzleView.Highlight(_puzzleState.NonPushFields, false);
+            _puzzleView.Highlight(_puzzleState.PushFields, true);
         }
     }
 }

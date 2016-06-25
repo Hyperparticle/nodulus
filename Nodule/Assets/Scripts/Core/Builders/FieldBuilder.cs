@@ -15,13 +15,13 @@ namespace Assets.Scripts.Core.Builders
     /// </summary>
     public class FieldBuilder {
 
-        private readonly ICollection<Field> _fields = new HashSet<Field>();
+        private readonly HashSet<Field> _fields = new HashSet<Field>();
         private readonly IDictionary<PointDir, Field> _fieldMap = new Dictionary<PointDir, Field>();
 
         // Maps points to occupying fields
         private IDictionary<Point, Field> _occupiedFields = new Dictionary<Point, Field>();
 
-        public IEnumerable<Field> Fields { get { return _fields; } }
+        public HashSet<Field> Fields { get { return _fields; } }
 
         public void BuildFields(Node node, IDictionary<Point, Node> nodeMap)
         {

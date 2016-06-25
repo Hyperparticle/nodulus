@@ -66,12 +66,9 @@ namespace Assets.Scripts.View.Data
             _arcSet.Add(pos, arcs);
         }
 
-        public bool Remove(Point pos)
+        public bool Remove(Point pos, Direction dir)
         {
-            Directions.All
-                .Select(dir => new PointDir(pos, dir))
-                .ToList()
-                .ForEach(pointDir => _arcMap.Remove(pointDir)); // Remove all possible point directions
+            _arcMap.Remove(new PointDir(pos, dir));
             return _arcSet.Remove(pos);
         }
 
@@ -79,6 +76,11 @@ namespace Assets.Scripts.View.Data
         {
             _arcMap.Clear();
             _arcSet.Clear();
+        }
+
+        public ArcView this[PointDir pointDir]
+        {
+            get { return _arcMap[pointDir]; }
         }
     }
 }

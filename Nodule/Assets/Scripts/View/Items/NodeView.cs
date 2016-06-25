@@ -19,7 +19,7 @@ namespace Assets.Scripts.View.Items
         private Colorizer _colorizer;
         private GameObject _rotor;
 
-        private readonly Queue<RotateRequest> _rotateQueue = new Queue<RotateRequest>();
+        private readonly Queue<Direction> _rotateQueue = new Queue<Direction>();
 
         private Node Node { get; set; }
 
@@ -48,35 +48,37 @@ namespace Assets.Scripts.View.Items
             _nodeScale.SetNode(node);
 
             if (!inStartIsland) {
-                _colorizer.Darken();
+                _colorizer.Darken(true);
             }
             if (node.Final) {
                 _colorizer.SetSecondary();
             }
         }
 
-        public void Rotate(Direction dir, Action onComplete)
+        public void Rotate(Direction dir)
         {
-            if (LeanTween.isTweening(_colorizer.gameObject)) {
+            if (LeanTween.isTweening(_rotor)) {
                 // Queue the request, which will get completed after this one is complete
                 // TODO: set parent objects
-                _rotateQueue.Enqueue(new RotateRequest(dir, onComplete));
+                _rotateQueue.Enqueue(dir);
                 return;
             }
 
-            Rotate90(dir, onComplete);
+            Rotate90(dir);
         }
 
-        private void Rotate90(Direction dir, Action onComplete)
+        private void Rotate90(Direction dir)
         {
+            // Grab the axis of the direction, and rotate it relative to the current rotation.
+            // This is accomplished by getting the rotation that undoes the current rotation, 
+            // and applying it to the absolute axis to get the relative axis we want
+            var rot = Quaternion.Inverse(_rotor.transform.localRotation);
+            var axis = rot*dir.Axis();
+
             // Rotate 90 degrees in the direction specified
-            LeanTween.rotateAroundLocal(_rotor, dir.Axis(), 90f, 0.5f)
+            LeanTween.rotateAroundLocal(_rotor, axis, 90f, 0.5f)
                 .setEase(LeanTweenType.easeInOutSine)
-                .setOnComplete(() => {
-                    onComplete();
-                    _rotor.transform.localRotation = Quaternion.identity;
-                    OnRotateComplete();
-                });
+                .setOnComplete(OnRotateComplete);
         }
 
         private void OnRotateComplete()
@@ -85,8 +87,21 @@ namespace Assets.Scripts.View.Items
                 return;
             }
 
-            var request = _rotateQueue.Dequeue();
-            Rotate90(request.Direction, request.OnComplete);
+            var dir = _rotateQueue.Dequeue();
+            Rotate90(dir);
+        }
+
+        public void Highlight(bool enable)
+        {
+            if (Node.Final) {
+                return;
+            }
+
+            if (enable) {
+                _colorizer.Highlight();
+            } else {
+                _colorizer.Darken();
+            }
         }
     }
 }

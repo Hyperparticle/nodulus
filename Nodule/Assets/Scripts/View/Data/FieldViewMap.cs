@@ -36,5 +36,10 @@ namespace Assets.Scripts.View.Data
         {
             _fieldMap.Clear();
         }
+
+        public FieldView this[PointDir pointDir]
+        {
+            get { return _fieldMap[pointDir]; }
+        }
     }
 }

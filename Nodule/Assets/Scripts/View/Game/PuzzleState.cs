@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using Assets.Scripts.Core.Data;
 using Assets.Scripts.Core.Game;
 using Assets.Scripts.View.Control;
@@ -19,13 +20,65 @@ namespace Assets.Scripts.View.Game
         private BoardInput _boardInput;
 
         private Puzzle _puzzle;
+        private PlayerState _playerState;
         private int _currentLevel;
 
         public ArcView PulledArcView { get; private set; }
         public bool IsPulled { get { return _puzzle.IsPulled; } }
-        public Point PullPosition { get { return _puzzle.PullPosition; } }
+        public Point PullPosition { get { return _playerState.PullPosition; } }
 
         // TODO: get nodes, arcs, and fields of player
+        //public IEnumerable<ArcView> PullArcs
+        //{
+        //    get { return _playerState.PullFields.Select(field => _arcMap[field.PointDir]); }
+        //}
+
+        public IEnumerable<NodeView> PlayerNodes
+        {
+            get { return _playerState.PlayerNodes.Select(node => _nodeMap[node.Position]); }
+        }
+
+        public IEnumerable<ArcView> PlayerArcs
+        {
+            get
+            {
+                return _playerState.PlayerArcs
+                    .Where(arc => !arc.IsPulled)
+                    .Select(arc => _arcMap[new PointDir(arc.Position, arc.Direction)]);
+            }
+        }
+
+        public IEnumerable<FieldView> PushFields
+        {
+            get
+            {
+                return _playerState.PushFields
+                    .Select(field => _fieldMap[new PointDir(field.Position, field.Direction)]);
+            }
+        }
+
+        public IEnumerable<NodeView> NonPlayerNodes
+        {
+            get { return _playerState.NonPlayerNodes.Select(node => _nodeMap[node.Position]); }
+        }
+
+        public IEnumerable<ArcView> NonPlayerArcs
+        {
+            get {
+                return _playerState.NonPlayerArcs
+                    .Where(arc => !arc.IsPulled)
+                    .Select(arc => _arcMap[new PointDir(arc.Position, arc.Direction)]);
+            }
+        }
+
+        public IEnumerable<FieldView> NonPushFields
+        {
+            get
+            {
+                return _playerState.NonPushFields
+                    .Select(field => _fieldMap[new PointDir(field.Position, field.Direction)]);
+            }
+        }
 
         public bool HasArcAt(Point pos, Direction dir) { return _arcMap.ContainsArc(pos, dir); }
 
@@ -61,6 +114,7 @@ namespace Assets.Scripts.View.Game
 
             // Spawn the new level
             _puzzle = _puzzleSpawner.SpawnBoard(level);
+            _playerState = _puzzle.PlayerState;
             _currentLevel = level;
 
             // Reset the puzzle view state
@@ -117,6 +171,8 @@ namespace Assets.Scripts.View.Game
         {
             var arcPos = arcView.Arc.Position;
             var arcConnPos = arcView.Arc.ConnectedPosition;
+            var arcDir = arcView.Arc.Direction;
+            var arcConnDir = arcView.Arc.Direction.Opposite();
 
             // If an arc exists, try to play the move
             var movedPlayed = _puzzle.PullArc(arcView.Arc, dir);
@@ -129,8 +185,8 @@ namespace Assets.Scripts.View.Game
 
             // If the move was played, update the arc map
             PulledArcView = arcView;
-            _arcMap.Remove(arcPos);
-            _arcMap.Remove(arcConnPos);
+            _arcMap.Remove(arcPos, arcDir);
+            _arcMap.Remove(arcConnPos, arcConnDir);
 
             return true;
         }

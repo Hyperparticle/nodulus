@@ -35,7 +35,19 @@ namespace Assets.Scripts.View.Items
             ConnectedNode = connected;
 
             _fieldScale.SetField(field);
-            _colorizer.SetInvisible();
+            _colorizer.SetInvisible(true);
+        }
+
+        public void Highlight(bool enable)
+        {
+            if (enable)
+            {
+                _colorizer.Highlight();
+            }
+            else
+            {
+                _colorizer.SetInvisible();
+            }
         }
     }
 }
