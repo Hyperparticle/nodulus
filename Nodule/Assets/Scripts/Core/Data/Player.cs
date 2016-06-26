@@ -32,6 +32,7 @@ namespace Assets.Scripts.Core.Data
         public bool PlayMove(IMove move)
         {
             var result = move.Play();
+
             NumMoves = result ? NumMoves + 1 : NumMoves;
             return result;
         }

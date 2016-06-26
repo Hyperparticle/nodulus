@@ -1,4 +1,4 @@
-﻿using Assets.Scripts.Core.Data;
+using Assets.Scripts.Core.Data;
 using Assets.Scripts.Core.Items;
 using Assets.Scripts.View.Game;
 using UnityEngine;
@@ -23,8 +23,8 @@ namespace Assets.Scripts.View.Items
             _puzzleScale = PuzzleScale.Get();
 
             var arcPos = arc.Direction.Vector() * arc.Length / 2;
-            var lengthScale = new Vector3(arc.Length*_puzzleScale.Scaling, 1, 1);
-            lengthScale -= Vector3.right * _puzzleScale.NodeScaling;
+            var lengthScale = new Vector3(arc.Length*_puzzleScale.Scaling, 1, 1)
+                - Vector3.right * _puzzleScale.NodeScaling;
 
             transform.localPosition = arcPos * _puzzleScale.Scaling;
             transform.localScale = Vector3.Scale(transform.localScale, lengthScale);
@@ -40,7 +40,7 @@ namespace Assets.Scripts.View.Items
                 - Vector3.right * _puzzleScale.NodeScaling;
 
             transform.localPosition = fieldPos * _puzzleScale.Scaling;
-            transform.localScale = lengthScale;
+            transform.localScale = Vector3.Scale(transform.localScale, lengthScale);
             transform.localRotation = field.Direction.Rotation();
         }
     }

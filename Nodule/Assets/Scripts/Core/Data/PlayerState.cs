@@ -36,6 +36,7 @@ namespace Assets.Scripts.Core.Data
         public bool IsFinal { get { return _playerIsland.IsFinal; } }
         public Point PullPosition { get; private set; }
 
+
         public bool Contains(Node node)
         {
             return _playerIsland.Contains(node);
@@ -64,23 +65,32 @@ namespace Assets.Scripts.Core.Data
         {
             // TODO: improve efficiency
             _playerNodes.Clear();
-            _pushFields.Clear();
             _playerArcs.Clear();
             _nonPlayerNodes.Clear();
-            _nonPushFields.Clear();
             _nonPlayerArcs.Clear();
 
             _playerNodes.UnionWith(_playerIsland.ConnectedNodes);
             _nonPlayerNodes.UnionWith(_nodes);
             _nonPlayerNodes.ExceptWith(_playerNodes);
 
-            _pushFields.UnionWith(_playerIsland.Outskirts);
-            _nonPushFields.UnionWith(_fields);
-            _nonPushFields.ExceptWith(_pushFields);
-
             _playerArcs.UnionWith(_playerIsland.Inskirts.Select(field => field.Arc));
             _nonPlayerArcs.UnionWith(_arcs);
             _nonPlayerArcs.ExceptWith(_playerArcs);
+        }
+
+        public void UpdatePush(Arc pullArc)
+        {
+            _pushFields.Clear();
+            _nonPushFields.Clear();
+
+            if (pullArc == null) {
+                _nonPushFields.UnionWith(_fields);
+                return;
+            } 
+
+            _pushFields.UnionWith(_playerIsland.Outskirts.Where(field => field.Length == pullArc.Length));
+            _nonPushFields.UnionWith(_fields);
+            _nonPushFields.ExceptWith(_pushFields);
         }
     }
 }

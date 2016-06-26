@@ -41,6 +41,7 @@ namespace Assets.Scripts.Core.Game
             var result = _player.PlayMove(move);
             if (result) {
                 _moveHistory.Add(move);
+                PlayerState.UpdatePush(arc);
             }
 
             PulledArc = result ? arc : PulledArc;
@@ -61,8 +62,10 @@ namespace Assets.Scripts.Core.Game
 
             var move = new PushMove(_gameBoard, _player, PulledArc, field);
             var result = _player.PlayMove(move);
+
             if (result) {
                 _moveHistory.Add(move);
+                PlayerState.UpdatePush(null);
             }
 
             PulledArc = result ? null : PulledArc;

@@ -55,6 +55,7 @@ namespace Assets.Scripts.View.Items
 
         public void SetInvisible(bool immediate = false)
         {
+            _highlighted = false;
             LeanTween.color(gameObject, _invisibleColor, immediate ? 0f : 0.5f);
         }
 
