@@ -9,7 +9,7 @@ namespace Assets.Scripts.View.Data
     public class ArcViewMap
     {
         private readonly IDictionary<PointDir, ArcView> _arcMap = new Dictionary<PointDir, ArcView>();
-        private readonly IDictionary<Point, HashSet<ArcView>> _arcSet = new Dictionary<Point, HashSet<ArcView>>();
+        private readonly IDictionary<Point, IDictionary<Direction, ArcView>> _arcSet = new Dictionary<Point, IDictionary<Direction, ArcView>>(); 
 
         public IEnumerable<ArcView> Arcs
         {
@@ -37,14 +37,14 @@ namespace Assets.Scripts.View.Data
 
         public ICollection<ArcView> GetArcs(Point pos)
         {
-            HashSet<ArcView> arcViews;
+            IDictionary<Direction, ArcView> arcViews;
             if (_arcSet.TryGetValue(pos, out arcViews)) {
-                return arcViews;
+                return arcViews.Values;
             }
 
-            arcViews = new HashSet<ArcView>();
+            arcViews = new Dictionary<Direction, ArcView>();
             _arcSet.Add(pos, arcViews);
-            return arcViews;
+            return arcViews.Values;
         }
 
         public bool TryGetArc(Point pos, Direction dir, out ArcView arcView)
@@ -56,20 +56,24 @@ namespace Assets.Scripts.View.Data
         {
             _arcMap.Add(new PointDir(pos, dir), arcView);
 
-            HashSet<ArcView> arcs;
-            if (_arcSet.TryGetValue(pos, out arcs)) {
-                arcs.Add(arcView);
+            IDictionary<Direction, ArcView> arcViews;
+            if (_arcSet.TryGetValue(pos, out arcViews)) {
+                arcViews.Add(dir, arcView);
                 return;
             }
 
-            arcs = new HashSet<ArcView> {arcView};
-            _arcSet.Add(pos, arcs);
+            arcViews = new Dictionary<Direction, ArcView> { { dir, arcView} };
+            _arcSet.Add(pos, arcViews);
         }
 
         public bool Remove(Point pos, Direction dir)
         {
             _arcMap.Remove(new PointDir(pos, dir));
-            return _arcSet.Remove(pos);
+
+            IDictionary<Direction, ArcView> arcViews;
+            return _arcSet.TryGetValue(pos, out arcViews) ? 
+                arcViews.Remove(dir) : 
+                _arcSet.Remove(pos);
         }
 
         public void Clear()
