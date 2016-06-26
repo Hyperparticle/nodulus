@@ -35,16 +35,16 @@ namespace Assets.Scripts.View.Data
             return _arcMap.ContainsKey(new PointDir(pos, dir));
         }
 
-        public ICollection<ArcView> GetArcs(Point pos)
+        public IDictionary<Direction, ArcView> GetArcs(Point pos)
         {
             IDictionary<Direction, ArcView> arcViews;
             if (_arcSet.TryGetValue(pos, out arcViews)) {
-                return arcViews.Values;
+                return arcViews;
             }
 
             arcViews = new Dictionary<Direction, ArcView>();
             _arcSet.Add(pos, arcViews);
-            return arcViews.Values;
+            return arcViews;
         }
 
         public bool TryGetArc(Point pos, Direction dir, out ArcView arcView)

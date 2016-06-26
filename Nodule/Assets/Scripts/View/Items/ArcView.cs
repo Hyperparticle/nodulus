@@ -41,12 +41,9 @@ namespace Assets.Scripts.View.Items
 
         public void Highlight(bool enable)
         {
-            if (enable)
-            {
+            if (enable) {
                 _colorizer.Highlight();
-            }
-            else
-            {
+            } else {
                 _colorizer.Darken();
             }
         }

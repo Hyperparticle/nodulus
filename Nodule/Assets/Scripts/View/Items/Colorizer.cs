@@ -1,3 +1,4 @@
+using System.Runtime.InteropServices;
 using Assets.Scripts.Utility;
 using UnityEngine;
 
@@ -8,14 +9,12 @@ namespace Assets.Scripts.View.Items
         private const float DarkBrightnessScale = 0.40f;
 
         public Color PrimaryColor;
-        public Color SecondaryColor;
 
         private Color _darkColor;
         private Color _invisibleColor;
-
         private Renderer _renderer;
 
-        private bool _highlighted;
+        private bool _highlighted = true;
 
         void Awake()
         {
@@ -24,13 +23,11 @@ namespace Assets.Scripts.View.Items
             // Precalculate colors here
             var hsb = new HsbColor(PrimaryColor);
 
-            var darkHsb = new HsbColor(hsb.h, hsb.s, hsb.b * DarkBrightnessScale, hsb.a);
+            var darkHsb = new HsbColor(hsb.h, hsb.s, hsb.b*DarkBrightnessScale, hsb.a);
             _darkColor = darkHsb.ToColor();
 
             var invisibleHsb = new HsbColor(hsb.h, hsb.s, hsb.b, 0f);
             _invisibleColor = invisibleHsb.ToColor();
-
-            Highlight(true);
         }
 
         public void Highlight(bool immediate = false)
@@ -40,7 +37,7 @@ namespace Assets.Scripts.View.Items
             }
 
             _highlighted = true;
-            LeanTween.color(gameObject, PrimaryColor, immediate ? 0f : 0.5f);
+            ColorThis(PrimaryColor, immediate);
         }
 
         public void Darken(bool immediate = false)
@@ -50,18 +47,19 @@ namespace Assets.Scripts.View.Items
             }
 
             _highlighted = false;
-            LeanTween.color(gameObject, _darkColor, immediate ? 0f : 0.5f);
+            ColorThis(_darkColor, immediate);
         }
 
         public void SetInvisible(bool immediate = false)
         {
             _highlighted = false;
-            LeanTween.color(gameObject, _invisibleColor, immediate ? 0f : 0.5f);
+            ColorThis(_invisibleColor, immediate);
         }
 
-        public void SetSecondary()
+        public void ColorThis(Color color, bool immediate)
         {
-            _renderer.material.color = SecondaryColor;
+            LeanTween.color(gameObject, color, immediate ? 0f : 0.5f)
+                .setEase(LeanTweenType.easeInOutSine);
         }
     }
 }

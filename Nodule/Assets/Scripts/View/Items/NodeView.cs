@@ -47,11 +47,13 @@ namespace Assets.Scripts.View.Items
 
             _nodeScale.SetNode(node);
 
-            if (!inStartIsland) {
+            if (inStartIsland) {
+                _colorizer.Highlight(true);
+            } else if (!node.Final) {
                 _colorizer.Darken(true);
-            }
-            if (node.Final) {
-                _colorizer.SetSecondary();
+            } else {
+                _colorizer.PrimaryColor = new Color(27f / 255f, 113f / 255f, 232f / 255f);
+                _colorizer.ColorThis(_colorizer.PrimaryColor, true);
             }
         }
 
@@ -60,7 +62,7 @@ namespace Assets.Scripts.View.Items
             if (LeanTween.isTweening(_rotor)) {
                 // Queue the request, which will get completed after this one is complete
                 // TODO: set parent objects
-                _rotateQueue.Enqueue(dir);
+                //_rotateQueue.Enqueue(dir);
                 return;
             }
 

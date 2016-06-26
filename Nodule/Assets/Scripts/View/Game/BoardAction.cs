@@ -24,6 +24,8 @@ namespace Assets.Scripts.View.Game
         /// </summary>
         public void Play(NodeView nodeView, Direction dir)
         {
+            // TODO: prevent the player from playing another move before completing this one
+
             // Try to play the move
             var movePlayed = _puzzleState.Play(nodeView, dir);
 
@@ -39,14 +41,14 @@ namespace Assets.Scripts.View.Game
                 // Even though no move has been played, if there are no arcs parallel 
                 // to the swipe, we can have the nodes/arcs rotate for effect,
                 // but not in the case where there is a pulled arc on the node
-                _puzzleView.Rotate(nodeView, dir);
+                _puzzleView.Rotate(nodeView, dir, true);
             } else if (movePlayed && _puzzleState.IsPulled) {
                 // If a pull move has been played, rotate the node
-                _puzzleView.Rotate(nodeView, _puzzleState.PulledArcView, dir);
+                _puzzleView.Rotate(nodeView, _puzzleState.PulledArcView, dir, true);
             } else if (movePlayed && !_puzzleState.IsPulled) {
                 // If a push move has been played, move the arc to the node, then rotate it
                 _puzzleView.MoveArc(nodeView, _puzzleState.PulledArcView);
-                _puzzleView.Rotate(nodeView, _puzzleState.PulledArcView, dir);
+                _puzzleView.Rotate(nodeView, _puzzleState.PulledArcView, dir, false);
             }
 
             // TODO

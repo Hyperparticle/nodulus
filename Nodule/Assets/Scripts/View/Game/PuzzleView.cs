@@ -60,20 +60,22 @@ namespace Assets.Scripts.View.Game
         //    _puzzleSpawner.DestroyBoard();
         //}
 
-        public void Rotate(NodeView nodeView, ArcView arcView, Direction dir)
+        public void Rotate(NodeView nodeView, ArcView arcView, Direction dir, bool pull)
         {
             arcView.transform.parent = nodeView.Rotor;
-            Rotate(nodeView, dir);
+            Rotate(nodeView, dir, pull);
         }
 
-        public void Rotate(NodeView nodeView, Direction dir)
+        // TODO: make pull cleaner
+        public void Rotate(NodeView nodeView, Direction dir, bool pull)
         {
             // Set all connecting arcs as the parent of this node
             // so that all arcs will rotate accordingly
             var arcViews = _puzzleState.GetArcs(nodeView.Position);
 
-            foreach (var arc in arcViews) {
-                arc.transform.parent = nodeView.Rotor;
+            var stay = pull ? dir : dir.Opposite();
+            foreach (var pair in arcViews.Where(p => p.Key != stay)) {
+                pair.Value.transform.parent = nodeView.Rotor;
             }
 
             // Finally, rotate the node!

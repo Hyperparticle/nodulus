@@ -82,7 +82,7 @@ namespace Assets.Scripts.View.Game
 
         public bool HasArcAt(Point pos, Direction dir) { return _arcMap.ContainsArc(pos, dir); }
 
-        public ICollection<ArcView> GetArcs(Point pos)
+        public IDictionary<Direction, ArcView> GetArcs(Point pos)
         {
             return _arcMap.GetArcs(pos);
         }
