@@ -9,6 +9,8 @@ namespace Assets.Scripts.View.Items
     /// </summary>
     public class ArcView : MonoBehaviour
     {
+        public Color ArcColor;
+
         private ScaleScript _arcScale;
         private Colorizer _colorizer;
 
@@ -28,6 +30,8 @@ namespace Assets.Scripts.View.Items
             Parent = parent;
 
             _arcScale.SetArc(arc);
+
+            _colorizer.PrimaryColor = ArcColor;
 
             if (!inStartIsland) {
                 _colorizer.Darken(true);

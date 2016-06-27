@@ -25,6 +25,8 @@ namespace Assets.Scripts.View.Game
         private PuzzleScale _puzzleScale;
         private PuzzleState _puzzleState;
 
+        public event Action ViewUpdated;
+
         //private Animator _levelSelectAnimator;
         //private Text _moveText;
 
@@ -79,7 +81,7 @@ namespace Assets.Scripts.View.Game
             }
 
             // Finally, rotate the node!
-            nodeView.Rotate(dir);
+            nodeView.Rotate(dir, OnViewUpdated);
         }
 
         public void MoveArc(NodeView nodeView, ArcView arcView)
@@ -107,6 +109,13 @@ namespace Assets.Scripts.View.Game
             foreach (var fieldView in fields)
             {
                 fieldView.Highlight(enable);
+            }
+        }
+
+        private void OnViewUpdated()
+        {
+            if (ViewUpdated != null) {
+                ViewUpdated();
             }
         }
     }

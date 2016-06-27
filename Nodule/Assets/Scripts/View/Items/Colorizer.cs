@@ -8,23 +8,38 @@ namespace Assets.Scripts.View.Items
     {
         private const float DarkBrightnessScale = 0.40f;
 
-        public Color PrimaryColor;
+        public Color PrimaryColor
+        {
+            get { return _primaryColor; }
+            set {
+                _primaryColor = value;
+                CalculateColors();
+            }
+        }
 
-        private Color _darkColor;
+        private Color _primaryColor;
         private Color _invisibleColor;
-        private Renderer _renderer;
+
+        private HsbColor _primaryHsb;
+        private HsbColor _darkHsb;
+
+        private Material _material;
 
         private bool _highlighted = true;
+        private bool _visible = true;
 
         void Awake()
         {
-            _renderer = GetComponent<Renderer>();
+            _material = GetComponent<Renderer>().material;
+            CalculateColors();
+        }
 
+        private void CalculateColors()
+        {
             // Precalculate colors here
-            var hsb = new HsbColor(PrimaryColor);
+            var hsb = _primaryHsb = new HsbColor(PrimaryColor);
 
-            var darkHsb = new HsbColor(hsb.h, hsb.s, hsb.b*DarkBrightnessScale, hsb.a);
-            _darkColor = darkHsb.ToColor();
+            _darkHsb = new HsbColor(hsb.h, hsb.s, hsb.b*DarkBrightnessScale, hsb.a);
 
             var invisibleHsb = new HsbColor(hsb.h, hsb.s, hsb.b, 0f);
             _invisibleColor = invisibleHsb.ToColor();
@@ -32,34 +47,68 @@ namespace Assets.Scripts.View.Items
 
         public void Highlight(bool immediate = false)
         {
-            if (_highlighted) {
+            if (_highlighted && !immediate) {
                 return;
             }
 
             _highlighted = true;
-            ColorThis(PrimaryColor, immediate);
+            var time = immediate ? 0f : 0.5f;
+
+            LeanTween.value(gameObject, _darkHsb.b, _primaryHsb.b, time)
+                .setOnUpdate(b => { _material.color = Brightness(_primaryColor, b); })
+                .setEase(LeanTweenType.easeInOutSine);
         }
 
         public void Darken(bool immediate = false)
         {
-            if (!_highlighted) {
+            if (!_highlighted && !immediate) {
                 return;
             }
 
             _highlighted = false;
-            ColorThis(_darkColor, immediate);
+            var time = immediate ? 0f : 0.5f;
+
+            LeanTween.value(gameObject, _primaryHsb.b, _darkHsb.b, time)
+                .setOnUpdate(b => { _material.color = Brightness(_primaryColor, b); })
+                .setEase(LeanTweenType.easeInOutSine); ;
+        }
+
+        public void SetVisible(bool immediate = false)
+        {
+            if (_visible && !immediate) {
+                return;
+            }
+
+            _visible = true;
+            var time = immediate ? 0f : 0.5f;
+
+            LeanTween.value(gameObject, _invisibleColor.a, _primaryColor.a, time)
+                .setOnUpdate(a => { _material.color = Alpha(_primaryColor, a); })
+                .setEase(LeanTweenType.easeInOutSine);
         }
 
         public void SetInvisible(bool immediate = false)
         {
-            _highlighted = false;
-            ColorThis(_invisibleColor, immediate);
+            if (!_visible && !immediate) {
+                return;
+            }
+
+            _visible = false;
+            var time = immediate ? 0f : 0.5f;
+
+            LeanTween.value(gameObject, _primaryColor.a, _invisibleColor.a, time)
+                .setOnUpdate(a => { _material.color = Alpha(_primaryColor, a); })
+                .setEase(LeanTweenType.easeInOutSine);
         }
 
-        public void ColorThis(Color color, bool immediate)
+        private static Color Alpha(Color color, float a)
         {
-            LeanTween.color(gameObject, color, immediate ? 0f : 0.5f)
-                .setEase(LeanTweenType.easeInOutSine);
+            return new Color(color.r, color.g, color.b, a);
+        }
+
+        private static Color Brightness(Color color, float b)
+        {
+            return new HsbColor(color) {b = b}.ToColor();
         }
     }
 }

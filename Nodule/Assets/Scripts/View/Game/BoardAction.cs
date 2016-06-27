@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using Assets.Scripts.Core.Data;
 using Assets.Scripts.View.Items;
@@ -13,10 +14,15 @@ namespace Assets.Scripts.View.Game
         private PuzzleView _puzzleView;
         private PuzzleState _puzzleState;
 
+        // A lock to prevent multiple moves to be played at the same time
+        private bool _viewUpdating;
+
         void Awake()
         {
             _puzzleView = GetComponent<PuzzleView>();
             _puzzleState = GetComponent<PuzzleState>();
+
+            _puzzleView.ViewUpdated += OnViewUpdated;
         }
 
         /// <summary>
@@ -24,14 +30,15 @@ namespace Assets.Scripts.View.Game
         /// </summary>
         public void Play(NodeView nodeView, Direction dir)
         {
-            // TODO: prevent the player from playing another move before completing this one
+            // If a pull move has been played, rotate the node
+            if (_viewUpdating) {
+                return;
+            }
 
             // Try to play the move
             var movePlayed = _puzzleState.Play(nodeView, dir);
 
             // Check for special rotation case:
-            //
-            // TODO: 
             var canRotate = !_puzzleState.HasArcAt(nodeView.Position, dir) &&
                             !_puzzleState.HasArcAt(nodeView.Position, dir.Opposite()) &&
                             !(_puzzleState.IsPulled && nodeView.Position.Equals(_puzzleState.PullPosition));
@@ -43,15 +50,14 @@ namespace Assets.Scripts.View.Game
                 // but not in the case where there is a pulled arc on the node
                 _puzzleView.Rotate(nodeView, dir, true);
             } else if (movePlayed && _puzzleState.IsPulled) {
-                // If a pull move has been played, rotate the node
+                _viewUpdating = true;
                 _puzzleView.Rotate(nodeView, _puzzleState.PulledArcView, dir, true);
             } else if (movePlayed && !_puzzleState.IsPulled) {
                 // If a push move has been played, move the arc to the node, then rotate it
+                _viewUpdating = true;
                 _puzzleView.MoveArc(nodeView, _puzzleState.PulledArcView);
                 _puzzleView.Rotate(nodeView, _puzzleState.PulledArcView, dir, false);
             }
-
-            // TODO
 
             // Update node highlighting
             _puzzleView.Highlight(_puzzleState.NonPlayerNodes, false);
@@ -64,6 +70,12 @@ namespace Assets.Scripts.View.Game
             // Update field highlighting
             _puzzleView.Highlight(_puzzleState.NonPushFields, false);
             _puzzleView.Highlight(_puzzleState.PushFields, true);
+        }
+
+        private void OnViewUpdated()
+        {
+            Debug.Log("View done");
+            _viewUpdating = false;
         }
     }
 }

@@ -9,6 +9,8 @@ namespace Assets.Scripts.View.Items
     /// </summary>
     public class FieldView : MonoBehaviour
     {
+        public Color FieldColor;
+
         private ScaleScript _fieldScale;
         private Colorizer _colorizer;
 
@@ -35,17 +37,16 @@ namespace Assets.Scripts.View.Items
             ConnectedNode = connected;
 
             _fieldScale.SetField(field);
+
+            _colorizer.PrimaryColor = FieldColor;
             _colorizer.SetInvisible(true);
         }
 
         public void Highlight(bool enable)
         {
-            if (enable)
-            {
-                _colorizer.Highlight();
-            }
-            else
-            {
+            if (enable) {
+                _colorizer.SetVisible();
+            } else {
                 _colorizer.SetInvisible();
             }
         }

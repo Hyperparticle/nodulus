@@ -14,6 +14,8 @@ namespace Assets.Scripts.View.Items
     public class NodeView : MonoBehaviour
     {
         public Transform Rotor;
+        public Color NodeColor;
+        public Color NodeFinalColor;
 
         private ScaleScript _nodeScale;
         private Colorizer _colorizer;
@@ -47,17 +49,16 @@ namespace Assets.Scripts.View.Items
 
             _nodeScale.SetNode(node);
 
-            if (inStartIsland) {
+            _colorizer.PrimaryColor = node.Final ? NodeFinalColor : NodeColor;
+
+            if (inStartIsland || node.Final) {
                 _colorizer.Highlight(true);
-            } else if (!node.Final) {
-                _colorizer.Darken(true);
             } else {
-                _colorizer.PrimaryColor = new Color(27f / 255f, 113f / 255f, 232f / 255f);
-                _colorizer.ColorThis(_colorizer.PrimaryColor, true);
+                _colorizer.Darken(true);
             }
         }
 
-        public void Rotate(Direction dir)
+        public void Rotate(Direction dir, Action onComplete)
         {
             if (LeanTween.isTweening(_rotor)) {
                 // Queue the request, which will get completed after this one is complete
@@ -66,10 +67,10 @@ namespace Assets.Scripts.View.Items
                 return;
             }
 
-            Rotate90(dir);
+            Rotate90(dir, onComplete);
         }
 
-        private void Rotate90(Direction dir)
+        private void Rotate90(Direction dir, Action onComplete)
         {
             // Grab the axis of the direction, and rotate it relative to the current rotation.
             // This is accomplished by getting the rotation that undoes the current rotation, 
@@ -80,18 +81,19 @@ namespace Assets.Scripts.View.Items
             // Rotate 90 degrees in the direction specified
             LeanTween.rotateAroundLocal(_rotor, axis, 90f, 0.5f)
                 .setEase(LeanTweenType.easeInOutSine)
-                .setOnComplete(OnRotateComplete);
+                //.setOnComplete(OnRotateComplete)
+                .setOnComplete(onComplete);
         }
 
-        private void OnRotateComplete()
-        {
-            if (_rotateQueue.Count == 0) {
-                return;
-            }
+        //private void OnRotateComplete()
+        //{
+        //    if (_rotateQueue.Count == 0) {
+        //        return;
+        //    }
 
-            var dir = _rotateQueue.Dequeue();
-            Rotate90(dir);
-        }
+        //    var dir = _rotateQueue.Dequeue();
+        //    Rotate90(dir);
+        //}
 
         public void Highlight(bool enable)
         {
