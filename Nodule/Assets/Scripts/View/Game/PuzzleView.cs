@@ -82,13 +82,16 @@ namespace Assets.Scripts.View.Game
                     nodeView.Rotor;
             }
 
+            // TODO: cool field rotations
+            //var fieldViews = _puzzleState.GetFields(nodeView.Position);
+
             // Finally, rotate the node!
             nodeView.Rotate(dir, OnViewUpdated);
         }
 
-        public void MoveArc(NodeView nodeView, ArcView arcView)
+        public void MoveRotate(NodeView nodeView, ArcView arcView, Direction dir)
         {
-            // TODO
+            arcView.MoveTo(nodeView, () => Rotate(nodeView, arcView, dir, false));
         }
 
         public void Highlight(IEnumerable<NodeView> nodes, bool enable)

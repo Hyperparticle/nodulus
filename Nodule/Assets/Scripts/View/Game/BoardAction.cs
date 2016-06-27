@@ -55,8 +55,7 @@ namespace Assets.Scripts.View.Game
             } else if (movePlayed && !_puzzleState.IsPulled) {
                 // If a push move has been played, move the arc to the node, then rotate it
                 _viewUpdating = true;
-                _puzzleView.MoveArc(nodeView, _puzzleState.PulledArcView);
-                _puzzleView.Rotate(nodeView, _puzzleState.PulledArcView, dir, false);
+                _puzzleView.MoveRotate(nodeView, _puzzleState.PulledArcView, dir);
             }
 
             // Update node highlighting

@@ -1,3 +1,4 @@
+using System;
 using Assets.Scripts.Core.Items;
 using UnityEngine;
 
@@ -50,6 +51,23 @@ namespace Assets.Scripts.View.Items
             } else {
                 _colorizer.Darken();
             }
+        }
+
+        public void MoveTo(NodeView nodeView, Action onComplete)
+        {
+            // Move to the same node
+            if (nodeView.transform.Equals(transform.parent.parent)) {
+                onComplete();
+                return;
+            }
+
+            transform.parent = nodeView.transform;
+
+            LeanTween.move(gameObject, nodeView.transform, 0.25f)
+                .setEase(LeanTweenType.easeInOutSine)
+                .setOnComplete(onComplete);
+            LeanTween.moveLocalZ(gameObject, -_arcScale.Length, 0.25f)
+                .setEase(LeanTweenType.easeInOutSine);
         }
     }
 }
