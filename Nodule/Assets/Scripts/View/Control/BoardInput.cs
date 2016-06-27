@@ -12,7 +12,7 @@ namespace Assets.Scripts.View.Control
     /// </summary>
     public class BoardInput : MonoBehaviour
     {
-        public float MinSwipeDistanceCm = 2f;
+        public float MinSwipeDistanceCm = 1f;
 
         private BoardAction _boardAction;
         private PuzzleScale _puzzleScale;
@@ -69,14 +69,18 @@ namespace Assets.Scripts.View.Control
         /// <summary>
         /// Finds the nearest node to the gesture
         /// </summary>
-        private NodeView GetNearestNode(TKAbstractGestureRecognizer recognizer)
+        private NodeView GetNearestNode(TKSwipeRecognizer recognizer)
         {
-            // Obtain the gesture position
-            var touch = recognizer.touchLocation();
-            var scaledPos = (Vector2) Camera.main.ScreenToWorldPoint(touch);
+            // Obtain the gesture positions
+            var startTouch = Camera.main.ScreenToWorldPoint(recognizer.startPoint);
+            var endTouch = Camera.main.ScreenToWorldPoint(recognizer.endPoint);
+
+            // Find the midpoint
+            var mid = startTouch + (endTouch - startTouch)/2f;
+            var scaledPos = (Vector2) (mid - transform.position);
 
             // Remove any scaling, and round the position to the nearest integer
-            var pos = (scaledPos + _puzzleScale.Dimensions/2f)/_puzzleScale.Scaling;
+            var pos = (scaledPos)/_puzzleScale.Scaling;
             var point = Point.Round(pos);
 
             // Retrieve the node, if it exists
