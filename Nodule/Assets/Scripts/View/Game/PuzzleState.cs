@@ -140,7 +140,7 @@ namespace Assets.Scripts.View.Game
             if (IsPulled) {
                 FieldView fieldView;
                 return _fieldMap.TryGetField(nodeView.Position, dir, out fieldView) &&
-                       PushArc(fieldView);
+                       PushArc(nodeView, fieldView);
             }
 
             // Pull move
@@ -149,8 +149,13 @@ namespace Assets.Scripts.View.Game
                    PullArc(arcView, dir);
         }
 
-        public bool PushArc(FieldView fieldView)
+        public bool PushArc(NodeView nodeView, FieldView fieldView)
         {
+            // Validate that the node is in the island
+            if (!_playerState.HasNodeAt(nodeView.Node)) {
+                return false;
+            }
+
             // If a field exists, try to play the move
             var movePlayed = _puzzle.PushArc(fieldView.Field);
 

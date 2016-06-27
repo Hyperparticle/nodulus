@@ -92,5 +92,10 @@ namespace Assets.Scripts.Core.Data
             _nonPushFields.UnionWith(_fields);
             _nonPushFields.ExceptWith(_pushFields);
         }
+
+        public bool HasNodeAt(Node node)
+        {
+            return _playerIsland.Contains(node);
+        }
     }
 }

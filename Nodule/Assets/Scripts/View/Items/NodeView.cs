@@ -23,7 +23,7 @@ namespace Assets.Scripts.View.Items
 
         private readonly Queue<Direction> _rotateQueue = new Queue<Direction>();
 
-        private Node Node { get; set; }
+        public Node Node { get; private set; }
 
         public Point Position
         {
