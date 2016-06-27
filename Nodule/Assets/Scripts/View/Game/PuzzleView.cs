@@ -76,8 +76,10 @@ namespace Assets.Scripts.View.Game
             var arcViews = _puzzleState.GetArcs(nodeView.Position);
 
             var stay = pull ? dir : dir.Opposite();
-            foreach (var pair in arcViews.Where(p => p.Key != stay)) {
-                pair.Value.transform.parent = nodeView.Rotor;
+            foreach (var pair in arcViews) {
+                pair.Value.transform.parent = pair.Key == stay ?
+                    nodeView.transform :
+                    nodeView.Rotor;
             }
 
             // Finally, rotate the node!
