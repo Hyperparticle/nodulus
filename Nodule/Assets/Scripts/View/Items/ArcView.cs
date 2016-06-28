@@ -63,6 +63,7 @@ namespace Assets.Scripts.View.Items
 
             transform.parent = nodeView.transform;
 
+            // TODO: remove magic constants
             LeanTween.move(gameObject, nodeView.transform, 0.25f)
                 .setEase(LeanTweenType.easeInOutSine)
                 .setOnComplete(onComplete);

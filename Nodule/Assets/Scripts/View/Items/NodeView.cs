@@ -79,7 +79,8 @@ namespace Assets.Scripts.View.Items
             var axis = rot*dir.Axis();
 
             // Rotate 90 degrees in the direction specified
-            LeanTween.rotateAroundLocal(_rotor, axis, 90f, 0.5f)
+            // TODO: remove magic constants
+            LeanTween.rotateAroundLocal(_rotor, axis, 90f, 0.33f)
                 .setEase(LeanTweenType.easeInOutSine)
                 //.setOnComplete(OnRotateComplete)
                 .setOnComplete(onComplete);
