@@ -79,7 +79,7 @@ namespace Assets.Scripts.View.Game
 
                 // Set the node's parent as this puzzle
                 nodeView.transform.SetParent(transform);
-                nodeView.Init(node, _gameBoard.StartIsland.Contains(node));
+                nodeView.Init(node, _gameBoard.StartIsland.Contains(node), i);
                 nodeView.name = "Node " + i++;
                 _nodeMap.Add(node.Position, nodeView);
             }

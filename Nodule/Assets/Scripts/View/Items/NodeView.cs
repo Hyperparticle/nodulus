@@ -4,6 +4,7 @@ using Assets.Scripts.Core.Data;
 using Assets.Scripts.Core.Items;
 using Assets.Scripts.View.Data;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace Assets.Scripts.View.Items
 {
@@ -20,6 +21,7 @@ namespace Assets.Scripts.View.Items
         private ScaleScript _nodeScale;
         private Colorizer _colorizer;
         private GameObject _rotor;
+        private Material _material;
 
         private readonly Queue<Direction> _rotateQueue = new Queue<Direction>();
 
@@ -38,10 +40,11 @@ namespace Assets.Scripts.View.Items
         void Awake()
         {
             _nodeScale = GetComponent<ScaleScript>();
+            _material = GetComponentInChildren<Renderer>().material;
             _colorizer = GetComponentInChildren<Colorizer>();
         }
 
-        public void Init(Node node, bool inStartIsland)
+        public void Init(Node node, bool inStartIsland, int delay)
         {
             _rotor = _colorizer.gameObject;
 
@@ -56,7 +59,32 @@ namespace Assets.Scripts.View.Items
             } else {
                 _colorizer.Darken(true);
             }
+
+            Wave(delay);
         }
+
+        private void Wave(int delay)
+        {
+            var pos = transform.localPosition;
+            //var alpha = _material.color.a;
+            
+            // Set node far away and transparent
+            transform.Translate(20*Vector3.forward);
+            //LeanTween.alpha(_rotor, 0f, 0f);
+
+            var random = 0f;//Random.Range(0f, 0.25f);
+            var moveDelay = 0.05f*delay + random;
+
+            // Start a nice animation effect
+            LeanTween.moveLocal(gameObject, pos, 0.50f)
+                .setDelay(moveDelay)
+                .setEase(LeanTweenType.easeOutBack);
+            //LeanTween.alpha(_rotor, alpha, 0.25f)
+            //    .setDelay(moveDelay)
+            //    .setEase(LeanTweenType.easeInOutSine);
+
+        }
+
 
         public void Rotate(Direction dir, Action onComplete)
         {
