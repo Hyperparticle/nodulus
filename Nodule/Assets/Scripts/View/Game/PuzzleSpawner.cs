@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Assets.Scripts.Core.Data;
 using Assets.Scripts.Core.Game;
@@ -53,15 +54,16 @@ namespace Assets.Scripts.View.Game
         {
             if (_gameBoard == null) return;
 
+            Action destroyChildren = () => {
+                foreach (Transform child in transform) {
+                    Destroy(child.gameObject);
+                }
+            };
+
             // Destroy all objects in the game board
+            var i = 0;
             foreach (var node in _nodeMap.Values) {
-                Destroy(node.gameObject);
-            }
-            foreach (var arc in _arcMap.Arcs) {
-                Destroy(arc.gameObject);
-            }
-            foreach (var field in _fieldMap.Fields) {
-                Destroy(field.gameObject);
+                node.WaveOut(i++, destroyChildren);
             }
 
             _nodeMap.Clear();

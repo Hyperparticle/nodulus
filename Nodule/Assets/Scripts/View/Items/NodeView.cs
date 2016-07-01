@@ -60,19 +60,21 @@ namespace Assets.Scripts.View.Items
                 _colorizer.Darken(true);
             }
 
-            Wave(delay);
+            WaveIn(delay);
         }
 
-        private void Wave(int delay)
+        // TODO: move this to an animation script
+        private void WaveIn(int delay)
         {
             var pos = transform.localPosition;
             //var alpha = _material.color.a;
-            
+
             // Set node far away and transparent
             transform.Translate(20*Vector3.forward);
             //LeanTween.alpha(_rotor, 0f, 0f);
 
-            var random = 0f;//Random.Range(0f, 0.25f);
+            // TODO: use smooth function over linear delay
+            var random = 0f; //Random.Range(0f, 0.25f);
             var moveDelay = 0.05f*delay + random;
 
             // Start a nice animation effect
@@ -82,7 +84,24 @@ namespace Assets.Scripts.View.Items
             //LeanTween.alpha(_rotor, alpha, 0.25f)
             //    .setDelay(moveDelay)
             //    .setEase(LeanTweenType.easeInOutSine);
+        }
 
+        public void WaveOut(int delay, Action onComplete)
+        {
+            // TODO: use smooth function over linear delay
+            var pos = 20*Vector3.forward;
+            var random = 0f; //Random.Range(0f, 0.25f);
+            var moveDelay = 0.05f*delay + random;
+
+            // Start a nice animation effect
+            LeanTween.moveLocal(gameObject, pos, 0.50f)
+                .setDelay(moveDelay)
+                .setEase(LeanTweenType.easeInOutSine)
+                .setOnComplete(onComplete);
+
+            //LeanTween.alpha(_rotor, alpha, 0.25f)
+            //    .setDelay(moveDelay)
+            //    .setEase(LeanTweenType.easeInOutSine);
         }
 
 
