@@ -75,10 +75,10 @@ namespace Assets.Scripts.View.Items
 
             // TODO: use smooth function over linear delay
             var random = 0f; //Random.Range(0f, 0.25f);
-            var moveDelay = 0.05f*delay + random;
+            var moveDelay = 0.1f*delay + random;
 
             // Start a nice animation effect
-            LeanTween.moveLocal(gameObject, pos, 0.50f)
+            LeanTween.moveLocal(gameObject, pos, 1f)
                 .setDelay(moveDelay)
                 .setEase(LeanTweenType.easeOutBack);
             //LeanTween.alpha(_rotor, alpha, 0.25f)

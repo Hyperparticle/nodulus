@@ -12,7 +12,9 @@ namespace Assets.Scripts.View.Control
     /// </summary>
     public class BoardInput : MonoBehaviour
     {
-        public float MinSwipeDistanceCm = 1f;
+        public float MinSwipeDistanceCm = 1.5f;
+        public float MedSwipeDistanceCm = 3f;
+        public float MaxSwipeDistanceCm = 4.5f;
 
         private BoardAction _boardAction;
         private PuzzleScale _puzzleScale;
@@ -28,9 +30,17 @@ namespace Assets.Scripts.View.Control
         void Start()
         {
             // Add an event handler for swiping the screen
-            var swipeRecognizer = new TKSwipeRecognizer(MinSwipeDistanceCm);
-            swipeRecognizer.gestureRecognizedEvent += OnSwipe;
-            TouchKit.addGestureRecognizer(swipeRecognizer);
+            var minSwipeRecognizer = new TKSwipeRecognizer(MinSwipeDistanceCm);
+            var medSwipeRecognizer = new TKSwipeRecognizer(MedSwipeDistanceCm);
+            var maxSwipeRecognizer = new TKSwipeRecognizer(MaxSwipeDistanceCm);
+
+            minSwipeRecognizer.gestureRecognizedEvent += OnSwipe;
+            medSwipeRecognizer.gestureRecognizedEvent += OnSwipe;
+            maxSwipeRecognizer.gestureRecognizedEvent += OnSwipe;
+
+            TouchKit.addGestureRecognizer(minSwipeRecognizer);
+            TouchKit.addGestureRecognizer(medSwipeRecognizer);
+            TouchKit.addGestureRecognizer(maxSwipeRecognizer);
 
             // Add an event handler for tapping the screen
             var tapRecognizer = new TKTapRecognizer();
