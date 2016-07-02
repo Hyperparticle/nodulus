@@ -70,7 +70,7 @@ namespace Assets.Scripts.View.Items
 
             LeanTween.value(gameObject, _primaryHsb.b, _darkHsb.b, time)
                 .setOnUpdate(b => { _material.color = Brightness(_primaryColor, b); })
-                .setEase(LeanTweenType.easeInOutSine); ;
+                .setEase(LeanTweenType.easeInOutSine);
         }
 
         public void SetVisible(bool immediate = false)

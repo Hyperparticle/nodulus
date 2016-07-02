@@ -40,8 +40,8 @@ namespace Assets.Scripts.View.Items
         void Awake()
         {
             _nodeScale = GetComponent<ScaleScript>();
-            _material = GetComponentInChildren<Renderer>().material;
             _colorizer = GetComponentInChildren<Colorizer>();
+            _material = GetComponentInChildren<Renderer>().material;
         }
 
         public void Init(Node node, bool inStartIsland, int delay)
@@ -59,49 +59,56 @@ namespace Assets.Scripts.View.Items
             } else {
                 _colorizer.Darken(true);
             }
-
-            WaveIn(delay);
         }
 
         // TODO: move this to an animation script
-        private void WaveIn(int delay)
+        public void WaveIn(int delay)
         {
             var pos = transform.localPosition;
-            //var alpha = _material.color.a;
+            var alpha = _material.color.a;
 
             // Set node far away and transparent
-            transform.Translate(20*Vector3.forward);
-            //LeanTween.alpha(_rotor, 0f, 0f);
+            transform.Translate(10*Vector3.forward);
+            LeanTween.alpha(_rotor, 0f, 0f)
+                .setRecursive(false);
 
             // TODO: use smooth function over linear delay
             var random = 0f; //Random.Range(0f, 0.25f);
-            var moveDelay = 0.1f*delay + random;
+            var moveDelay = 0.25f + 0.1f*delay + random;
 
             // Start a nice animation effect
             LeanTween.moveLocal(gameObject, pos, 1f)
                 .setDelay(moveDelay)
                 .setEase(LeanTweenType.easeOutBack);
-            //LeanTween.alpha(_rotor, alpha, 0.25f)
-            //    .setDelay(moveDelay)
-            //    .setEase(LeanTweenType.easeInOutSine);
+            LeanTween.alpha(_rotor, alpha, 1f)
+                .setDelay(moveDelay)
+                .setEase(LeanTweenType.easeOutExpo)
+                .setRecursive(false);
+
+            var arc = GetComponentInChildren<ArcView>();
+            if (arc != null) {
+                LeanTween.alpha(arc.gameObject, alpha, 1f)
+                 .setDelay(moveDelay)
+                 .setEase(LeanTweenType.easeOutExpo)
+                 .setRecursive(false);
+            }
         }
 
-        public void WaveOut(int delay, Action onComplete)
+        public void WaveOut(int delay)
         {
             // TODO: use smooth function over linear delay
-            var pos = 20*Vector3.forward;
+            var pos = transform.localPosition + 10 * Vector3.forward;
             var random = 0f; //Random.Range(0f, 0.25f);
             var moveDelay = 0.05f*delay + random;
 
             // Start a nice animation effect
-            LeanTween.moveLocal(gameObject, pos, 0.50f)
+            LeanTween.moveLocal(gameObject, pos, 0.75f)
                 .setDelay(moveDelay)
-                .setEase(LeanTweenType.easeInOutSine)
-                .setOnComplete(onComplete);
-
-            //LeanTween.alpha(_rotor, alpha, 0.25f)
-            //    .setDelay(moveDelay)
-            //    .setEase(LeanTweenType.easeInOutSine);
+                .setEase(LeanTweenType.easeInBack);
+            LeanTween.alpha(_rotor, 0f, 0.75f)
+                .setDelay(moveDelay)
+                .setEase(LeanTweenType.easeInExpo)
+                .setRecursive(false);
         }
 
 

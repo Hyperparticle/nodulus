@@ -12,12 +12,6 @@ namespace Assets.Scripts.View.Game
     /// </summary>
     public class PuzzleView : MonoBehaviour
     {
-        //private const int InvalidAudio = 0;
-        //private const int ForwardAudio = 1;
-        //private const int TakeAudio = 2;
-        //private const int PlaceAudio = 3;
-        //private const int CompleteAudio = 4;
-
         //public float WinDelay = 1.0f;
 
         //public float AnimationSpeed = 1.0f;

@@ -126,7 +126,8 @@ namespace Assets.Scripts.View.Game
 
         public void NextLevel()
         {
-            Init(_currentLevel == Level.LevelCount - 1 ? _currentLevel : _currentLevel + 1);
+            _puzzleSpawner.DestroyBoard();
+            //Init(_currentLevel == Level.LevelCount - 1 ? _currentLevel : _currentLevel + 1);
         }
 
         public void PrevLevel()

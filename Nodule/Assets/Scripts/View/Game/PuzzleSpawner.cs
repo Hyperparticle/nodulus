@@ -46,6 +46,8 @@ namespace Assets.Scripts.View.Game
             InstantiateFields();
             InstantiateArcs();
 
+            StartAnimations();
+
             // Wrap a puzzle around the gameboard and return it
             return new Puzzle(_gameBoard);
         }
@@ -54,16 +56,14 @@ namespace Assets.Scripts.View.Game
         {
             if (_gameBoard == null) return;
 
-            Action destroyChildren = () => {
-                foreach (Transform child in transform) {
-                    Destroy(child.gameObject);
-                }
-            };
-
             // Destroy all objects in the game board
             var i = 0;
             foreach (var node in _nodeMap.Values) {
-                node.WaveOut(i++, destroyChildren);
+                node.WaveOut(_nodeMap.Count - i++);
+            }
+
+            foreach (Transform child in transform) {
+                Destroy(child.gameObject, 1.5f);
             }
 
             _nodeMap.Clear();
@@ -90,7 +90,6 @@ namespace Assets.Scripts.View.Game
         private void InstantiateFields()
         {
             var i = 0;
-
             foreach (var field in _gameBoard.Fields) {
                 var fieldView = Instantiate(FieldScript);
 
@@ -122,6 +121,14 @@ namespace Assets.Scripts.View.Game
                 // Since arcs are undirected, we should add the opposite direction as well
                 _arcMap.Add(arc.Position, arc.Direction, arcView);
                 _arcMap.Add(arc.ConnectedPosition, arc.Direction.Opposite(), arcView);
+            }
+        }
+
+        private void StartAnimations()
+        {
+            var i = 0;
+            foreach (var nodeView in _nodeMap.Values) {
+                nodeView.WaveIn(i++);
             }
         }
     }
