@@ -107,12 +107,12 @@ namespace Assets.Scripts.View.Items
 
         public void Rotate(Direction dir, Action onComplete)
         {
-            if (LeanTween.isTweening(_rotor)) {
-                // Queue the request, which will get completed after this one is complete
-                // TODO: set parent objects
-                //_rotateQueue.Enqueue(dir);
-                return;
-            }
+            //if (LeanTween.isTweening(_rotor)) {
+            //    // Queue the request, which will get completed after this one is complete
+            //    // TODO: set parent objects
+            //    //_rotateQueue.Enqueue(dir);
+            //    return;
+            //}
 
             Rotate90(dir, onComplete);
         }

@@ -37,6 +37,8 @@ namespace Assets.Scripts.View.Game
                 return;
             }
 
+            _viewUpdating = true;
+
             // Try to play the move
             var movePlayed = _puzzleState.Play(nodeView, dir);
 
@@ -52,14 +54,14 @@ namespace Assets.Scripts.View.Game
                 // but not in the case where there is a pulled arc on the node
                 _puzzleView.Rotate(nodeView, dir, true);
             } else if (movePlayed && _puzzleState.IsPulled) {
-                _viewUpdating = true;
                 _puzzleView.Rotate(nodeView, _puzzleState.PulledArcView, dir, true);
                 _gameAudio.Play(Clip.MovePull);
             } else if (movePlayed && !_puzzleState.IsPulled) {
                 // If a push move has been played, move the arc to the node, then rotate it
-                _viewUpdating = true;
                 _puzzleView.MoveRotate(nodeView, _puzzleState.PulledArcView, dir);
                 _gameAudio.Play(Clip.MovePush);
+            } else {
+                _viewUpdating = false;
             }
 
             // Update node highlighting
