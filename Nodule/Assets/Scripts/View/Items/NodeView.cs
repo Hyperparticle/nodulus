@@ -105,10 +105,16 @@ namespace Assets.Scripts.View.Items
             LeanTween.moveLocal(gameObject, pos, 0.75f)
                 .setDelay(moveDelay)
                 .setEase(LeanTweenType.easeInBack);
-            LeanTween.alpha(_rotor, 0f, 0.75f)
-                .setDelay(moveDelay)
-                .setEase(LeanTweenType.easeInExpo)
-                .setRecursive(false);
+
+            var colorizers = GetComponentsInChildren<Colorizer>();
+            foreach (var colorizer in colorizers) {
+                colorizer.SetInvisible();
+            }
+
+            //LeanTween.alpha(_rotor, 0f, 0.75f)
+            //    .setDelay(moveDelay)
+            //    .setEase(LeanTweenType.easeInExpo)
+            //    .setRecursive(false);
         }
 
 

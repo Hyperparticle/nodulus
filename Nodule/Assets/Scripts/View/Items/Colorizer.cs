@@ -18,7 +18,6 @@ namespace Assets.Scripts.View.Items
         }
 
         private Color _primaryColor;
-        private Color _invisibleColor;
 
         private HsbColor _primaryHsb;
         private HsbColor _darkHsb;
@@ -40,9 +39,6 @@ namespace Assets.Scripts.View.Items
             var hsb = _primaryHsb = new HsbColor(PrimaryColor);
 
             _darkHsb = new HsbColor(hsb.h, hsb.s, hsb.b*DarkBrightnessScale, hsb.a);
-
-            var invisibleHsb = new HsbColor(hsb.h, hsb.s, hsb.b, 0f);
-            _invisibleColor = invisibleHsb.ToColor();
         }
 
         public void Highlight(bool immediate = false)
@@ -82,8 +78,7 @@ namespace Assets.Scripts.View.Items
             _visible = true;
             var time = immediate ? 0f : 0.5f;
 
-            LeanTween.value(gameObject, _invisibleColor.a, _primaryColor.a, time)
-                .setOnUpdate(a => { _material.color = Alpha(_primaryColor, a); })
+            LeanTween.alpha(gameObject, _primaryColor.a, time)
                 .setEase(LeanTweenType.easeInOutSine);
         }
 
@@ -96,8 +91,7 @@ namespace Assets.Scripts.View.Items
             _visible = false;
             var time = immediate ? 0f : 0.5f;
 
-            LeanTween.value(gameObject, _primaryColor.a, _invisibleColor.a, time)
-                .setOnUpdate(a => { _material.color = Alpha(_primaryColor, a); })
+            LeanTween.alpha(gameObject, 0f, time)
                 .setEase(LeanTweenType.easeInOutSine);
         }
 
