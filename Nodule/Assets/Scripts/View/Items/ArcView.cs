@@ -35,7 +35,7 @@ namespace Assets.Scripts.View.Items
             _colorizer.PrimaryColor = ArcColor;
 
             if (!inStartIsland) {
-                _colorizer.Darken(true);
+                _colorizer.Darken(0f);
             }
         }
 

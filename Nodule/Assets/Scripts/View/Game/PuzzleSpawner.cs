@@ -59,7 +59,7 @@ namespace Assets.Scripts.View.Game
             // Destroy all objects in the game board
             var i = 0;
             foreach (var node in _nodeMap.Values) {
-                node.WaveOut(_nodeMap.Count - i++);
+                node.WaveOut(i++);
             }
 
             foreach (Transform child in transform) {

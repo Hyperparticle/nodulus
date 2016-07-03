@@ -1,12 +1,14 @@
 using UnityEngine;
-using System.Collections;
 
-public class GameController : MonoBehaviour
+namespace Assets.Scripts.View.Control
 {
-    public GameObject PointPrefab;
-
-    public void DebugPoint(Vector3 pos)
+    public class GameController : MonoBehaviour
     {
-        Instantiate(PointPrefab, pos, Quaternion.identity);
+        public GameObject PointPrefab;
+
+        public void DebugPoint(Vector3 pos)
+        {
+            Instantiate(PointPrefab, pos, Quaternion.identity);
+        }
     }
 }

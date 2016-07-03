@@ -1,47 +1,50 @@
 using System;
-using UnityEngine;
 using System.Collections;
 using Assets.Scripts.View.Game;
+using UnityEngine;
 
-public class ButtonScript : MonoBehaviour
+namespace Assets.Scripts.View.Items
 {
-    public float AnimationTime = 0.25f;
-    public ButtonState ButtonState;
-
-    public event Action<ButtonState> ButtonPressed;
-
-    void OnMouseDown()
+    public class ButtonScript : MonoBehaviour
     {
-        if (LeanTween.isTweening(gameObject)) {
-            return;
+        public float AnimationTime = 0.25f;
+        public ButtonState ButtonState;
+
+        public event Action<ButtonState> ButtonPressed;
+
+        void OnMouseDown()
+        {
+            if (LeanTween.isTweening(gameObject)) {
+                return;
+            }
+
+            if (ButtonPressed != null) {
+                ButtonPressed(ButtonState);
+            }
+
+            Move();
         }
 
-        if (ButtonPressed != null) {
-            ButtonPressed(ButtonState);
+        private void Move()
+        {
+            var pos = transform.localPosition;
+
+            LeanTween.moveLocalZ(gameObject, pos.z + 0.5f, AnimationTime)
+                .setEase(LeanTweenType.easeInOutSine)
+                .setOnComplete(() => MoveBack(pos));
         }
 
-        Move();
+        private void MoveBack(Vector3 pos)
+        {
+            LeanTween.moveLocalZ(gameObject, pos.z, AnimationTime)
+                .setEase(LeanTweenType.easeInOutSine);
+        }
     }
 
-    private void Move()
+    public enum ButtonState
     {
-        var pos = transform.localPosition;
-
-        LeanTween.moveLocalZ(gameObject, pos.z + 0.5f, AnimationTime)
-            .setEase(LeanTweenType.easeInOutSine)
-            .setOnComplete(() => MoveBack(pos));
+        Left,
+        Select,
+        Right
     }
-
-    private void MoveBack(Vector3 pos)
-    {
-        LeanTween.moveLocalZ(gameObject, pos.z, AnimationTime)
-            .setEase(LeanTweenType.easeInOutSine);
-    }
-}
-
-public enum ButtonState
-{
-    Left,
-    Select,
-    Right
 }

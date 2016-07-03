@@ -39,15 +39,15 @@ namespace Assets.Scripts.View.Items
             _fieldScale.SetField(field);
 
             _colorizer.PrimaryColor = FieldColor;
-            _colorizer.SetInvisible(true);
+            _colorizer.Fade(0f);
         }
 
         public void Highlight(bool enable)
         {
             if (enable) {
-                _colorizer.SetVisible();
+                _colorizer.Appear();
             } else {
-                _colorizer.SetInvisible();
+                _colorizer.Fade();
             }
         }
     }

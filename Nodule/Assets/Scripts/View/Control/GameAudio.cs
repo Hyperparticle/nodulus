@@ -1,25 +1,28 @@
-using UnityEngine;
 using System.Collections;
+using UnityEngine;
 
-public class GameAudio : MonoBehaviour
+namespace Assets.Scripts.View.Control
 {
-    public AudioClip[] AudioClips;
-    private AudioSource _audioSource;
-
-    void Awake()
+    public class GameAudio : MonoBehaviour
     {
-        _audioSource = GetComponent<AudioSource>();
+        public AudioClip[] AudioClips;
+        private AudioSource _audioSource;
+
+        void Awake()
+        {
+            _audioSource = GetComponent<AudioSource>();
+        }
+
+        public void Play(Clip clip)
+        {
+            _audioSource.clip = AudioClips[(uint) clip];
+            _audioSource.Play();
+        }
     }
 
-    public void Play(Clip clip)
+    public enum Clip
     {
-        _audioSource.clip = AudioClips[(uint) clip];
-        _audioSource.Play();
+        MovePull,
+        MovePush
     }
-}
-
-public enum Clip
-{
-    MovePull,
-    MovePush
 }

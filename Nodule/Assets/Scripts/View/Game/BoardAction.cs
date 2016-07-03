@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using Assets.Scripts.Core.Data;
+using Assets.Scripts.View.Control;
 using Assets.Scripts.View.Items;
 using UnityEngine;
 
@@ -13,7 +14,7 @@ namespace Assets.Scripts.View.Game
     {
         private PuzzleView _puzzleView;
         private PuzzleState _puzzleState;
-        private GameAudio _gameAudio;
+        public GameAudio GameAudio;
 
         // A lock to prevent multiple moves to be played at the same time
         private bool _viewUpdating;
@@ -22,7 +23,6 @@ namespace Assets.Scripts.View.Game
         {
             _puzzleView = GetComponent<PuzzleView>();
             _puzzleState = GetComponent<PuzzleState>();
-            _gameAudio = GetComponentInChildren<GameAudio>();
 
             _puzzleView.ViewUpdated += OnViewUpdated;
         }
@@ -55,11 +55,11 @@ namespace Assets.Scripts.View.Game
                 _puzzleView.Rotate(nodeView, dir, true);
             } else if (movePlayed && _puzzleState.IsPulled) {
                 _puzzleView.Rotate(nodeView, _puzzleState.PulledArcView, dir, true);
-                _gameAudio.Play(Clip.MovePull);
+                GameAudio.Play(Clip.MovePull);
             } else if (movePlayed && !_puzzleState.IsPulled) {
                 // If a push move has been played, move the arc to the node, then rotate it
                 _puzzleView.MoveRotate(nodeView, _puzzleState.PulledArcView, dir);
-                _gameAudio.Play(Clip.MovePush);
+                GameAudio.Play(Clip.MovePush);
             } else {
                 _viewUpdating = false;
             }
