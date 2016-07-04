@@ -19,6 +19,7 @@ namespace Assets.Scripts.Core.Game
         public Node StartNode { get { return _gameBoard.StartNode; } }
         public bool Win { get { return _player.Win; } }
         public Point BoardSize { get { return _gameBoard.Size; } }
+        public int NumMoves { get { return _player.NumMoves; } }
 
         public PlayerState PlayerState { get { return _player.PlayerState; } }
 

@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using Assets.Scripts.Core.Data;
 using Assets.Scripts.Core.Items;
-using Assets.Scripts.View.Data;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -21,6 +20,7 @@ namespace Assets.Scripts.View.Items
         private ScaleScript _nodeScale;
         private Colorizer _colorizer;
         private GameObject _rotor;
+        private AudioSource _audioSource;
 
         private readonly Queue<Direction> _rotateQueue = new Queue<Direction>();
 
@@ -40,6 +40,8 @@ namespace Assets.Scripts.View.Items
         {
             _nodeScale = GetComponent<ScaleScript>();
             _colorizer = GetComponentInChildren<Colorizer>();
+            _audioSource = GetComponent<AudioSource>();
+            _audioSource.time = 0.5f;
         }
 
         public void Init(Node node, bool inStartIsland, int delay)
@@ -76,6 +78,7 @@ namespace Assets.Scripts.View.Items
 
             // Start a nice animation effect
             LeanTween.moveLocal(gameObject, pos, 1f)
+                .setOnStart(() => _audioSource.PlayDelayed(0.1f))
                 .setDelay(moveDelay)
                 .setEase(LeanTweenType.easeOutBack);
 

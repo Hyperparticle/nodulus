@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using Assets.Scripts.Core.Data;
 using Assets.Scripts.View.Items;
 using UnityEngine;
@@ -12,30 +11,11 @@ namespace Assets.Scripts.View.Game
     /// </summary>
     public class PuzzleView : MonoBehaviour
     {
-        //public float WinDelay = 1.0f;
-
-        //public float AnimationSpeed = 1.0f;
 
         private PuzzleScale _puzzleScale;
         private PuzzleState _puzzleState;
 
         public event Action ViewUpdated;
-
-        //private Animator _levelSelectAnimator;
-        //private Text _moveText;
-
-
-        //private AudioSource[] _audioSources;
-
-
-        //_audioSources = GetComponents<AudioSource>();
-
-        //_levelSelectAnimator = GameObject.FindGameObjectWithTag("LevelSelect").GetComponent<Animator>();
-        //_moveText = GameObject.FindGameObjectWithTag("Moves").GetComponent<Text>();         
-
-        //_playerScript.Init(_puzzle.Player);
-
-        //_moveText.text = _puzzle.NumMoves.ToString();
 
         void Awake()
         {
@@ -46,15 +26,8 @@ namespace Assets.Scripts.View.Game
         public void Init(Point startNode, Point boardSize)
         {
             _puzzleScale.Init(startNode, boardSize);
+            OnViewUpdated();
         }
-
-        // TODO
-        //private IEnumerator WinBoard()
-        //{
-        //    yield return new WaitForSeconds(WinDelay);
-        //    //_levelSelectAnimator.SetTrigger("Slide In");
-        //    _puzzleSpawner.DestroyBoard();
-        //}
 
         public void Rotate(NodeView nodeView, ArcView arcView, Direction dir, bool pull)
         {

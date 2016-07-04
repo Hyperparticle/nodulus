@@ -13,16 +13,17 @@ namespace Assets.Scripts.View.Control
             _audioSource = GetComponent<AudioSource>();
         }
 
-        public void Play(Clip clip)
+        public void Play(Clip clip, float delay = 0f)
         {
             _audioSource.clip = AudioClips[(uint) clip];
-            _audioSource.Play();
+            _audioSource.PlayDelayed(delay);
         }
     }
 
     public enum Clip
     {
         MovePull,
-        MovePush
+        MovePush,
+        WinBoard
     }
 }

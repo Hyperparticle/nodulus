@@ -27,12 +27,7 @@ namespace Assets.Scripts.View.Game
         public ArcView PulledArcView { get; private set; }
         public bool IsPulled { get { return _puzzle.IsPulled; } }
         public Point PullPosition { get { return _playerState.PullPosition; } }
-
-        // TODO: get nodes, arcs, and fields of player
-        //public IEnumerable<ArcView> PullArcs
-        //{
-        //    get { return _playerState.PullFields.Select(field => _arcMap[field.PointDir]); }
-        //}
+        public int NumMoves { get { return _puzzle.NumMoves; } }
 
         public IEnumerable<NodeView> PlayerNodes
         {
@@ -81,6 +76,8 @@ namespace Assets.Scripts.View.Game
             }
         }
 
+        public bool Win { get { return _puzzle.Win; } }
+
         public bool HasArcAt(Point pos, Direction dir) { return _arcMap.ContainsArc(pos, dir); }
 
         public IDictionary<Direction, ArcView> GetArcs(Point pos)
@@ -124,12 +121,12 @@ namespace Assets.Scripts.View.Game
             _nodeMap = _puzzleSpawner.NodeMap;
         }
 
-        public void NextLevel()
+        public void NextLevel(float delay = 0f)
         {
             Init(_currentLevel == Level.LevelCount - 1 ? _currentLevel : _currentLevel + 1);
         }
 
-        public void PrevLevel()
+        public void PrevLevel(float delay = 0f)
         {
             Init(_currentLevel == 0 ? 0 : _currentLevel - 1);
         }

@@ -4,6 +4,7 @@ using Assets.Scripts.Core.Data;
 using Assets.Scripts.View.Control;
 using Assets.Scripts.View.Items;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Assets.Scripts.View.Game
 {
@@ -14,6 +15,7 @@ namespace Assets.Scripts.View.Game
     {
         private PuzzleView _puzzleView;
         private PuzzleState _puzzleState;
+        private Text _moveText;
         public GameAudio GameAudio;
 
         // A lock to prevent multiple moves to be played at the same time
@@ -23,6 +25,8 @@ namespace Assets.Scripts.View.Game
         {
             _puzzleView = GetComponent<PuzzleView>();
             _puzzleState = GetComponent<PuzzleState>();
+
+            _moveText = GameObject.FindGameObjectWithTag("MoveText").GetComponent<Text>();
 
             _puzzleView.ViewUpdated += OnViewUpdated;
         }
@@ -75,12 +79,20 @@ namespace Assets.Scripts.View.Game
             // Update field highlighting
             _puzzleView.Highlight(_puzzleState.NonPushFields, false);
             _puzzleView.Highlight(_puzzleState.PushFields, true);
+
+            if (_puzzleState.Win) {
+                GameAudio.Play(Clip.WinBoard);
+                _puzzleState.NextLevel(0.2f);
+            }
         }
 
         private void OnViewUpdated()
         {
             Debug.Log("View done");
             _viewUpdating = false;
+
+            // Update MoveText
+            _moveText.text = _puzzleState.NumMoves.ToString();
         }
     }
 }

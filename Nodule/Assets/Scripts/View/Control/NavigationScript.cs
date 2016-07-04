@@ -14,7 +14,7 @@ namespace Assets.Scripts.View.Control
         private readonly IDictionary<ButtonState, Action<PuzzleState>> _buttonActions = new Dictionary<ButtonState, Action<PuzzleState>> {
             { ButtonState.Left, puzzleState => puzzleState.PrevLevel() },
             { ButtonState.Right, puzzleState => puzzleState.NextLevel() },
-            { ButtonState.Select, puzzleState => SceneManager.LoadScene("Sandbox") }
+            { ButtonState.Select, puzzleState => SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex) }
         };
 
         void Awake()
