@@ -1,19 +1,25 @@
 using Assets.Scripts.Core.Data;
+using Assets.Scripts.View.Control;
 using UnityEngine;
 
 namespace Assets.Scripts.View.Game
 {
     public class PuzzleScale : MonoBehaviour
     {
-        public float Scaling = 2.5f;
-        public float NodeScaling = 1.0f;
-        public float EdgeScaling = 1.0f;
-        public float BoardScaling = 1.0f;
-        public float BoardPadding = 1.0f;
-
-        public Vector3 BoardRotation = new Vector3(22.5f, 12.25f, 0f);
+        // Constants
+        public float Scaling { get { return GameDef.Get.Scaling; } }
+        public float NodeScaling { get { return GameDef.Get.NodeScaling; } }
+        public float EdgeScaling { get { return GameDef.Get.EdgeScaling; } } 
+        public float BoardScaling { get { return GameDef.Get.BoardScaling; } }
+        public float BoardPadding { get { return GameDef.Get.BoardPadding; } }
+        public Vector3 BoardRotation { get { return GameDef.Get.BoardRotation; } }
 
         public Vector2 Dimensions { get; private set; }
+
+        void Awake()
+        {
+            Get = this;
+        }
 
         public void Init(Point startNode, Point boardSize)
         {
@@ -33,12 +39,6 @@ namespace Assets.Scripts.View.Game
             //transform.localPosition = -(Vector3)startNode * Scaling;
         }
 
-        private static PuzzleScale _puzzleScale;
-
-        public static PuzzleScale Get()
-        {
-            return _puzzleScale ??
-                   (_puzzleScale = GameObject.FindGameObjectWithTag("PuzzleGame").GetComponent<PuzzleScale>());
-        }
+        public static PuzzleScale Get { get; private set; }
     }
 }

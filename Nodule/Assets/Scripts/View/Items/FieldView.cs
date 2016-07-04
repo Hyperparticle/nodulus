@@ -1,4 +1,5 @@
 using Assets.Scripts.Core.Items;
+using Assets.Scripts.View.Control;
 using UnityEngine;
 
 namespace Assets.Scripts.View.Items
@@ -9,7 +10,7 @@ namespace Assets.Scripts.View.Items
     /// </summary>
     public class FieldView : MonoBehaviour
     {
-        public Color FieldColor;
+        public Color FieldColor { get { return GameDef.Get.FieldColor; } }
 
         private ScaleScript _fieldScale;
         private Colorizer _colorizer;

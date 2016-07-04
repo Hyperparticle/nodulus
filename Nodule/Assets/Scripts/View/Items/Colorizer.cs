@@ -1,7 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.Runtime.InteropServices;
 using Assets.Scripts.Utility;
+using Assets.Scripts.View.Control;
 using UnityEngine;
 
 namespace Assets.Scripts.View.Items
@@ -9,9 +7,9 @@ namespace Assets.Scripts.View.Items
     public class Colorizer : MonoBehaviour
     {
         // Defaults
-        private const float DarkBrightnessScale = 0.40f;
-        private const float TransitionTime = 0.5f;
-        private const LeanTweenType Ease = LeanTweenType.easeInOutSine;
+        public float DarkBrightnessScale { get { return GameDef.Get.DarkBrightnessScale; } }
+        public float TransitionTime { get { return GameDef.Get.ColorTransitionTime; } }
+        public LeanTweenType Ease { get { return GameDef.Get.ColorEase; } }
 
         public Color Primary;
 
@@ -51,7 +49,17 @@ namespace Assets.Scripts.View.Items
             _material = GetComponent<Renderer>().material;
         }
 
-        public void Highlight(float time = TransitionTime, float delay = 0f, LeanTweenType ease = Ease)
+        public void Highlight()
+        {
+            Highlight(TransitionTime, 0f, Ease);
+        }
+
+        public void Highlight(float time)
+        {
+            Highlight(time, 0f, Ease);
+        }
+
+        public void Highlight(float time, float delay, LeanTweenType ease)
         {
             _previousColor = CurrentColor;
 
@@ -66,7 +74,17 @@ namespace Assets.Scripts.View.Items
                 .setEase(ease);
         }
 
-        public void Darken(float time = TransitionTime, float delay = 0f, LeanTweenType ease = Ease)
+        public void Darken()
+        {
+            Darken(TransitionTime, 0f, Ease);
+        }
+
+        public void Darken(float time)
+        {
+            Darken(time, 0f, Ease);
+        }
+
+        public void Darken(float time, float delay, LeanTweenType ease)
         {
             _previousColor = CurrentColor;
 
@@ -81,7 +99,17 @@ namespace Assets.Scripts.View.Items
                 .setEase(ease);
         }
 
-        public void Appear(float time = TransitionTime, float delay = 0f, LeanTweenType ease = Ease)
+        public void Appear()
+        {
+            Appear(TransitionTime, 0f, Ease);
+        }
+
+        public void Appear(float time)
+        {
+            Appear(time, 0f, Ease);
+        }
+
+        public void Appear(float time, float delay, LeanTweenType ease)
         {
             _previousColor = CurrentColor;
 
@@ -95,7 +123,17 @@ namespace Assets.Scripts.View.Items
                 .setEase(ease);
         }
 
-        public void Fade(float time = TransitionTime, float delay = 0f, LeanTweenType ease = Ease)
+        public void Fade()
+        {
+            Fade(TransitionTime, 0f, Ease);
+        }
+
+        public void Fade(float time)
+        {
+            Fade(time, 0f, Ease);
+        }
+
+        public void Fade(float time, float delay, LeanTweenType ease)
         {
             _previousColor = CurrentColor;
 
@@ -109,7 +147,17 @@ namespace Assets.Scripts.View.Items
                 .setEase(ease);
         }
 
-        public void Previous(float time = TransitionTime, float delay = 0f, LeanTweenType ease = Ease)
+        public void Previous()
+        {
+            Previous(TransitionTime, 0f, Ease);
+        }
+
+        public void Previous(float time)
+        {
+            Previous(time, 0f, Ease);
+        }
+
+        public void Previous(float time, float delay, LeanTweenType ease)
         {
             LeanTween.color(gameObject, _previousColor, time)
                 .setDelay(delay)

@@ -1,5 +1,6 @@
 using System;
 using Assets.Scripts.Core.Items;
+using Assets.Scripts.View.Control;
 using UnityEngine;
 
 namespace Assets.Scripts.View.Items
@@ -10,7 +11,9 @@ namespace Assets.Scripts.View.Items
     /// </summary>
     public class ArcView : MonoBehaviour
     {
-        public Color ArcColor;
+        public Color ArcColor { get { return GameDef.Get.ArcColor; } }
+        public float ArcMoveTime { get { return GameDef.Get.ArcMoveTime; } }
+        public LeanTweenType ArcMoveEase { get { return GameDef.Get.ArcMoveEase; } }
 
         private ScaleScript _arcScale;
         private Colorizer _colorizer;
@@ -63,12 +66,12 @@ namespace Assets.Scripts.View.Items
 
             transform.parent = nodeView.transform;
 
-            // TODO: remove magic constants
-            LeanTween.move(gameObject, nodeView.transform, 0.25f)
-                .setEase(LeanTweenType.easeInOutSine)
+            // TODO: move arc gracefully
+            LeanTween.move(gameObject, nodeView.transform, ArcMoveTime)
+                .setEase(ArcMoveEase)
                 .setOnComplete(onComplete);
-            LeanTween.moveLocalZ(gameObject, -_arcScale.Length, 0.25f)
-                .setEase(LeanTweenType.easeInOutSine);
+            LeanTween.moveLocalZ(gameObject, -_arcScale.Length, ArcMoveTime)
+                .setEase(ArcMoveEase);
         }
     }
 }

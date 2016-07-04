@@ -13,7 +13,7 @@ namespace Assets.Scripts.View.Game
     /// </summary>
     public class BoardAction : MonoBehaviour
     {
-        private const float LevelDelay = 0.2f;
+        public float LevelDelay { get { return GameDef.Get.LevelDelay; } }
 
         private PuzzleView _puzzleView;
         private PuzzleState _puzzleState;

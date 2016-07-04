@@ -12,14 +12,14 @@ namespace Assets.Scripts.View.Control
     /// </summary>
     public class BoardInput : MonoBehaviour
     {
-        public float MinSwipeDistanceCm = 1.5f;
-        public float MedSwipeDistanceCm = 3f;
-        public float MaxSwipeDistanceCm = 4.5f;
-
         private BoardAction _boardAction;
         private PuzzleScale _puzzleScale;
 
         private IDictionary<Point, NodeView> _nodeMap;
+
+        public float MinSwipeDistanceCm { get { return GameDef.Get.MinSwipeDistanceCm; } }
+        public float MedSwipeDistanceCm { get { return GameDef.Get.MedSwipeDistanceCm; } }
+        public float MaxSwipeDistanceCm { get { return GameDef.Get.MedSwipeDistanceCm; } }
 
         void Awake()
         {
@@ -29,18 +29,17 @@ namespace Assets.Scripts.View.Control
 
         void Start()
         {
-            // Add an event handler for swiping the screen
-            var minSwipeRecognizer = new TKSwipeRecognizer(MinSwipeDistanceCm);
-            var medSwipeRecognizer = new TKSwipeRecognizer(MedSwipeDistanceCm);
-            var maxSwipeRecognizer = new TKSwipeRecognizer(MaxSwipeDistanceCm);
+            // Add event handlers for swiping the screen
+            var swipeRecognizers = new[] {
+                new TKSwipeRecognizer(MinSwipeDistanceCm),
+                new TKSwipeRecognizer(MedSwipeDistanceCm),
+                new TKSwipeRecognizer(MaxSwipeDistanceCm)
+            };
 
-            minSwipeRecognizer.gestureRecognizedEvent += OnSwipe;
-            medSwipeRecognizer.gestureRecognizedEvent += OnSwipe;
-            maxSwipeRecognizer.gestureRecognizedEvent += OnSwipe;
-
-            TouchKit.addGestureRecognizer(minSwipeRecognizer);
-            TouchKit.addGestureRecognizer(medSwipeRecognizer);
-            TouchKit.addGestureRecognizer(maxSwipeRecognizer);
+            foreach (var swipe in swipeRecognizers) {
+                swipe.gestureRecognizedEvent += OnSwipe;
+                TouchKit.addGestureRecognizer(swipe);
+            }
 
             // Add an event handler for tapping the screen
             var tapRecognizer = new TKTapRecognizer();
@@ -81,6 +80,8 @@ namespace Assets.Scripts.View.Control
         /// </summary>
         private NodeView GetNearestNode(TKSwipeRecognizer recognizer)
         {
+            // TODO: make this more robust
+
             // Obtain the gesture positions
             var startTouch = Camera.main.ScreenToWorldPoint(recognizer.startPoint);
             var endTouch = Camera.main.ScreenToWorldPoint(recognizer.endPoint);

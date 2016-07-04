@@ -2,8 +2,8 @@ using System;
 using System.Collections.Generic;
 using Assets.Scripts.Core.Data;
 using Assets.Scripts.Core.Items;
+using Assets.Scripts.View.Control;
 using UnityEngine;
-using Random = UnityEngine.Random;
 
 namespace Assets.Scripts.View.Items
 {
@@ -14,8 +14,9 @@ namespace Assets.Scripts.View.Items
     public class NodeView : MonoBehaviour
     {
         public Transform Rotor;
-        public Color NodeColor;
-        public Color NodeFinalColor;
+
+        public Color NodeColor { get { return GameDef.Get.NodeColor; } }
+        public Color NodeFinalColor { get { return GameDef.Get.NodeFinalColor; } }
 
         private ScaleScript _nodeScale;
         private Colorizer _colorizer;

@@ -2,8 +2,15 @@ using UnityEngine;
 
 namespace Assets.Scripts.View.Control
 {
-    public class GameController : MonoBehaviour
+    public class GameDef : MonoBehaviour
     {
+        void Awake()
+        {
+            Get = this;
+        }
+
+        // TODO: Move all constants to a configuration file
+
         // Board Scaling
         public float Scaling = 2.5f;
         public float NodeScaling = 1.0f;
@@ -18,24 +25,28 @@ namespace Assets.Scripts.View.Control
         public float MaxSwipeDistanceCm = 4.5f;
 
         // Item Colors
-        public Color NodeColor;
-        public Color NodeFinalColor;
-        public Color ArcColor;
-        public Color FieldColor;
+        // TODO: add color themes
+        public Color NodeColor = new Color32(195, 38, 11, 255);
+        public Color NodeFinalColor = new Color32(9, 94, 193, 255);
+        public Color ArcColor = new Color32(76, 176, 12, 255);
+        public Color FieldColor = new Color32(32, 163, 21, 100);
 
         // Colorizer
         public float DarkBrightnessScale = 0.40f;
         public float ColorTransitionTime = 0.5f;
         public LeanTweenType ColorEase = LeanTweenType.easeInOutSine;
 
+        // Moves
+        public float NodeRotateTime = 0.33f;
+        public float ArcMoveTime = 0.25f;
+        public LeanTweenType ArcMoveEase = LeanTweenType.easeInOutSine;
+
         // Buttons
         public float ButtonTransitionTime = 0.25f;
+        public LeanTweenType ButtonEase = LeanTweenType.easeInOutSine;
 
         // Board Animations
         public float LevelDelay = 0.2f;
-
-        // Node Animations
-        public float NodeRotateTime = 0.33f;
 
         public float WaveInTravel = 10f;
         public float WaveInAudioDelay = 0.1f;
@@ -52,5 +63,7 @@ namespace Assets.Scripts.View.Control
         public float WaveOutTime = 0.75f;
         public LeanTweenType WaveOutMoveEase = LeanTweenType.easeInBack;
         public LeanTweenType WaveOutColorEase = LeanTweenType.easeInExpo;
+
+        public static GameDef Get { get; private set; }
     }
 }

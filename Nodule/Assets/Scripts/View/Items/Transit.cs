@@ -1,5 +1,6 @@
 using System;
 using Assets.Scripts.Core.Data;
+using Assets.Scripts.View.Control;
 using UnityEngine;
 
 namespace Assets.Scripts.View.Items
@@ -11,6 +12,24 @@ namespace Assets.Scripts.View.Items
     {
         private AudioSource _audioSource;
         private GameObject _rotor;
+
+        public float NodeRotateTime { get { return GameDef.Get.NodeRotateTime; } }
+
+        public float WaveInTravel { get { return GameDef.Get.WaveInTravel; } }
+        public float WaveInAudioDelay { get { return GameDef.Get.WaveInAudioDelay; } }
+        public float WaveInMoveDelayStart { get { return GameDef.Get.WaveInMoveDelayStart; } }
+        public float WaveInMoveDelayOffsetScale { get { return GameDef.Get.WaveInMoveDelayOffsetScale; } }
+        public float WaveInTime { get { return GameDef.Get.WaveInTime; } }
+        public LeanTweenType WaveInMoveEase { get { return GameDef.Get.WaveInMoveEase; } }
+        public LeanTweenType WaveInColorEase { get { return GameDef.Get.WaveInColorEase; } }
+
+        public float WaveOutTravel { get { return GameDef.Get.WaveOutTravel; } }
+        public float WaveOutAudioDelay { get { return GameDef.Get.WaveOutAudioDelay; } }
+        public float WaveOutMoveDelayStart { get { return GameDef.Get.WaveOutMoveDelayStart; } }
+        public float WaveOutMoveDelayOffsetScale { get { return GameDef.Get.WaveOutMoveDelayOffsetScale; } }
+        public float WaveOutTime { get { return GameDef.Get.WaveOutTime; } }
+        public LeanTweenType WaveOutMoveEase { get { return GameDef.Get.WaveOutMoveEase; } }
+        public LeanTweenType WaveOutColorEase { get { return GameDef.Get.WaveOutColorEase; } }
 
         void Awake()
         {
@@ -25,7 +44,7 @@ namespace Assets.Scripts.View.Items
             var pos = transform.localPosition;
 
             // Set node far away and transparent
-            transform.Translate(10*Vector3.forward);
+            transform.Translate(WaveInTravel * Vector3.forward);
 
             var colorizers = GetComponentsInChildren<Colorizer>();
             foreach (var colorizer in colorizers) {
@@ -33,34 +52,33 @@ namespace Assets.Scripts.View.Items
             }
 
             // TODO: use smooth function over linear delay
-            var moveDelay = 1.25f + 0.1f*delay;
+            var moveDelay = WaveInMoveDelayStart + WaveInMoveDelayOffsetScale * delay;
 
             // Start a nice animation effect
-            LeanTween.moveLocal(gameObject, pos, 1f)
-                .setOnStart(() => _audioSource.PlayDelayed(0.1f))
+            LeanTween.moveLocal(gameObject, pos, WaveInTime)
+                .setOnStart(() => _audioSource.PlayDelayed(WaveInAudioDelay))
                 .setDelay(moveDelay)
-                .setEase(LeanTweenType.easeOutBack);
+                .setEase(WaveInMoveEase);
 
             foreach (var colorizer in colorizers) {
-                colorizer.Previous(1f, moveDelay, LeanTweenType.easeOutExpo);
+                colorizer.Previous(WaveInTime, moveDelay, WaveInColorEase);
             }
         }
 
         public void WaveOut(int delay)
         {
             // TODO: use smooth function over linear delay
-            var pos = transform.localPosition + 10*Vector3.forward;
-            var random = 0f; //Random.Range(0f, 0.25f);
-            var moveDelay = 0.05f*delay + random;
+            var pos = transform.localPosition + WaveOutTravel * Vector3.forward;
+            var moveDelay = WaveOutMoveDelayStart + WaveOutMoveDelayOffsetScale * delay;
 
             // Start a nice animation effect
-            LeanTween.moveLocal(gameObject, pos, 0.75f)
+            LeanTween.moveLocal(gameObject, pos, WaveOutTime)
                 .setDelay(moveDelay)
-                .setEase(LeanTweenType.easeInBack);
+                .setEase(WaveOutMoveEase);
 
             var colorizers = GetComponentsInChildren<Colorizer>();
             foreach (var colorizer in colorizers) {
-                colorizer.Fade(0.75f, moveDelay, LeanTweenType.easeInExpo);
+                colorizer.Fade(WaveOutTime, moveDelay, WaveOutColorEase);
             }
         }
 
@@ -74,7 +92,7 @@ namespace Assets.Scripts.View.Items
 
             // Rotate 90 degrees in the direction specified
             // TODO: remove magic constants
-            LeanTween.rotateAroundLocal(_rotor, axis, 90f, 0.33f)
+            LeanTween.rotateAroundLocal(_rotor, axis, 90f, NodeRotateTime)
                 .setEase(LeanTweenType.easeInOutSine)
                 //.setOnComplete(OnRotateComplete)
                 .setOnComplete(onComplete);

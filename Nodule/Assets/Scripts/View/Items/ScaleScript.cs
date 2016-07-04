@@ -13,7 +13,7 @@ namespace Assets.Scripts.View.Items
         
         public void SetNode(Node node)
         {
-            _puzzleScale = PuzzleScale.Get();
+            _puzzleScale = PuzzleScale.Get;
 
             transform.localPosition = (Vector3) node.Position * _puzzleScale.Scaling;
             transform.localScale = Vector3.one * _puzzleScale.NodeScaling;
@@ -24,7 +24,7 @@ namespace Assets.Scripts.View.Items
 
         public void SetArc(Arc arc)
         {
-            _puzzleScale = PuzzleScale.Get();
+            _puzzleScale = PuzzleScale.Get;
 
             var arcPos = arc.Direction.Vector() * arc.Length / 2;
             var lengthScale = new Vector3(arc.Length*_puzzleScale.Scaling, 1, 1)
@@ -39,7 +39,7 @@ namespace Assets.Scripts.View.Items
 
         public void SetField(Field field)
         {
-            _puzzleScale = PuzzleScale.Get();
+            _puzzleScale = PuzzleScale.Get;
 
             var fieldPos = field.Direction.Vector() * field.Length / 2;
             var lengthScale = new Vector3(field.Length * _puzzleScale.Scaling, 1, 1)
