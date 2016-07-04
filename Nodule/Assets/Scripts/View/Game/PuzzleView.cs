@@ -11,7 +11,6 @@ namespace Assets.Scripts.View.Game
     /// </summary>
     public class PuzzleView : MonoBehaviour
     {
-
         private PuzzleScale _puzzleScale;
         private PuzzleState _puzzleState;
 

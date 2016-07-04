@@ -13,6 +13,8 @@ namespace Assets.Scripts.View.Game
     /// </summary>
     public class BoardAction : MonoBehaviour
     {
+        private const float LevelDelay = 0.2f;
+
         private PuzzleView _puzzleView;
         private PuzzleState _puzzleState;
         private Text _moveText;
@@ -82,13 +84,12 @@ namespace Assets.Scripts.View.Game
 
             if (_puzzleState.Win) {
                 GameAudio.Play(Clip.WinBoard);
-                _puzzleState.NextLevel(0.2f);
+                _puzzleState.NextLevel(LevelDelay);
             }
         }
 
         private void OnViewUpdated()
         {
-            Debug.Log("View done");
             _viewUpdating = false;
 
             // Update MoveText
