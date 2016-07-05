@@ -8,12 +8,12 @@ namespace Assets.Scripts.Core.Builders
 {
     public class GameBoardBuilder 
     {
-        public static GameBoard BuildBoard(IEnumerable<Point> nodePositions, IEnumerable<ArcArg> arcArgs)
+        public static GameBoard BuildBoard(Level level)
         {
             var gameBoard = new GameBoard();
 
-            var buildNodes = BuildNodes(gameBoard, nodePositions);
-            var buildArcs = BuildArcs(gameBoard, arcArgs);
+            var buildNodes = BuildNodes(gameBoard, level.Nodes);
+            var buildArcs = BuildArcs(gameBoard, level.Arcs);
 
             // Fail fast if something went wrong
             if (!buildNodes || !buildArcs) return null;
@@ -40,26 +40,16 @@ namespace Assets.Scripts.Core.Builders
             return success;
         }
 
-        private static bool BuildArcs(GameBoard gameBoard, IEnumerable<ArcArg> arcArgs)
+        private static bool BuildArcs(GameBoard gameBoard, IEnumerable<PointDir> arcPositions)
         {
             // Place all arcs on the board, and return sucess if all placements were valid
-            var success = arcArgs
-                .Select(arcArg => gameBoard.CreateArc(arcArg.Position, arcArg.Direction))
+            var success = arcPositions
+                .Select(pointDir => gameBoard.CreateArc(pointDir.Point, pointDir.Direction))
                 .All(valid => valid);
 
             return success;
         }
     }
 
-    public struct ArcArg
-    {
-        public Direction Direction { get; private set; }
-        public Point Position { get; private set; }
 
-        public ArcArg(Point pos, Direction dir) : this()
-        {
-            Position = pos;
-            Direction = dir;
-        }
-    }
 }

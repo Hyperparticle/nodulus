@@ -39,7 +39,11 @@ namespace Assets.Scripts.View.Game
         public Puzzle SpawnBoard(int level)
         {
             // Create the game board model
-            _gameBoard = Level.BuildLevel(level);
+            _gameBoard = Levels.BuildLevel(level);
+
+            if (_gameBoard == null) {
+                Debug.LogError(string.Format("The game board for level {0} is in an invalid format", level));
+            }
 
             // Instantiate all the necessary components to view the board
             InstantiateNodes();

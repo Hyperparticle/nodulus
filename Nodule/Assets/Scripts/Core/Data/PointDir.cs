@@ -6,15 +6,15 @@ namespace Assets.Scripts.Core.Data
     /// </summary>
     public struct PointDir
     {
-        public readonly Point point;
-        public readonly Direction direction;
+        public readonly Point Point;
+        public readonly Direction Direction;
 
-        public PointDir Opposite { get { return new PointDir(point, direction.Opposite()); } }
+        public PointDir Opposite { get { return new PointDir(Point, Direction.Opposite()); } }
 
         public PointDir(Point point, Direction direction)
         {
-            this.point = point;
-            this.direction = direction;
+            this.Point = point;
+            this.Direction = direction;
         }
 
         public override bool Equals(object obj)
@@ -25,20 +25,20 @@ namespace Assets.Scripts.Core.Data
 
         public bool Equals(PointDir other)
         {
-            return point.Equals(other.point) && direction == other.direction;
+            return Point.Equals(other.Point) && Direction == other.Direction;
         }
 
         public override int GetHashCode()
         {
             unchecked
             {
-                return (point.GetHashCode() * 397) ^ (int)direction;
+                return (Point.GetHashCode() * 397) ^ (int)Direction;
             }
         }
         
         public override string ToString()
         {
-            return string.Format("{{{0}, {1}}}", point, direction);
+            return string.Format("{{{0}, {1}}}", Point, Direction);
         }
     }
 }

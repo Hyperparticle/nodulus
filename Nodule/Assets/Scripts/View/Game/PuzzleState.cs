@@ -123,7 +123,7 @@ namespace Assets.Scripts.View.Game
 
         public void NextLevel(float delay = 0f)
         {
-            Init(_currentLevel == Level.LevelCount - 1 ? _currentLevel : _currentLevel + 1);
+            Init(_currentLevel == Levels.LevelCount - 1 ? _currentLevel : _currentLevel + 1);
         }
 
         public void PrevLevel(float delay = 0f)

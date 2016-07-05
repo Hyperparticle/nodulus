@@ -9,7 +9,7 @@ namespace Assets.Editor
         [Test]
         public void Level0Test()
         {
-            var gameBoard = Level.BuildLevel(0);
+            var gameBoard = Levels.BuildLevel(0);
             var puzzle = new Puzzle(gameBoard);
 
             //Debug.Log(gameBoard.GetBoard(puzzle.PullFields, puzzle.PushFields));

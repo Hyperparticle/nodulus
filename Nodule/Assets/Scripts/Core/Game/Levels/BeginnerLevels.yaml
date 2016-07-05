@@ -1,0 +1,153 @@
+info:
+  title: Beginner Level Pack
+  description: This level pack introduces the player to the game
+  version: 1.0.0
+
+levels:
+  - name: Loop
+    description: A Simple Challenge
+    nodes:
+      - [0, 1]  # Nodes are constructed by specifying their [x, y] coordinates
+      - [1, 2]
+      - [1, 1]
+      - [1, 0]
+      - [2, 0]
+      - [3, 1]
+      - [4, 0]
+      - [4, 2]
+      - [5, 0]
+      - [6, 1]
+    #start: [0, 1]  # The position of the start and final nodes. If left out, they are
+    #final: [6, 1]    # assumed as the first and last nodes in the list above
+    arcs:
+      - parent: [0, 1]    # Arcs are constructed by specifying parent node coordinates
+        direction: Right  # and the direction it points to (Right or Up)
+      - parent: [1, 2]
+        direction: Right
+      - parent: [2, 0]
+        direction: Right
+
+  - name: tbd
+    description: tbd
+    nodes:
+      - [0, 1]
+      - [1, 0]
+      - [1, 2]
+      - [2, 1]
+      - [3, 0]
+      - [4, 1]
+      - [4, 2]
+      - [5, 2]
+      - [6, 0]
+      - [6, 1]
+      - [8, 0]
+      - [8, 2]
+      - [9, 1]
+    arcs:
+      - parent: [0, 1]
+        direction: Right
+      - parent: [5, 2]
+        direction: Right
+      - parent: [6, 0]
+        direction: Up
+
+  - name: tbd
+    description: tbd
+    nodes:
+      - [0, 1]
+      - [1, 2]
+      - [2, 0]
+      - [2, 1]
+      - [4, 1]
+      - [4, 2]
+      - [5, 0]
+      - [5, 2]
+      - [6, 0]
+      - [6, 1]
+      - [8, 0]
+      - [8, 2]
+      - [9, 1]
+    arcs:
+      - parent: [0, 1]
+        direction: Right
+      - parent: [2, 0]
+        direction: Right
+      - parent: [4, 1]
+        direction: Up
+
+  - name: tbd
+    description: tbd
+    nodes:
+      - [0, 1]
+      - [1, 0]
+      - [1, 2]
+      - [2, 1]
+      - [2, 2]
+      - [4, 0]
+      - [4, 2]
+      - [5, 0]
+      - [5, 1]
+      - [6, 2]
+      - [7, 1]
+      - [7, 2]
+      - [8, 0]
+      - [9, 1]
+    arcs:
+      - parent: [0, 1]
+        direction: Right
+      - parent: [1, 0]
+        direction: Right
+      - parent: [2, 1]
+        direction: Up
+
+  - name: tbd
+    description: tbd
+    nodes:
+      - [0, 1]
+      - [1, 2]
+      - [2, 0]
+      - [3, 1]
+      - [3, 2]
+      - [4, 0]
+      - [4, 1]
+      - [6, 0]
+      - [6, 2]
+      - [7, 0]
+      - [7, 1]
+      - [8, 2]
+      - [9, 1]
+    arcs:
+      - parent: [0, 1]
+        direction: Right
+      - parent: [1, 2]
+        direction: Right
+      - parent: [3, 1]
+        direction: Up
+
+  - name: tbd
+    description: tbd
+    nodes:
+      - [0, 3]
+      - [1, 0]
+      - [1, 1]
+      - [1, 4]
+      - [2, 0]
+      - [2, 2]
+      - [2, 3]
+      - [2, 4]
+      - [3, 1]
+      - [3, 2]
+      - [4, 0]
+      - [4, 3]
+      - [5, 0]
+      - [5, 2]
+      - [5, 3]
+      - [5, 4]
+      - [6, 1]
+    arcs:
+      - parent: [0, 3]
+        direction: Right
+      - parent: [1, 0]
+        direction: Right
+      - parent: [4, 0]
+        direction: Up
