@@ -1,4 +1,7 @@
-﻿Shader "Hyperparticle/Waves" {
+﻿// Upgrade NOTE: replaced '_Object2World' with 'unity_ObjectToWorld'
+// Upgrade NOTE: replaced '_World2Object' with 'unity_WorldToObject'
+
+Shader "Hyperparticle/Waves" {
 
 Properties {
 	_PrimaryColor("Primary color", Color) = (1,1,1,1)
@@ -97,19 +100,19 @@ Category {
                 //         _Intensity * 0.05 * sin(1.57 + _SquareWaves * (vertex.position.x * sin(_Direction + 1.57) + vertex.position.z * cos(_Direction + 1.57) / _WaveLength));
                 
                 ///
-                float3 v0 = mul(_Object2World, vertex.position).xyz;
+                float3 v0 = mul(unity_ObjectToWorld, vertex.position).xyz;
 
 				float phase0 = (_WaveHeight)* sin((_Time[1] * _WaveSpeed) + (v0.x * _WaveLength2) + (v0.z * _WaveLength2) + rand2(v0.xzz));
 				float phase0_1 = (_RandomHeight)*sin(cos(rand(v0.xzz) * _RandomHeight * cos(_Time[1] * _RandomSpeed * sin(rand(v0.xxz)))));
 				
 				v0.y += phase0 + phase0_1;
                 
-                vertex.position.xyz = mul((float3x3)_World2Object, v0);
+                vertex.position.xyz = mul((float3x3)unity_WorldToObject, v0);
                 ///
                 
-			    half3 worldPosition = mul(_Object2World, vertex.position).xyz;
+			    half3 worldPosition = mul(unity_ObjectToWorld, vertex.position).xyz;
 			    half3 cameraVector = normalize(worldPosition.xyz - _WorldSpaceCameraPos);
-			    half3 worldNormal = normalize(mul(_Object2World, half4(vertex.normal,0)).xyz);
+			    half3 worldNormal = normalize(mul(unity_ObjectToWorld, half4(vertex.normal,0)).xyz);
 			    half blend = dot(worldNormal, cameraVector) * _SecondaryColorAngle + _SecondaryColorImpact;
 
 			    output.color = _PrimaryColor * (1 - blend) + _SecondaryColor * blend;
