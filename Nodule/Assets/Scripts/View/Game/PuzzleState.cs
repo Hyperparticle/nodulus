@@ -76,6 +76,21 @@ namespace Assets.Scripts.View.Game
             }
         }
 
+        /// <summary>
+        /// Get centroid (average position) of the player island
+        /// </summary>
+        public Vector2 IslandAverage
+        {
+            get
+            {
+                var islandSize = _playerState.PlayerNodes.Count();
+                var sumPos = _playerState.PlayerNodes.Select(node => node.Position)
+                    .Aggregate(Point.Zero, (a, b) => a + b);
+
+                return (Vector2) sumPos / islandSize;
+            }
+        }
+
         public bool Win { get { return _puzzle.Win; } }
 
         public bool HasArcAt(Point pos, Direction dir) { return _arcMap.ContainsArc(pos, dir); }

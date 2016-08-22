@@ -5,51 +5,66 @@ namespace Assets.Scripts.View.Control
 {
     public class PanScript : MonoBehaviour
     {
-        public const float MouseSensitivity = 0.01f;
-        public const KeyCode PanCode = KeyCode.Mouse2;
+        //public const float MouseSensitivity = 0.01f;
+        //public const KeyCode PanCode = KeyCode.Mouse2;
 
-        private Vector2 _boardDimensions;
+        private PuzzleScale _puzzleScale;
 
-        private Vector2 _minClamp;
-        private Vector2 _maxClamp;
+        private Vector2 _currentPos;
 
-        private Vector3 _lastPosition;
+        //private Vector2 _boardDimensions;
+
+        //private Vector2 _minClamp;
+        //private Vector2 _maxClamp;
+
+        //private Vector3 _lastPosition;
 
         void Awake()
         {
-            _boardDimensions = GameObject.FindGameObjectWithTag("PuzzleGame")
-                .GetComponent<PuzzleScale>()
-                .Dimensions;
+            //    _boardDimensions = PuzzleScale.Get.Dimensions;
+            _puzzleScale = GetComponentInChildren<PuzzleScale>();
         }
 
-        void Start()
+        public void PanTo(Vector2 boardPosition)
         {
-            _minClamp = _boardDimensions/-2f;
-            _maxClamp = _boardDimensions/2f;
+            var scaledPos = _puzzleScale.Scale(boardPosition);
+            var delta = scaledPos - _currentPos; // Adjusted relative to the current position
+
+            _currentPos = scaledPos;
         }
 
-        void Update()
-        {
-            if (Input.GetKeyDown(PanCode)) {
-                _lastPosition = Input.mousePosition;
-            }
+        //void Start()
+        //{
+        //    _minClamp = _boardDimensions/-2f;
+        //    _maxClamp = _boardDimensions/2f;
+        //}
 
-            // Pan the camera if dragging
-            if (Input.GetKey(PanCode)) {
-                var delta = -_lastPosition + Input.mousePosition;
-                var deltaPos = delta*MouseSensitivity;
-                var pos = transform.position + deltaPos;
+        //void Update()
+        //{
+        //    if (Input.GetKeyDown(PanCode)) {
+        //        _lastPosition = Input.mousePosition;
+        //    }
 
-                transform.localPosition = Clamp(pos);
+        //    // Pan if dragging
+        //    if (Input.GetKey(PanCode)) {
+        //        var delta = -_lastPosition + Input.mousePosition;
+        //        var deltaPos = delta*MouseSensitivity;
+        //        var pos = transform.position + deltaPos;
 
-                _lastPosition = Input.mousePosition;
-            }
-        }
+        //        transform.localPosition = Clamp(pos);
 
-        private Vector2 Clamp(Vector2 pos)
-        {
-            return new Vector2(Mathf.Clamp(pos.x, _minClamp.x, _maxClamp.x),
-                Mathf.Clamp(pos.y, _minClamp.y, _maxClamp.y));
-        }
+        //        _lastPosition = Input.mousePosition;
+
+        //        Debug.Log(Input.mousePosition);
+        //    }
+        //}
+
+        //private Vector2 Clamp(Vector2 pos)
+        //{
+        //    return new Vector2(
+        //        Mathf.Clamp(pos.x, _minClamp.x, _maxClamp.x),
+        //        Mathf.Clamp(pos.y, _minClamp.y, _maxClamp.y)
+        //    );
+        //}
     }
 }

@@ -39,6 +39,11 @@ namespace Assets.Scripts.View.Game
             //transform.localPosition = -(Vector3)startNode * Scaling;
         }
 
+        public Vector2 Scale(Vector2 boardPos)
+        {
+            return boardPos*Scaling;
+        }
+
         public static PuzzleScale Get { get; private set; }
     }
 }
