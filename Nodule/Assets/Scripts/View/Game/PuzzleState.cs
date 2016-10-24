@@ -18,6 +18,7 @@ namespace Assets.Scripts.View.Game
         private PuzzleSpawner _puzzleSpawner;
         private PuzzleView _puzzleView;
         private BoardInput _boardInput;
+        private PanScript _panScript;
 
         private Puzzle _puzzle;
         private PlayerState _playerState;
@@ -104,6 +105,7 @@ namespace Assets.Scripts.View.Game
             _puzzleSpawner = GetComponent<PuzzleSpawner>();
             _puzzleView = GetComponent<PuzzleView>();
             _boardInput = GetComponent<BoardInput>();
+            _panScript = GameObject.FindGameObjectWithTag("MainView").GetComponent<PanScript>();
         }
 
         void Start()
@@ -133,6 +135,7 @@ namespace Assets.Scripts.View.Game
             // Init all scripts that require additional information on startup
             _puzzleView.Init(_puzzle.StartNode.Position, _puzzle.BoardSize);
             _boardInput.Init(_puzzleSpawner.NodeMap);
+            _panScript.Init(PuzzleScale.Get.Dimensions);
         }
 
         public void NextLevel(float delay = 0f)

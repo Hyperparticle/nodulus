@@ -14,8 +14,6 @@ namespace Assets.Scripts.View.Control
 
         //private Vector2 _currentPos;
 
-        private Vector2 _boardDimensions;
-
         //private Vector2 _startPosition;
         private Vector2 _minClamp;
         private Vector2 _maxClamp;
@@ -24,7 +22,6 @@ namespace Assets.Scripts.View.Control
 
         void Awake()
         {
-            _boardDimensions = PuzzleScale.Get.Dimensions;
             //_puzzleScale = GetComponentInChildren<PuzzleScale>();
         }
 
@@ -41,10 +38,13 @@ namespace Assets.Scripts.View.Control
         //    //    .setEase(LeanTweenType.easeInOutSine);
         //}
 
-        void Start()
+        public void Init(Vector2 boardDimensions)
         {
-            _minClamp = _boardDimensions / -2f;
-            _maxClamp = _boardDimensions / 2f;
+            LeanTween.moveLocal(gameObject, Vector3.zero, 1f)
+                .setEase(LeanTweenType.easeInOutSine);
+
+            _minClamp = boardDimensions / -2f;
+            _maxClamp = boardDimensions / 2f;
         }
 
         void Update()
