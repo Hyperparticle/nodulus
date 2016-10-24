@@ -1,5 +1,3 @@
-using System;
-using System.Linq;
 using Assets.Scripts.Core.Data;
 using Assets.Scripts.View.Control;
 using Assets.Scripts.View.Items;
@@ -17,7 +15,7 @@ namespace Assets.Scripts.View.Game
 
         private PuzzleView _puzzleView;
         private PuzzleState _puzzleState;
-        private PanScript _panScript;
+        //private PanScript _panScript;
         private Text _moveText;
         public GameAudio GameAudio;
 
@@ -28,7 +26,7 @@ namespace Assets.Scripts.View.Game
         {
             _puzzleView = GetComponent<PuzzleView>();
             _puzzleState = GetComponent<PuzzleState>();
-            _panScript = GameObject.FindGameObjectWithTag("MainView").GetComponent<PanScript>();
+            //_panScript = GameObject.FindGameObjectWithTag("MainView").GetComponent<PanScript>();
             _moveText = GameObject.FindGameObjectWithTag("MoveText").GetComponent<Text>();
 
             _puzzleView.ViewUpdated += OnViewUpdated;
@@ -49,7 +47,7 @@ namespace Assets.Scripts.View.Game
             // Try to play the move
             var movePlayed = _puzzleState.Play(nodeView, dir);
 
-            // Check for special rotation case:
+            // Check for special rotation case
             var canRotate = !_puzzleState.HasArcAt(nodeView.Position, dir) &&
                             !_puzzleState.HasArcAt(nodeView.Position, dir.Opposite()) &&
                             !(_puzzleState.IsPulled && nodeView.Position.Equals(_puzzleState.PullPosition));
@@ -57,8 +55,8 @@ namespace Assets.Scripts.View.Game
             // Modify the game view accordingly
             if (!movePlayed && canRotate) {
                 // Even though no move has been played, if there are no arcs parallel 
-                // to the swipe, we can have the nodes/arcs rotate for effect,
-                // but not in the case where there is a pulled arc on the node
+                // to the swipe, we can have the nodes/arcs rotate for effect
+                // (but not in the case where there is a pulled arc on the node)
                 _puzzleView.Rotate(nodeView, dir, true);
             } else if (movePlayed && _puzzleState.IsPulled) {
                 _puzzleView.Rotate(nodeView, _puzzleState.PulledArcView, dir, true);
@@ -89,7 +87,7 @@ namespace Assets.Scripts.View.Game
             }
 
             // Pan camera towards island
-            _panScript.PanTo(_puzzleState.IslandAverage);
+            //_panScript.PanTo(_puzzleState.IslandAverage);
         }
 
         private void OnViewUpdated()

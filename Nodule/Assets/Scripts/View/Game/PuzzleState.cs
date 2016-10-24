@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using Assets.Scripts.Core.Data;
@@ -111,10 +110,6 @@ namespace Assets.Scripts.View.Game
         {
             // Start with level 0
             Init(0);
-
-            // Init all scripts that require additional information on startup
-            _puzzleView.Init(_puzzle.StartNode.Position, _puzzle.BoardSize);
-            _boardInput.Init(_puzzleSpawner.NodeMap);
         }
 
         /// <summary>
@@ -134,6 +129,10 @@ namespace Assets.Scripts.View.Game
             _arcMap.Reset(_puzzleSpawner.ArcMap);
             _fieldMap.Reset(_puzzleSpawner.FieldMap);
             _nodeMap = _puzzleSpawner.NodeMap;
+
+            // Init all scripts that require additional information on startup
+            _puzzleView.Init(_puzzle.StartNode.Position, _puzzle.BoardSize);
+            _boardInput.Init(_puzzleSpawner.NodeMap);
         }
 
         public void NextLevel(float delay = 0f)
