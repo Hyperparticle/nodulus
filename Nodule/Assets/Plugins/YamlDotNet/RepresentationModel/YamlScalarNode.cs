@@ -8,10 +8,10 @@
 //  use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
 //  of the Software, and to permit persons to whom the Software is furnished to do
 //  so, subject to the following conditions:
-    
+
 //  The above copyright notice and this permission notice shall be included in all
 //  copies or substantial portions of the Software.
-    
+
 //  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 //  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 //  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -25,6 +25,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using YamlDotNet.Core;
 using YamlDotNet.Core.Events;
+using YamlDotNet.Serialization;
 
 namespace YamlDotNet.RepresentationModel
 {
@@ -33,7 +34,7 @@ namespace YamlDotNet.RepresentationModel
     /// </summary>
     [DebuggerDisplay("{Value}")]
     [Serializable]
-    public class YamlScalarNode : YamlNode
+    public sealed class YamlScalarNode : YamlNode, IYamlConvertible
     {
         /// <summary>
         /// Gets or sets the value of the node.
@@ -50,11 +51,14 @@ namespace YamlDotNet.RepresentationModel
         /// <summary>
         /// Initializes a new instance of the <see cref="YamlScalarNode"/> class.
         /// </summary>
-        /// <param name="events">The events.</param>
-        /// <param name="state">The state.</param>
-        internal YamlScalarNode(EventReader events, DocumentLoadingState state)
+        internal YamlScalarNode(IParser parser, DocumentLoadingState state)
         {
-            Scalar scalar = events.Expect<Scalar>();
+            Load(parser, state);
+        }
+
+        private void Load(IParser parser, DocumentLoadingState state)
+        {
+            var scalar = parser.Expect<Scalar>();
             Load(scalar, state);
             Value = scalar.Value;
             Style = scalar.Style;
@@ -92,26 +96,27 @@ namespace YamlDotNet.RepresentationModel
         /// <param name="state">The state.</param>
         internal override void Emit(IEmitter emitter, EmitterState state)
         {
-            emitter.Emit(new Scalar(Anchor, Tag, Value, Style, true, false));
+            emitter.Emit(new Scalar(Anchor, Tag, Value, Style, Tag == null, false));
         }
-        
+
         /// <summary>
         /// Accepts the specified visitor by calling the appropriate Visit method on it.
         /// </summary>
         /// <param name="visitor">
         /// A <see cref="IYamlVisitor"/>.
         /// </param>
-        public override void Accept(IYamlVisitor visitor) {
+        public override void Accept(IYamlVisitor visitor)
+        {
             visitor.Visit(this);
         }
-        
+
         /// <summary />
-        public override bool Equals(object other)
+        public override bool Equals(object obj)
         {
-            var obj = other as YamlScalarNode;
-            return obj != null && Equals(obj) && SafeEquals(Value, obj.Value);
+            var other = obj as YamlScalarNode;
+            return other != null && Equals(other) && SafeEquals(Value, other.Value);
         }
-            
+
         /// <summary>
         /// Serves as a hash function for a particular type.
         /// </summary>
@@ -124,16 +129,6 @@ namespace YamlDotNet.RepresentationModel
                 base.GetHashCode(),
                 GetHashCode(Value)
             );
-        }
-
-        /// <summary>
-        /// Performs an implicit conversion from <see cref="System.String"/> to <see cref="YamlDotNet.RepresentationModel.YamlScalarNode"/>.
-        /// </summary>
-        /// <param name="value">The value.</param>
-        /// <returns>The result of the conversion.</returns>
-        public static implicit operator YamlScalarNode(string value)
-        {
-            return new YamlScalarNode(value);
         }
 
         /// <summary>
@@ -152,17 +147,37 @@ namespace YamlDotNet.RepresentationModel
         /// <returns>
         /// A <see cref="System.String"/> that represents this instance.
         /// </returns>
-        public override string ToString()
+        internal override string ToString(RecursionLevel level)
         {
             return Value;
         }
 
         /// <summary>
-        /// Gets all nodes from the document, starting on the current node.
+        /// Recursively enumerates all the nodes from the document, starting on the current node,
+        /// and throwing <see cref="MaximumRecursionLevelReachedException"/>
+        /// if <see cref="RecursionLevel.Maximum"/> is reached.
         /// </summary>
-        public override IEnumerable<YamlNode> AllNodes
+        internal override IEnumerable<YamlNode> SafeAllNodes(RecursionLevel level)
         {
-            get { yield return this; }
+            yield return this;
+        }
+
+        /// <summary>
+        /// Gets the type of node.
+        /// </summary>
+        public override YamlNodeType NodeType
+        {
+            get { return YamlNodeType.Scalar; }
+        }
+
+        void IYamlConvertible.Read(IParser parser, Type expectedType, ObjectDeserializer nestedObjectDeserializer)
+        {
+            Load(parser, new DocumentLoadingState());
+        }
+
+        void IYamlConvertible.Write(IEmitter emitter, ObjectSerializer nestedObjectSerializer)
+        {
+            Emit(emitter, new EmitterState());
         }
     }
 }

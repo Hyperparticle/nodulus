@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+#if UNITY_EDITOR
 using UnityEditor;
 
 public class LeanTweenDocumentationEditor : Editor {
@@ -53,6 +54,6 @@ public class LeanTweenDocumentationEditor : Editor {
 	{
 		Application.OpenURL("http://dentedpixel.com/category/developer-diary/");
 	}
-
-	
 }
+
+#endif

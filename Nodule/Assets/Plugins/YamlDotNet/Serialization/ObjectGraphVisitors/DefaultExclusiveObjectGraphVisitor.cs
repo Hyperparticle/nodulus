@@ -1,16 +1,16 @@
 //  This file is part of YamlDotNet - A .NET library for YAML.
 //  Copyright (c) Antoine Aubry and contributors
-    
+
 //  Permission is hereby granted, free of charge, to any person obtaining a copy of
 //  this software and associated documentation files (the "Software"), to deal in
 //  the Software without restriction, including without limitation the rights to
 //  use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
 //  of the Software, and to permit persons to whom the Software is furnished to do
 //  so, subject to the following conditions:
-    
+
 //  The above copyright notice and this permission notice shall be included in all
 //  copies or substantial portions of the Software.
-    
+
 //  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 //  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 //  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -22,12 +22,13 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using YamlDotNet.Core;
 
 namespace YamlDotNet.Serialization.ObjectGraphVisitors
 {
     public sealed class DefaultExclusiveObjectGraphVisitor : ChainedObjectGraphVisitor
     {
-        public DefaultExclusiveObjectGraphVisitor(IObjectGraphVisitor nextVisitor)
+        public DefaultExclusiveObjectGraphVisitor(IObjectGraphVisitor<IEmitter> nextVisitor)
             : base(nextVisitor)
         {
         }
@@ -39,13 +40,13 @@ namespace YamlDotNet.Serialization.ObjectGraphVisitors
 
         private static readonly IEqualityComparer<object> _objectComparer = EqualityComparer<object>.Default;
 
-        public override bool EnterMapping(IObjectDescriptor key, IObjectDescriptor value)
+        public override bool EnterMapping(IObjectDescriptor key, IObjectDescriptor value, IEmitter context)
         {
             return !_objectComparer.Equals(value, GetDefault(value.Type))
-                   && base.EnterMapping(key, value);
+                   && base.EnterMapping(key, value, context);
         }
 
-        public override bool EnterMapping(IPropertyDescriptor key, IObjectDescriptor value)
+        public override bool EnterMapping(IPropertyDescriptor key, IObjectDescriptor value, IEmitter context)
         {
             var defaultValueAttribute = key.GetCustomAttribute<DefaultValueAttribute>();
             var defaultValue = defaultValueAttribute != null
@@ -53,7 +54,7 @@ namespace YamlDotNet.Serialization.ObjectGraphVisitors
                 : GetDefault(key.Type);
 
             return !_objectComparer.Equals(value.Value, defaultValue)
-                   && base.EnterMapping(key, value);
+                   && base.EnterMapping(key, value, context);
         }
     }
 }

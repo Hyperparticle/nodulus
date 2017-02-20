@@ -8,10 +8,10 @@
 //  use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
 //  of the Software, and to permit persons to whom the Software is furnished to do
 //  so, subject to the following conditions:
-    
+
 //  The above copyright notice and this permission notice shall be included in all
 //  copies or substantial portions of the Software.
-    
+
 //  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 //  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 //  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -26,6 +26,7 @@ using System.Diagnostics;
 using YamlDotNet.Core;
 using YamlDotNet.Core.Events;
 using System.Text;
+using YamlDotNet.Serialization;
 
 namespace YamlDotNet.RepresentationModel
 {
@@ -34,7 +35,7 @@ namespace YamlDotNet.RepresentationModel
     /// </summary>
     [DebuggerDisplay("Count = {children.Count}")]
     [Serializable]
-    public class YamlSequenceNode : YamlNode, IEnumerable<YamlNode>
+    public sealed class YamlSequenceNode : YamlNode, IEnumerable<YamlNode>, IYamlConvertible
     {
         private readonly IList<YamlNode> children = new List<YamlNode>();
 
@@ -60,17 +61,21 @@ namespace YamlDotNet.RepresentationModel
         /// <summary>
         /// Initializes a new instance of the <see cref="YamlSequenceNode"/> class.
         /// </summary>
-        /// <param name="events">The events.</param>
-        /// <param name="state">The state.</param>
-        internal YamlSequenceNode(EventReader events, DocumentLoadingState state)
+        internal YamlSequenceNode(IParser parser, DocumentLoadingState state)
         {
-            SequenceStart sequence = events.Expect<SequenceStart>();
+            Load(parser, state);
+        }
+
+        private void Load(IParser parser, DocumentLoadingState state)
+        {
+            var sequence = parser.Expect<SequenceStart>();
             Load(sequence, state);
+            Style = sequence.Style;
 
             bool hasUnresolvedAliases = false;
-            while (!events.Accept<SequenceEnd>())
+            while (!parser.Accept<SequenceEnd>())
             {
-                YamlNode child = ParseNode(events, state);
+                var child = ParseNode(parser, state);
                 children.Add(child);
                 hasUnresolvedAliases |= child is YamlAliasNode;
             }
@@ -79,20 +84,8 @@ namespace YamlDotNet.RepresentationModel
             {
                 state.AddNodeWithUnresolvedAliases(this);
             }
-#if DEBUG
-            else
-            {
-                foreach (var child in children)
-                {
-                    if (child is YamlAliasNode)
-                    {
-                        throw new InvalidOperationException("Error in alias resolution.");
-                    }
-                }
-            }
-#endif
 
-            events.Expect<SequenceEnd>();
+            parser.Expect<SequenceEnd>();
         }
 
         /// <summary>
@@ -181,17 +174,17 @@ namespace YamlDotNet.RepresentationModel
         }
 
         /// <summary />
-        public override bool Equals(object other)
+        public override bool Equals(object obj)
         {
-            var obj = other as YamlSequenceNode;
-            if (obj == null || !Equals(obj) || children.Count != obj.children.Count)
+            var other = obj as YamlSequenceNode;
+            if (other == null || !Equals(other) || children.Count != other.children.Count)
             {
                 return false;
             }
 
             for (int i = 0; i < children.Count; ++i)
             {
-                if (!SafeEquals(children[i], obj.children[i]))
+                if (!SafeEquals(children[i], other.children[i]))
                 {
                     return false;
                 }
@@ -218,21 +211,30 @@ namespace YamlDotNet.RepresentationModel
         }
 
         /// <summary>
-        /// Gets all nodes from the document, starting on the current node.
+        /// Recursively enumerates all the nodes from the document, starting on the current node,
+        /// and throwing <see cref="MaximumRecursionLevelReachedException"/>
+        /// if <see cref="RecursionLevel.Maximum"/> is reached.
         /// </summary>
-        public override IEnumerable<YamlNode> AllNodes
+        internal override IEnumerable<YamlNode> SafeAllNodes(RecursionLevel level)
         {
-            get
+            level.Increment();
+            yield return this;
+            foreach (var child in children)
             {
-                yield return this;
-                foreach (var child in children)
+                foreach (var node in child.SafeAllNodes(level))
                 {
-                    foreach (var node in child.AllNodes)
-                    {
-                        yield return node;
-                    }
+                    yield return node;
                 }
             }
+            level.Decrement();
+        }
+
+        /// <summary>
+        /// Gets the type of node.
+        /// </summary>
+        public override YamlNodeType NodeType
+        {
+            get { return YamlNodeType.Sequence; }
         }
 
         /// <summary>
@@ -241,20 +243,27 @@ namespace YamlDotNet.RepresentationModel
         /// <returns>
         /// A <see cref="System.String"/> that represents this instance.
         /// </returns>
-        public override string ToString()
+        internal override string ToString(RecursionLevel level)
         {
+            if (!level.TryIncrement())
+            {
+                return MaximumRecursionLevelReachedToStringValue;
+            }
+
             var text = new StringBuilder("[ ");
 
             foreach (var child in children)
             {
-                if(text.Length > 2)
+                if (text.Length > 2)
                 {
                     text.Append(", ");
                 }
-                text.Append(child);
+                text.Append(child.ToString(level));
             }
 
             text.Append(" ]");
+
+            level.Decrement();
 
             return text.ToString();
         }
@@ -277,5 +286,15 @@ namespace YamlDotNet.RepresentationModel
         }
 
         #endregion
+
+        void IYamlConvertible.Read(IParser parser, Type expectedType, ObjectDeserializer nestedObjectDeserializer)
+        {
+            Load(parser, new DocumentLoadingState());
+        }
+
+        void IYamlConvertible.Write(IEmitter emitter, ObjectSerializer nestedObjectSerializer)
+        {
+            Emit(emitter, new EmitterState());
+        }
     }
 }

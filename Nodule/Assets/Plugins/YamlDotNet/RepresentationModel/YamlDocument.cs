@@ -1,16 +1,16 @@
 //  This file is part of YamlDotNet - A .NET library for YAML.
 //  Copyright (c) Antoine Aubry and contributors
-    
+
 //  Permission is hereby granted, free of charge, to any person obtaining a copy of
 //  this software and associated documentation files (the "Software"), to deal in
 //  the Software without restriction, including without limitation the rights to
 //  use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
 //  of the Software, and to permit persons to whom the Software is furnished to do
 //  so, subject to the following conditions:
-    
+
 //  The above copyright notice and this permission notice shall be included in all
 //  copies or substantial portions of the Software.
-    
+
 //  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 //  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 //  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -59,17 +59,16 @@ namespace YamlDotNet.RepresentationModel
         /// <summary>
         /// Initializes a new instance of the <see cref="YamlDocument"/> class.
         /// </summary>
-        /// <param name="events">The events.</param>
-        internal YamlDocument(EventReader events)
+        internal YamlDocument(IParser parser)
         {
-            DocumentLoadingState state = new DocumentLoadingState();
+            var state = new DocumentLoadingState();
 
-            events.Expect<DocumentStart>();
+            parser.Expect<DocumentStart>();
 
-            while (!events.Accept<DocumentEnd>())
+            while (!parser.Accept<DocumentEnd>())
             {
                 Debug.Assert(RootNode == null);
-                RootNode = YamlNode.ParseNode(events, state);
+                RootNode = YamlNode.ParseNode(parser, state);
 
                 if (RootNode is YamlAliasNode)
                 {
@@ -79,27 +78,19 @@ namespace YamlDotNet.RepresentationModel
 
             state.ResolveAliases();
 
-#if DEBUG
-            foreach (var node in AllNodes)
-            {
-                if (node is YamlAliasNode)
-                {
-                    throw new InvalidOperationException("Error in alias resolution.");
-                }
-            }
-#endif
-
-            events.Expect<DocumentEnd>();
+            parser.Expect<DocumentEnd>();
         }
 
-#pragma warning disable 618
         /// <summary>
-        /// Visitor that assigns anchors to nodes that are referenced more than once but have no anchor.
+        /// Visitor that assigns anchors to nodes that are referenced more than once.
+        /// Existing anchors are preserved as much as possible.
         /// </summary>
-        private class AnchorAssigningVisitor : YamlVisitor
-#pragma warning restore 618
+        private class AnchorAssigningVisitor : YamlVisitorBase
         {
             private readonly HashSet<string> existingAnchors = new HashSet<string>();
+            /// <summary>
+            /// Key: Node, Value: IsDuplicate
+            /// </summary>
             private readonly Dictionary<YamlNode, bool> visitedNodes = new Dictionary<YamlNode, bool>();
 
             public void AssignAnchors(YamlDocument document)
@@ -109,65 +100,73 @@ namespace YamlDotNet.RepresentationModel
 
                 document.Accept(this);
 
-                Random random = new Random();
+                var random = new Random();
                 foreach (var visitedNode in visitedNodes)
                 {
                     if (visitedNode.Value)
                     {
                         string anchor;
-                        do
+                        // If the existing anchor is not already used, we can have it
+                        if (!string.IsNullOrEmpty(visitedNode.Key.Anchor) && !existingAnchors.Contains(visitedNode.Key.Anchor))
                         {
-                            anchor = random.Next().ToString(CultureInfo.InvariantCulture);
-                        } while (existingAnchors.Contains(anchor));
-                        existingAnchors.Add(anchor);
+                            anchor = visitedNode.Key.Anchor;
+                        }
+                        else
+                        {
+                            do
+                            {
+                                anchor = random.Next().ToString(CultureInfo.InvariantCulture);
+                            } while (existingAnchors.Contains(anchor));
+                        }
 
+                        existingAnchors.Add(anchor);
                         visitedNode.Key.Anchor = anchor;
                     }
                 }
             }
 
-            private void VisitNode(YamlNode node)
+            /// <summary>
+            /// Returns whether the visited node is a duplicate.
+            /// </summary>
+            private bool VisitNodeAndFindDuplicates(YamlNode node)
             {
-                if (string.IsNullOrEmpty(node.Anchor))
+                bool isDuplicate;
+                if (visitedNodes.TryGetValue(node, out isDuplicate))
                 {
-                    bool isDuplicate;
-                    if (visitedNodes.TryGetValue(node, out isDuplicate))
+                    if (!isDuplicate)
                     {
-                        if (!isDuplicate)
-                        {
-                            visitedNodes[node] = true;
-                        }
+                        visitedNodes[node] = true;
                     }
-                    else
-                    {
-                        visitedNodes.Add(node, false);
-                    }
+                    return !isDuplicate;
                 }
                 else
                 {
-                    existingAnchors.Add(node.Anchor);
+                    visitedNodes.Add(node, false);
+                    return false;
                 }
             }
 
-            protected override void Visit(YamlScalarNode scalar)
+            public override void Visit(YamlScalarNode scalar)
             {
-                VisitNode(scalar);
+                VisitNodeAndFindDuplicates(scalar);
             }
 
-            protected override void Visit(YamlMappingNode mapping)
+            public override void Visit(YamlMappingNode mapping)
             {
-                VisitNode(mapping);
+                if (!VisitNodeAndFindDuplicates(mapping))
+                    base.Visit(mapping);
             }
 
-            protected override void Visit(YamlSequenceNode sequence)
+            public override void Visit(YamlSequenceNode sequence)
             {
-                VisitNode(sequence);
+                if (!VisitNodeAndFindDuplicates(sequence))
+                    base.Visit(sequence);
             }
         }
 
         private void AssignAnchors()
         {
-            AnchorAssigningVisitor visitor = new AnchorAssigningVisitor();
+            var visitor = new AnchorAssigningVisitor();
             visitor.AssignAnchors(this);
         }
 
@@ -196,6 +195,7 @@ namespace YamlDotNet.RepresentationModel
 
         /// <summary>
         /// Gets all nodes from the document.
+        /// <see cref="MaximumRecursionLevelReachedException"/> is thrown if an infinite recursion is detected.
         /// </summary>
         public IEnumerable<YamlNode> AllNodes
         {

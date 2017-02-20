@@ -83,5 +83,6 @@ namespace YamlDotNet.Core
             : base(message, inner)
         {
         }
+
     }
 }

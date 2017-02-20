@@ -22,6 +22,7 @@
 using System;
 using System.Globalization;
 using System.Text;
+using System.Text.RegularExpressions;
 using YamlDotNet.Core;
 using YamlDotNet.Core.Events;
 using YamlDotNet.Serialization.Utilities;
@@ -30,9 +31,12 @@ namespace YamlDotNet.Serialization.NodeDeserializers
 {
     public sealed class ScalarNodeDeserializer : INodeDeserializer
     {
-        bool INodeDeserializer.Deserialize(EventReader reader, Type expectedType, Func<EventReader, Type, object> nestedObjectDeserializer, out object value)
+        private const string BooleanTruePattern = "^(true|y|yes|on)$";
+        private const string BooleanFalsePattern = "^(false|n|no|off)$";
+
+        bool INodeDeserializer.Deserialize(IParser parser, Type expectedType, Func<IParser, Type, object> nestedObjectDeserializer, out object value)
         {
-            var scalar = reader.Allow<Scalar>();
+            var scalar = parser.Allow<Scalar>();
             if (scalar == null)
             {
                 value = null;
@@ -41,15 +45,15 @@ namespace YamlDotNet.Serialization.NodeDeserializers
 
             if (expectedType.IsEnum())
             {
-                value = Enum.Parse(expectedType, scalar.Value);
+                value = Enum.Parse(expectedType, scalar.Value, true);
             }
             else
             {
-                TypeCode typeCode = expectedType.GetTypeCode();
+                var typeCode = expectedType.GetTypeCode();
                 switch (typeCode)
                 {
                     case TypeCode.Boolean:
-                        value = bool.Parse(scalar.Value);
+                        value = DeserializeBooleanHelper(scalar.Value);
                         break;
 
                     case TypeCode.Byte:
@@ -60,7 +64,7 @@ namespace YamlDotNet.Serialization.NodeDeserializers
                     case TypeCode.UInt16:
                     case TypeCode.UInt32:
                     case TypeCode.UInt64:
-                        value = DeserializeIntegerHelper(typeCode, scalar.Value, YamlFormatter.NumberFormat);
+                        value = DeserializeIntegerHelper(typeCode, scalar.Value);
                         break;
 
                     case TypeCode.Single:
@@ -104,13 +108,33 @@ namespace YamlDotNet.Serialization.NodeDeserializers
             return true;
         }
 
-        private object DeserializeIntegerHelper(TypeCode typeCode, string value, IFormatProvider formatProvider)
+        private object DeserializeBooleanHelper(string value)
         {
-            StringBuilder numberBuilder = new StringBuilder();
+            bool result;
+
+            if (Regex.IsMatch(value, ScalarNodeDeserializer.BooleanTruePattern, RegexOptions.IgnoreCase))
+            {
+                result = true;
+            }
+            else if (Regex.IsMatch(value, ScalarNodeDeserializer.BooleanFalsePattern, RegexOptions.IgnoreCase))
+            {
+                result = false;
+            }
+            else
+            {
+                throw new FormatException(String.Format("The value \"{0}\" is not a valid YAML Boolean", value));
+            }
+
+            return result;
+        }
+
+        private object DeserializeIntegerHelper(TypeCode typeCode, string value)
+        {
+            var numberBuilder = new StringBuilder();
             int currentIndex = 0;
             bool isNegative = false;
             int numberBase = 0;
-            long result = 0;
+            ulong result = 0;
 
             if (value[0] == '-')
             {
@@ -178,11 +202,11 @@ namespace YamlDotNet.Serialization.NodeDeserializers
                     case 2:
                     case 8:
                         // TODO: how to incorporate the numberFormat?
-                        result = Convert.ToInt64(numberBuilder.ToString(), numberBase);
+                        result = Convert.ToUInt64(numberBuilder.ToString(), numberBase);
                         break;
 
                     case 16:
-                        result = Int64.Parse(numberBuilder.ToString(), NumberStyles.HexNumber, YamlFormatter.NumberFormat);
+                        result = ulong.Parse(numberBuilder.ToString(), NumberStyles.HexNumber, YamlFormatter.NumberFormat);
                         break;
 
                     case 10:
@@ -194,7 +218,7 @@ namespace YamlDotNet.Serialization.NodeDeserializers
             else
             {
                 // Could be decimal or base 60
-                string[] chunks = value.Substring(currentIndex).Split(':');
+                var chunks = value.Substring(currentIndex).Split(':');
                 result = 0;
 
                 for (int chunkIndex = 0; chunkIndex < chunks.Length; chunkIndex++)
@@ -202,43 +226,89 @@ namespace YamlDotNet.Serialization.NodeDeserializers
                     result *= 60;
 
                     // TODO: verify that chunks after the first are non-negative and less than 60
-                    result += long.Parse(chunks[chunkIndex].Replace("_", ""));
+                    result += ulong.Parse(chunks[chunkIndex].Replace("_", ""));
                 }
             }
 
             if (isNegative)
             {
-                result = -result;
+                return CastInteger(checked(-(long)result), typeCode);
             }
-
-            switch (typeCode)
+            else
             {
-                case TypeCode.Byte:
-                    return (byte)result;
+                return CastInteger(result, typeCode);
+            }
+        }
 
-                case TypeCode.Int16:
-                    return (short)result;
+        private static object CastInteger(long number, TypeCode typeCode)
+        {
+            checked
+            {
+                switch (typeCode)
+                {
+                    case TypeCode.Byte:
+                        return (byte)number;
 
-                case TypeCode.Int32:
-                    return (int)result;
+                    case TypeCode.Int16:
+                        return (short)number;
 
-                case TypeCode.Int64:
-                    return result;
+                    case TypeCode.Int32:
+                        return (int)number;
 
-                case TypeCode.SByte:
-                    return (sbyte)result;
+                    case TypeCode.Int64:
+                        return number;
 
-                case TypeCode.UInt16:
-                    return (ushort)result;
+                    case TypeCode.SByte:
+                        return (sbyte)number;
 
-                case TypeCode.UInt32:
-                    return (uint)result;
+                    case TypeCode.UInt16:
+                        return (ushort)number;
 
-                case TypeCode.UInt64:
-                    return (ulong)result;
+                    case TypeCode.UInt32:
+                        return (uint)number;
 
-                default:
-                    return result;
+                    case TypeCode.UInt64:
+                        return (ulong)number;
+
+                    default:
+                        return number;
+                }
+            }
+        }
+
+        private static object CastInteger(ulong number, TypeCode typeCode)
+        {
+            checked
+            {
+                switch (typeCode)
+                {
+                    case TypeCode.Byte:
+                        return (byte)number;
+
+                    case TypeCode.Int16:
+                        return (short)number;
+
+                    case TypeCode.Int32:
+                        return (int)number;
+
+                    case TypeCode.Int64:
+                        return (long)number;
+
+                    case TypeCode.SByte:
+                        return (sbyte)number;
+
+                    case TypeCode.UInt16:
+                        return (ushort)number;
+
+                    case TypeCode.UInt32:
+                        return (uint)number;
+
+                    case TypeCode.UInt64:
+                        return number;
+
+                    default:
+                        return number;
+                }
             }
         }
     }

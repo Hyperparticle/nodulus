@@ -8,10 +8,10 @@
 //  use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
 //  of the Software, and to permit persons to whom the Software is furnished to do
 //  so, subject to the following conditions:
-    
+
 //  The above copyright notice and this permission notice shall be included in all
 //  copies or substantial portions of the Software.
-    
+
 //  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 //  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 //  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -22,9 +22,11 @@
 
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 using System.Text;
 using YamlDotNet.Core;
 using YamlDotNet.Core.Events;
+using YamlDotNet.Serialization;
 
 namespace YamlDotNet.RepresentationModel
 {
@@ -32,7 +34,7 @@ namespace YamlDotNet.RepresentationModel
     /// Represents a mapping node in the YAML document.
     /// </summary>
     [Serializable]
-    public class YamlMappingNode : YamlNode, IEnumerable<KeyValuePair<YamlNode, YamlNode>>
+    public sealed class YamlMappingNode : YamlNode, IEnumerable<KeyValuePair<YamlNode, YamlNode>>, IYamlConvertible
     {
         private readonly IDictionary<YamlNode, YamlNode> children = new Dictionary<YamlNode, YamlNode>();
 
@@ -57,18 +59,22 @@ namespace YamlDotNet.RepresentationModel
         /// <summary>
         /// Initializes a new instance of the <see cref="YamlMappingNode"/> class.
         /// </summary>
-        /// <param name="events">The events.</param>
-        /// <param name="state">The state.</param>
-        internal YamlMappingNode(EventReader events, DocumentLoadingState state)
+        internal YamlMappingNode(IParser parser, DocumentLoadingState state)
         {
-            MappingStart mapping = events.Expect<MappingStart>();
+            Load(parser, state);
+        }
+
+        private void Load(IParser parser, DocumentLoadingState state)
+        {
+            var mapping = parser.Expect<MappingStart>();
             Load(mapping, state);
+            Style = mapping.Style;
 
             bool hasUnresolvedAliases = false;
-            while (!events.Accept<MappingEnd>())
+            while (!parser.Accept<MappingEnd>())
             {
-                YamlNode key = ParseNode(events, state);
-                YamlNode value = ParseNode(events, state);
+                var key = ParseNode(parser, state);
+                var value = ParseNode(parser, state);
 
                 try
                 {
@@ -86,30 +92,21 @@ namespace YamlDotNet.RepresentationModel
             {
                 state.AddNodeWithUnresolvedAliases(this);
             }
-#if DEBUG
-            else
-            {
-                foreach (var child in children)
-                {
-                    if (child.Key is YamlAliasNode)
-                    {
-                        throw new InvalidOperationException("Error in alias resolution.");
-                    }
-                    if (child.Value is YamlAliasNode)
-                    {
-                        throw new InvalidOperationException("Error in alias resolution.");
-                    }
-                }
-            }
-#endif
 
-            events.Expect<MappingEnd>();
+            parser.Expect<MappingEnd>();
         }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="YamlMappingNode"/> class.
         /// </summary>
         public YamlMappingNode()
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="YamlMappingNode"/> class.
+        /// </summary>
+        public YamlMappingNode(int dummy) // dummy makes the call to the constructor unambiguous to buggy compilers like mono in Unity.
         {
         }
 
@@ -275,10 +272,10 @@ namespace YamlDotNet.RepresentationModel
         }
 
         /// <summary />
-        public override bool Equals(object other)
+        public override bool Equals(object obj)
         {
-            var obj = other as YamlMappingNode;
-            if (obj == null || !Equals(obj) || children.Count != obj.children.Count)
+            var other = obj as YamlMappingNode;
+            if (other == null || !Equals(other) || children.Count != other.children.Count)
             {
                 return false;
             }
@@ -286,7 +283,7 @@ namespace YamlDotNet.RepresentationModel
             foreach (var entry in children)
             {
                 YamlNode otherNode;
-                if (!obj.children.TryGetValue(entry.Key, out otherNode) || !SafeEquals(entry.Value, otherNode))
+                if (!other.children.TryGetValue(entry.Key, out otherNode) || !SafeEquals(entry.Value, otherNode))
                 {
                     return false;
                 }
@@ -314,25 +311,34 @@ namespace YamlDotNet.RepresentationModel
         }
 
         /// <summary>
-        /// Gets all nodes from the document, starting on the current node.
+        /// Recursively enumerates all the nodes from the document, starting on the current node,
+        /// and throwing <see cref="MaximumRecursionLevelReachedException"/>
+        /// if <see cref="RecursionLevel.Maximum"/> is reached.
         /// </summary>
-        public override IEnumerable<YamlNode> AllNodes
+        internal override IEnumerable<YamlNode> SafeAllNodes(RecursionLevel level)
         {
-            get
+            level.Increment();
+            yield return this;
+            foreach (var child in children)
             {
-                yield return this;
-                foreach (var child in children)
+                foreach (var node in child.Key.SafeAllNodes(level))
                 {
-                    foreach (var node in child.Key.AllNodes)
-                    {
-                        yield return node;
-                    }
-                    foreach (var node in child.Value.AllNodes)
-                    {
-                        yield return node;
-                    }
+                    yield return node;
+                }
+                foreach (var node in child.Value.SafeAllNodes(level))
+                {
+                    yield return node;
                 }
             }
+            level.Decrement();
+        }
+
+        /// <summary>
+        /// Gets the type of node.
+        /// </summary>
+        public override YamlNodeType NodeType
+        {
+            get { return YamlNodeType.Mapping; }
         }
 
         /// <summary>
@@ -341,8 +347,13 @@ namespace YamlDotNet.RepresentationModel
         /// <returns>
         /// A <see cref="System.String"/> that represents this instance.
         /// </returns>
-        public override string ToString()
+        internal override string ToString(RecursionLevel level)
         {
+            if (!level.TryIncrement())
+            {
+                return MaximumRecursionLevelReachedToStringValue;
+            }
+
             var text = new StringBuilder("{ ");
 
             foreach (var child in children)
@@ -351,10 +362,12 @@ namespace YamlDotNet.RepresentationModel
                 {
                     text.Append(", ");
                 }
-                text.Append("{ ").Append(child.Key).Append(", ").Append(child.Value).Append(" }");
+                text.Append("{ ").Append(child.Key.ToString(level)).Append(", ").Append(child.Value.ToString(level)).Append(" }");
             }
 
             text.Append(" }");
+
+            level.Decrement();
 
             return text.ToString();
         }
@@ -377,5 +390,38 @@ namespace YamlDotNet.RepresentationModel
         }
 
         #endregion
+
+        void IYamlConvertible.Read(IParser parser, Type expectedType, ObjectDeserializer nestedObjectDeserializer)
+        {
+            Load(parser, new DocumentLoadingState());
+        }
+
+        void IYamlConvertible.Write(IEmitter emitter, ObjectSerializer nestedObjectSerializer)
+        {
+            Emit(emitter, new EmitterState());
+        }
+
+        /// <summary>
+        /// Creates a <see cref="YamlMappingNode" /> containing a key-value pair for each property of the specified object.
+        /// </summary>
+        public static YamlMappingNode FromObject(object mapping)
+        {
+            if (mapping == null)
+            {
+                throw new ArgumentNullException("mapping");
+            }
+
+            var result = new YamlMappingNode(0);
+            foreach (var property in mapping.GetType().GetPublicProperties())
+            {
+                if (property.CanRead && property.GetGetMethod().GetParameters().Length == 0)
+                {
+                    var value = property.GetValue(mapping, null);
+                    var valueNode = (value as YamlNode) ?? (Convert.ToString(value));
+                    result.Add(property.Name, valueNode);
+                }
+            }
+            return result;
+        }
     }
 }

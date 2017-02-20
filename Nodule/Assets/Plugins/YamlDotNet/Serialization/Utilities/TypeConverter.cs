@@ -147,6 +147,7 @@ namespace YamlDotNet.Serialization.Utilities
                     return true;
             }
 
+#if !PORTABLE
             // Try with the source type's converter
             var sourceConverter = TypeDescriptor.GetConverter(value);
             if (sourceConverter != null && sourceConverter.CanConvertTo(destinationType))
@@ -160,6 +161,7 @@ namespace YamlDotNet.Serialization.Utilities
             {
                 return destinationConverter.ConvertFrom(null, culture, value);
             }
+#endif
 
             // Try to find a casting operator in the source or destination type
             foreach (var type in new[] { sourceType, destinationType })

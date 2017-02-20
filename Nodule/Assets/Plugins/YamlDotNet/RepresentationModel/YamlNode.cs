@@ -1,16 +1,16 @@
 //  This file is part of YamlDotNet - A .NET library for YAML.
 //  Copyright (c) Antoine Aubry and contributors
-    
+
 //  Permission is hereby granted, free of charge, to any person obtaining a copy of
 //  this software and associated documentation files (the "Software"), to deal in
 //  the Software without restriction, including without limitation the rights to
 //  use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
 //  of the Software, and to permit persons to whom the Software is furnished to do
 //  so, subject to the following conditions:
-    
+
 //  The above copyright notice and this permission notice shall be included in all
 //  copies or substantial portions of the Software.
-    
+
 //  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 //  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 //  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -20,6 +20,7 @@
 //  SOFTWARE.
 
 using System;
+using System.Linq;
 using YamlDotNet.Core;
 using YamlDotNet.Core.Events;
 using System.Collections.Generic;
@@ -32,6 +33,9 @@ namespace YamlDotNet.RepresentationModel
     [Serializable]
     public abstract class YamlNode
     {
+        private const int MaximumRecursionLevel = 1000;
+        internal const string MaximumRecursionLevelReachedToStringValue = "WARNING! INFINITE RECURSION!";
+
         /// <summary>
         /// Gets or sets the anchor of the node.
         /// </summary>
@@ -72,31 +76,29 @@ namespace YamlDotNet.RepresentationModel
         }
 
         /// <summary>
-        /// Parses the node represented by the next event in <paramref name="events" />.
+        /// Parses the node represented by the next event in <paramref name="parser" />.
         /// </summary>
-        /// <param name="events">The events.</param>
-        /// <param name="state">The state.</param>
         /// <returns>Returns the node that has been parsed.</returns>
-        static internal YamlNode ParseNode(EventReader events, DocumentLoadingState state)
+        static internal YamlNode ParseNode(IParser parser, DocumentLoadingState state)
         {
-            if (events.Accept<Scalar>())
+            if (parser.Accept<Scalar>())
             {
-                return new YamlScalarNode(events, state);
+                return new YamlScalarNode(parser, state);
             }
 
-            if (events.Accept<SequenceStart>())
+            if (parser.Accept<SequenceStart>())
             {
-                return new YamlSequenceNode(events, state);
+                return new YamlSequenceNode(parser, state);
             }
 
-            if (events.Accept<MappingStart>())
+            if (parser.Accept<MappingStart>())
             {
-                return new YamlMappingNode(events, state);
+                return new YamlMappingNode(parser, state);
             }
 
-            if (events.Accept<AnchorAlias>())
+            if (parser.Accept<AnchorAlias>())
             {
-                AnchorAlias alias = events.Expect<AnchorAlias>();
+                var alias = parser.Expect<AnchorAlias>();
                 return state.GetNode(alias.Value, false, alias.Start, alias.End) ?? new YamlAliasNode(alias.Value);
             }
 
@@ -197,12 +199,90 @@ namespace YamlDotNet.RepresentationModel
             return unchecked(((h1 << 5) + h1) ^ h2);
         }
 
+        public override string ToString()
+        {
+            var level = new RecursionLevel(MaximumRecursionLevel);
+            return ToString(level);
+        }
+
+        internal abstract string ToString(RecursionLevel level);
+
         /// <summary>
         /// Gets all nodes from the document, starting on the current node.
+        /// <see cref="MaximumRecursionLevelReachedException"/> is thrown if an infinite recursion is detected.
         /// </summary>
-        public abstract IEnumerable<YamlNode> AllNodes
+        public IEnumerable<YamlNode> AllNodes
+        {
+            get
+            {
+                var level = new RecursionLevel(MaximumRecursionLevel);
+                return SafeAllNodes(level);
+            }
+        }
+
+        /// <summary>
+        /// When implemented, recursively enumerates all the nodes from the document, starting on the current node.
+        /// If <see cref="RecursionLevel.Maximum"/> is reached, a <see cref="MaximumRecursionLevelReachedException"/> is thrown
+        /// instead of continuing and crashing with a <see cref="StackOverflowException"/>.
+        /// </summary>
+        internal abstract IEnumerable<YamlNode> SafeAllNodes(RecursionLevel level);
+
+        /// <summary>
+        /// Gets the type of node.
+        /// </summary>
+        public abstract YamlNodeType NodeType
         {
             get;
+        }
+
+        /// <summary>
+        /// Performs an implicit conversion from <see cref="System.String"/> to <see cref="YamlDotNet.RepresentationModel.YamlNode"/>.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <returns>The result of the conversion.</returns>
+        public static implicit operator YamlNode(string value)
+        {
+            return new YamlScalarNode(value);
+        }
+
+        /// <summary>
+        /// Performs an implicit conversion from string[] to <see cref="YamlDotNet.RepresentationModel.YamlNode"/>.
+        /// </summary>
+        /// <param name="sequence">The value.</param>
+        /// <returns>The result of the conversion.</returns>
+        public static implicit operator YamlNode(string[] sequence)
+        {
+            return new YamlSequenceNode(sequence.Select(i => (YamlNode)i));
+        }
+
+        /// <summary>
+        /// Converts a <see cref="YamlScalarNode" /> to a string by returning its value.
+        /// </summary>
+        public static explicit operator string(YamlNode scalar)
+        {
+            return ((YamlScalarNode)scalar).Value;
+        }
+
+        /// <summary>
+        /// Gets the nth element in a <see cref="YamlSequenceNode" />.
+        /// </summary>
+        public YamlNode this[int index]
+        {
+            get
+            {
+                return ((YamlSequenceNode)this).Children[index];
+            }
+        }
+
+        /// <summary>
+        /// Gets the value associated with a key in a <see cref="YamlMappingNode" />.
+        /// </summary>
+        public YamlNode this[YamlNode key]
+        {
+            get
+            {
+                return ((YamlMappingNode)this).Children[key];
+            }
         }
     }
 }
