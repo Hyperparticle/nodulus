@@ -15,7 +15,7 @@ namespace Assets.Scripts.View.Game
 
         private PuzzleView _puzzleView;
         private PuzzleState _puzzleState;
-        //private PanScript _panScript;
+        private PanScript _panScript;
         private Text _moveText;
         public GameAudio GameAudio;
 
@@ -26,7 +26,7 @@ namespace Assets.Scripts.View.Game
         {
             _puzzleView = GetComponent<PuzzleView>();
             _puzzleState = GetComponent<PuzzleState>();
-            //_panScript = GameObject.FindGameObjectWithTag("MainView").GetComponent<PanScript>();
+            _panScript = GameObject.FindGameObjectWithTag("MainView").GetComponent<PanScript>();
             _moveText = GameObject.FindGameObjectWithTag("MoveText").GetComponent<Text>();
 
             _puzzleView.ViewUpdated += OnViewUpdated;
@@ -86,7 +86,7 @@ namespace Assets.Scripts.View.Game
                 _puzzleState.NextLevel(LevelDelay);
             }
 
-            // Pan camera towards island
+            //// Pan camera towards island
             //_panScript.PanTo(_puzzleState.IslandAverage);
         }
 

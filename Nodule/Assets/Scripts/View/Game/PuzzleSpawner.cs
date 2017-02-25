@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using Assets.Scripts.Core.Data;
 using Assets.Scripts.Core.Game;
-using Assets.Scripts.Utility;
 using Assets.Scripts.View.Data;
 using Assets.Scripts.View.Items;
 using UnityEngine;

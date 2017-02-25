@@ -14,6 +14,7 @@ namespace Assets.Scripts.View.Control
     {
         private BoardAction _boardAction;
         private PuzzleScale _puzzleScale;
+        private PanScript _panScript;
 
         private IDictionary<Point, NodeView> _nodeMap;
 
@@ -25,15 +26,16 @@ namespace Assets.Scripts.View.Control
         {
             _puzzleScale = GetComponent<PuzzleScale>();
             _boardAction = GetComponent<BoardAction>();
+            _panScript = GetComponent<PanScript>();
         }
 
         void Start()
         {
             // Add event handlers for swiping the screen
             var swipeRecognizers = new[] {
-                new TKSwipeRecognizer(MinSwipeDistanceCm),
-                new TKSwipeRecognizer(MedSwipeDistanceCm),
-                new TKSwipeRecognizer(MaxSwipeDistanceCm)
+                new TKSwipeRecognizer(MinSwipeDistanceCm) { minimumNumberOfTouches = 0, maximumNumberOfTouches = 1 },
+                new TKSwipeRecognizer(MedSwipeDistanceCm) { minimumNumberOfTouches = 0, maximumNumberOfTouches = 1 },
+                new TKSwipeRecognizer(MaxSwipeDistanceCm) { minimumNumberOfTouches = 0, maximumNumberOfTouches = 1 } 
             };
 
             foreach (var swipe in swipeRecognizers) {
@@ -45,6 +47,10 @@ namespace Assets.Scripts.View.Control
             var tapRecognizer = new TKTapRecognizer();
             tapRecognizer.gestureRecognizedEvent += OnTap;
             TouchKit.addGestureRecognizer(tapRecognizer);
+
+            var panRecognizer = new TKPanRecognizer() { minimumNumberOfTouches = 2, maximumNumberOfTouches = 3 };
+            panRecognizer.gestureRecognizedEvent += OnPan;
+            TouchKit.addGestureRecognizer(panRecognizer);
         }
 
         public void Init(IDictionary<Point, NodeView> nodeMap)
@@ -98,6 +104,11 @@ namespace Assets.Scripts.View.Control
             NodeView node;
             _nodeMap.TryGetValue(point, out node);
             return node;
+        }
+
+        private void OnPan(TKPanRecognizer recognizer)
+        {
+            _panScript.PanTowards(recognizer.deltaTranslation);
         }
     }
 }

@@ -16,8 +16,14 @@ namespace Assets.Scripts.View.Game
 
         public Vector2 Dimensions { get; private set; }
 
+        public Vector2 Offset { get; private set; }
+
+        public Vector2 MinClamp { get; private set; }
+        public Vector2 MaxClamp { get; private set; }
+
+        public Vector2 CameraDimensions { get; private set; }
+
         private Vector2 _currentPos = Vector2.zero;
-        private Vector2 _cameraDimensions;
 
         void Awake()
         {
@@ -31,7 +37,7 @@ namespace Assets.Scripts.View.Game
             var width = (p2 - p1).magnitude;
             var height = (p3 - p2).magnitude;
 
-            _cameraDimensions = new Vector2(width, height);
+            CameraDimensions = new Vector2(width, height);
 
             transform.localScale = Vector3.one;
             transform.localPosition = Vector3.zero;
@@ -41,18 +47,21 @@ namespace Assets.Scripts.View.Game
         public void Init(Point startNode, Point boardSize)
         {
             Dimensions = new Vector2(boardSize.x, boardSize.y)*Scaling;
+            GetClamp();
 
             transform.localEulerAngles = BoardRotation;
 
             //transform.Translate(-Dimensions * BoardScaling / 2);
 
-            var cameraOffset = _cameraDimensions.x/2f * Vector2.left; // Move board the left screen edge
+            var cameraOffset = CameraDimensions.x/2f * Vector2.left; // Move board the left screen edge
             var startNodeOffset = -(Vector2)startNode * Scaling;   // Move node to bottom left screen corner
             var edgeOffset = NodeScaling * Vector2.right;          // Move node slightly right to prevent cutoff
 
             var offset = cameraOffset + startNodeOffset + edgeOffset;
 
-            LeanTween.moveLocal(gameObject, offset, 1f)
+            Offset = Clamp(offset);
+
+            LeanTween.moveLocal(gameObject, Offset, 1f)
                 .setEase(LeanTweenType.easeInOutSine);
 
             //transform.Translate(offset);
@@ -63,9 +72,30 @@ namespace Assets.Scripts.View.Game
             //transform.localPosition = -(Vector3)startNode * Scaling;
         }
 
+        private void GetClamp()
+        {
+            var boardOffset = CameraDimensions;
+            var margin = NodeScaling * Vector2.one; // Add margin to prevent node cutoff
+            var overlap = Dimensions - CameraDimensions;
+
+            var clamp1 = CameraDimensions / 2f - Dimensions - margin;
+            var clamp2 = -CameraDimensions / 2f + margin;
+
+            MinClamp = new Vector2(Mathf.Min(clamp1.x, clamp2.x), Mathf.Min(clamp1.y, clamp2.y));
+            MaxClamp = new Vector2(Mathf.Max(clamp1.x, clamp2.x), Mathf.Max(clamp1.y, clamp2.y));
+        }
+
         public Vector2 Scale(Vector2 boardPos)
         {
             return boardPos*Scaling;
+        }
+
+        public Vector2 Clamp(Vector2 pos)
+        {
+            return new Vector2(
+                Mathf.Clamp(pos.x, MinClamp.x, MaxClamp.x),
+                Mathf.Clamp(pos.y, MinClamp.y, MaxClamp.y)
+            );
         }
 
         public static PuzzleScale Get { get; private set; }

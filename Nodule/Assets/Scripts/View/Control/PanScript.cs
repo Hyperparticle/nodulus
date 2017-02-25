@@ -8,43 +8,27 @@ namespace Assets.Scripts.View.Control
         public const float MouseSensitivity = 0.01f;
         public const KeyCode PanCode = KeyCode.Mouse2;
 
-        public Vector2 StartNodePos = new Vector2(-7.5f, 0f);
-
-        //private PuzzleScale _puzzleScale;
-
-        //private Vector2 _currentPos;
-
-        //private Vector2 _startPosition;
-        private Vector2 _minClamp;
-        private Vector2 _maxClamp;
-
+        private PuzzleScale _puzzleScale;
         private Vector3 _lastPosition;
 
         void Awake()
         {
-            //_puzzleScale = GetComponentInChildren<PuzzleScale>();
+            _puzzleScale = GetComponentInChildren<PuzzleScale>();
         }
 
         //public void PanTo(Vector2 boardPosition)
         //{
-        //    //var scaledPos = _puzzleScale.Scale(boardPosition);
-        //    //var delta = scaledPos - _currentPos; // Adjusted relative to the current position
+        //    var scaledPos = _puzzleScale.Scale(boardPosition) + _puzzleScale.Offset;
 
-        //    //_currentPos = scaledPos;
-
-        //    //Debug.Log(scaledPos);
-
-        //    //LeanTween.moveLocal(gameObject, scaledPos, 1f)
-        //    //    .setEase(LeanTweenType.easeInOutSine);
+        //    LeanTween.moveLocal(gameObject, -scaledPos, 1f)
+        //        .setEase(LeanTweenType.easeInOutSine);
         //}
 
-        public void Init(Vector2 boardDimensions)
+        public void PanTowards(Vector3 delta)
         {
-            LeanTween.moveLocal(gameObject, Vector3.zero, 1f)
-                .setEase(LeanTweenType.easeInOutSine);
-
-            _minClamp = boardDimensions / -2f;
-            _maxClamp = boardDimensions / 2f;
+            var pos = transform.localPosition + delta / 150;
+            transform.localPosition = _puzzleScale.Clamp(pos);
+            _lastPosition = Input.mousePosition;
         }
 
         void Update()
@@ -61,24 +45,10 @@ namespace Assets.Scripts.View.Control
                 var deltaPos = delta * MouseSensitivity;
                 var pos = transform.localPosition + deltaPos;
 
-                transform.localPosition = Clamp(pos);
+                transform.localPosition = _puzzleScale.Clamp(pos);
 
                 _lastPosition = Input.mousePosition;
             }
-        }
-
-        public void SetBounds(Vector2 min, Vector2 max)
-        {
-            _minClamp = min;
-            _maxClamp = max;
-        }
-
-        private Vector2 Clamp(Vector2 pos)
-        {
-            return new Vector2(
-                Mathf.Clamp(pos.x, _minClamp.x, _maxClamp.x),
-                Mathf.Clamp(pos.y, _minClamp.y, _maxClamp.y)
-            );
         }
     }
 }
