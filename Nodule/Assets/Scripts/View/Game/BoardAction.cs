@@ -15,7 +15,6 @@ namespace Assets.Scripts.View.Game
 
         private PuzzleView _puzzleView;
         private PuzzleState _puzzleState;
-        private PanScript _panScript;
         private Text _moveText;
         public GameAudio GameAudio;
 
@@ -26,7 +25,6 @@ namespace Assets.Scripts.View.Game
         {
             _puzzleView = GetComponent<PuzzleView>();
             _puzzleState = GetComponent<PuzzleState>();
-            _panScript = GameObject.FindGameObjectWithTag("MainView").GetComponent<PanScript>();
             _moveText = GameObject.FindGameObjectWithTag("MoveText").GetComponent<Text>();
 
             _puzzleView.ViewUpdated += OnViewUpdated;
@@ -37,7 +35,6 @@ namespace Assets.Scripts.View.Game
         /// </summary>
         public void Play(NodeView nodeView, Direction dir)
         {
-            // If a pull move has been played, rotate the node
             if (_viewUpdating) {
                 return;
             }
@@ -63,7 +60,7 @@ namespace Assets.Scripts.View.Game
                 GameAudio.Play(Clip.MovePull);
             } else if (movePlayed && !_puzzleState.IsPulled) {
                 // If a push move has been played, move the arc to the node, then rotate it
-                _puzzleView.MoveRotate(nodeView, _puzzleState.PulledArcView, dir);
+                _puzzleView.MoveRotate(_puzzleState.PushNodePath, _puzzleState.PulledArcView, dir);
                 GameAudio.Play(Clip.MovePush);
             } else {
                 _viewUpdating = false;
@@ -85,9 +82,6 @@ namespace Assets.Scripts.View.Game
                 GameAudio.Play(Clip.WinBoard);
                 _puzzleState.NextLevel(LevelDelay);
             }
-
-            //// Pan camera towards island
-            //_panScript.PanTo(_puzzleState.IslandAverage);
         }
 
         private void OnViewUpdated()

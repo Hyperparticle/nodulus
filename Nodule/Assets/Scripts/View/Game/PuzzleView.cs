@@ -55,9 +55,11 @@ namespace Assets.Scripts.View.Game
             nodeView.Rotate(dir, OnViewUpdated);
         }
 
-        public void MoveRotate(NodeView nodeView, ArcView arcView, Direction dir)
+        public void MoveRotate(List<NodeView> nodeViews, ArcView arcView, Direction dir)
         {
-            arcView.MoveTo(nodeView, () => Rotate(nodeView, arcView, dir, false));
+            var path = _puzzleState.PushNodePath;
+
+            arcView.MoveTo(nodeViews, () => Rotate(nodeViews[nodeViews.Count-1], arcView, dir, false));
         }
 
         public void Highlight(IEnumerable<NodeView> nodes, bool enable)

@@ -2,6 +2,7 @@ using System;
 using Assets.Scripts.Core.Items;
 using Assets.Scripts.View.Control;
 using UnityEngine;
+using System.Collections.Generic;
 
 namespace Assets.Scripts.View.Items
 {
@@ -66,12 +67,40 @@ namespace Assets.Scripts.View.Items
 
             transform.parent = nodeView.transform;
 
-            // TODO: move arc gracefully
             LeanTween.move(gameObject, nodeView.transform, ArcMoveTime)
                 .setEase(ArcMoveEase)
                 .setOnComplete(onComplete);
             LeanTween.moveLocalZ(gameObject, -_arcScale.Length, ArcMoveTime)
                 .setEase(ArcMoveEase);
+        }
+
+        /// <summary>
+        /// Moves this arc along a path of nodes specified in the given node list
+        /// </summary>
+        public void MoveTo(List<NodeView> nodeViews, Action onComplete)
+        {
+            var list = new LinkedList<NodeView>(nodeViews);
+            MoveNext(list.First, onComplete);
+        }
+
+        /// <summary>
+        /// Recursively applies arc movement to a node based on a list of nodes
+        /// </summary>
+        private void MoveNext(LinkedListNode<NodeView> nodeViews, Action onComplete)
+        {
+            if (nodeViews == null) {
+                return;
+            }
+
+            var head = nodeViews.Value;
+            var tail = nodeViews.Next;
+
+            if (tail == null) {
+                MoveTo(head, onComplete);
+                return;
+            }
+
+            MoveTo(head, () => MoveNext(tail, onComplete));
         }
     }
 }

@@ -123,6 +123,43 @@ namespace Assets.Scripts.Core.Data
             }
         }
 
+        /// <summary>
+        /// Finds the node path between the start and end nodes in the island.
+        /// </summary>
+        public static bool FindPath(Node start, Node end, HashSet<Node> nodes, List<Node> path)
+        {
+            nodes.Add(start);
+
+            if (start.Equals(end)) {
+                path.Add(end);
+                return true;
+            }
+
+            // Find all parent node connections
+            foreach (var connection in start.Connections
+                .Where(connection => !nodes.Contains(connection.ParentNode)))
+            {
+                var found = FindPath(connection.ParentNode, end, nodes, path);
+                if (found) {
+                    path.Add(start);
+                    return true;
+                }
+            }
+
+            // Find all connected node connections
+            foreach (var connection in start.Connections
+                .Where(connection => !nodes.Contains(connection.ConnectedNode)))
+            {
+                var found = FindPath(connection.ConnectedNode, end, nodes, path);
+                if (found) {
+                    path.Add(start);
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
         public override string ToString()
         {
             var join = string.Join(",", ConnectedNodes.Select(node => node.ToString()).ToArray());

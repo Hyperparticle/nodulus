@@ -6,6 +6,7 @@ using Assets.Scripts.View.Control;
 using Assets.Scripts.View.Data;
 using Assets.Scripts.View.Items;
 using UnityEngine;
+using Assets.Scripts.Core.Items;
 
 namespace Assets.Scripts.View.Game
 {
@@ -18,16 +19,19 @@ namespace Assets.Scripts.View.Game
         private PuzzleSpawner _puzzleSpawner;
         private PuzzleView _puzzleView;
         private BoardInput _boardInput;
-        private PanScript _panScript;
 
         private Puzzle _puzzle;
         private PlayerState _playerState;
         private int _currentLevel;
 
+        private NodeView _lastNodePulled;
+
         public ArcView PulledArcView { get; private set; }
         public bool IsPulled { get { return _puzzle.IsPulled; } }
         public Point PullPosition { get { return _playerState.PullPosition; } }
         public int NumMoves { get { return _puzzle.NumMoves; } }
+
+        public List<NodeView> PushNodePath { get; private set; }
 
         public IEnumerable<NodeView> PlayerNodes
         {
@@ -105,7 +109,6 @@ namespace Assets.Scripts.View.Game
             _puzzleSpawner = GetComponent<PuzzleSpawner>();
             _puzzleView = GetComponent<PuzzleView>();
             _boardInput = GetComponent<BoardInput>();
-            _panScript = GetComponent<PanScript>();
         }
 
         void Start()
@@ -152,14 +155,24 @@ namespace Assets.Scripts.View.Game
             // Push move
             if (IsPulled) {
                 FieldView fieldView;
-                return _fieldMap.TryGetField(nodeView.Position, dir, out fieldView) &&
+                bool pushMove = _fieldMap.TryGetField(nodeView.Position, dir, out fieldView) &&
                        PushArc(nodeView, fieldView);
+
+                if (pushMove) {
+                    PushNodePath = _playerState.PushPath(_lastNodePulled.Node, nodeView.Node)
+                        .Select(node => _nodeMap[node.Position])
+                        .ToList();
+                }
+
+                return pushMove;
             }
 
             // Pull move
             ArcView arcView;
-            return _arcMap.TryGetArc(nodeView.Position, dir.Opposite(), out arcView) &&
+            bool pullMove = _arcMap.TryGetArc(nodeView.Position, dir.Opposite(), out arcView) &&
                    PullArc(arcView, dir);
+            _lastNodePulled = nodeView;
+            return pullMove;
         }
 
         public bool PushArc(NodeView nodeView, FieldView fieldView)

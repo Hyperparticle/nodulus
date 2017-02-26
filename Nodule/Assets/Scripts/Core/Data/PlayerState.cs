@@ -97,5 +97,21 @@ namespace Assets.Scripts.Core.Data
         {
             return _playerIsland.Contains(node);
         }
+
+        public List<Node> PushPath(Node start, Node end)
+        {
+            // Make sure the nodes are in the player island
+            if (!_playerIsland.Contains(start) || !_playerIsland.Contains(end)) {
+                return new List<Node>();
+            }
+
+            var nodes = new HashSet<Node>();
+            var path = new List<Node>();
+
+            Island.FindPath(start, end, nodes, path);
+            path.Reverse();
+
+            return path;
+        }
     }
 }

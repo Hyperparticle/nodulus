@@ -23,8 +23,6 @@ namespace Assets.Scripts.View.Game
 
         public Vector2 CameraDimensions { get; private set; }
 
-        private Vector2 _currentPos = Vector2.zero;
-
         void Awake()
         {
             Get = this;
@@ -66,7 +64,6 @@ namespace Assets.Scripts.View.Game
         {
             var boardOffset = CameraDimensions;
             var margin = NodeScaling * Vector2.one; // Add margin to prevent node cutoff
-            var overlap = Dimensions - CameraDimensions;
 
             var minClamp = CameraDimensions / 2f - Dimensions - margin;
             var maxClamp = -CameraDimensions / 2f + margin;

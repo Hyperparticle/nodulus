@@ -22,8 +22,6 @@ namespace Assets.Scripts.View.Items
         private Colorizer _colorizer;
         private Transit _transit;
 
-        private readonly Queue<Direction> _rotateQueue = new Queue<Direction>();
-
         public Node Node { get; private set; }
 
         public Point Position
@@ -67,28 +65,10 @@ namespace Assets.Scripts.View.Items
             _transit.WaveOut(delay);
         }
 
-
         public void Rotate(Direction dir, Action onComplete)
         {
-            //if (LeanTween.isTweening(_rotor)) {
-            //    // Queue the request, which will get completed after this one is complete
-            //    // TODO: set parent objects
-            //    //_rotateQueue.Enqueue(dir);
-            //    return;
-            //}
-
             _transit.Rotate90(dir, onComplete);
         }
-
-        //private void OnRotateComplete()
-        //{
-        //    if (_rotateQueue.Count == 0) {
-        //        return;
-        //    }
-
-        //    var dir = _rotateQueue.Dequeue();
-        //    Rotate90(dir);
-        //}
 
         public void Highlight(bool enable)
         {
