@@ -88,7 +88,7 @@ namespace Assets.Scripts.Core.Data
                 return;
             } 
 
-            _pushFields.UnionWith(_playerIsland.Outskirts.Where(field => field.Length == pullArc.Length));
+            _pushFields.UnionWith(_playerIsland.Outskirts.Where(field => field.ValidPlacement(pullArc)));
             _nonPushFields.UnionWith(_fields);
             _nonPushFields.ExceptWith(_pushFields);
         }
