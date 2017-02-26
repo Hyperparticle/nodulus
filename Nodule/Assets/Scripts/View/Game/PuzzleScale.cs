@@ -42,33 +42,24 @@ namespace Assets.Scripts.View.Game
 
             transform.localEulerAngles = BoardRotation;
 
-            // Offset to show board with start node on left edge of the screen
-            //var cameraOffset = CameraDimensions.x/2f * Vector2.left; // Move board the left screen edge
-            //var startNodeOffset = -(Vector2)startNode * Scaling;   // Move node to bottom left screen corner
-            //var edgeOffset = NodeScaling * Vector2.right;          // Move node slightly right to prevent cutoff
-            //var offset = cameraOffset + startNode + edgeOffset;
-            //Offset = Clamp(offset);
-
+            // Move the board to the center of the screen
             Offset = -Dimensions / 2f;
-
             LeanTween.moveLocal(gameObject, Offset, 1f)
                 .setEase(LeanTweenType.easeInOutSine);
 
+            // Calculate dimensions of the game board + a small margin to prevent cutoff around the edges,
+            // then calculate a scaled zoom value based on the ratio of the board dimensions to the camera dimensions
+            // so that the board never gets cut off by the camera
             var margin = NodeScaling * Vector2.one * 2f;
             var scaledDimensions = Dimensions + margin;
             var cameraZoomScale = new Vector2(scaledDimensions.x / CameraDimensions.x, scaledDimensions.y / CameraDimensions.y);
             var cameraZoom = Camera.main.orthographicSize * cameraZoomScale;
             var maxZoom = Mathf.Max(cameraZoom.x, cameraZoom.y);
 
-            LeanTween.value(Camera.main.orthographicSize, maxZoom, 1f)
+            LeanTween.value(Camera.main.orthographicSize, maxZoom, GameDef.Get.WaveInMoveDelayStart)
                 .setEase(LeanTweenType.easeInOutSine)
-                .setDelay(0.2f)
-                .setOnUpdate(v => Camera.main.orthographicSize = v);
-
-            //BoardScaling = CameraScript.Fit(Dimensions, BoardPadding, BoardPadding + 2.0f);
-            //transform.localScale = Vector3.one * BoardScaling;
-            //transform.localPosition = -Dimensions * BoardScaling / 2 + (Vector2)transform.localPosition;
-            //transform.localPosition = -(Vector3)startNode * Scaling;
+                .setDelay(GameDef.Get.LevelDelay)
+                .setOnUpdate(scaled => Camera.main.orthographicSize = scaled);
         }
 
         private void GetClamp()
