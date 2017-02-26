@@ -35,7 +35,7 @@ namespace Assets.Scripts.View.Game
         /// </summary>
         public void Play(NodeView nodeView, Direction dir)
         {
-            if (_viewUpdating) {
+            if (_viewUpdating || LeanTween.isTweening(nodeView.gameObject)) {
                 return;
             }
 
@@ -54,13 +54,13 @@ namespace Assets.Scripts.View.Game
                 // Even though no move has been played, if there are no arcs parallel 
                 // to the swipe, we can have the nodes/arcs rotate for effect
                 // (but not in the case where there is a pulled arc on the node)
-                _puzzleView.Rotate(nodeView, dir, true);
+                _puzzleView.Rotate(nodeView, dir, true, OnMoveComplete);
             } else if (movePlayed && _puzzleState.IsPulled) {
-                _puzzleView.Rotate(nodeView, _puzzleState.PulledArcView, dir, true);
+                _puzzleView.Rotate(nodeView, _puzzleState.PulledArcView, dir, true, OnMoveComplete);
                 GameAudio.Play(Clip.MovePull);
             } else if (movePlayed && !_puzzleState.IsPulled) {
                 // If a push move has been played, move the arc to the node, then rotate it
-                _puzzleView.MoveRotate(_puzzleState.PushNodePath, _puzzleState.PulledArcView, dir);
+                _puzzleView.MoveRotate(_puzzleState.PushNodePath, _puzzleState.PulledArcView, dir, OnMoveComplete);
                 GameAudio.Play(Clip.MovePush);
             } else {
                 _viewUpdating = false;
@@ -77,8 +77,12 @@ namespace Assets.Scripts.View.Game
             // Update field highlighting
             _puzzleView.Highlight(_puzzleState.NonPushFields, false);
             _puzzleView.Highlight(_puzzleState.PushFields, true);
+        }
 
-            if (_puzzleState.Win) {
+        private void OnMoveComplete()
+        {
+            if (_puzzleState.Win)
+            {
                 GameAudio.Play(Clip.WinBoard);
                 _puzzleState.NextLevel(LevelDelay);
             }

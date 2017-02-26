@@ -28,14 +28,14 @@ namespace Assets.Scripts.View.Game
             OnViewUpdated();
         }
 
-        public void Rotate(NodeView nodeView, ArcView arcView, Direction dir, bool pull)
+        public void Rotate(NodeView nodeView, ArcView arcView, Direction dir, bool pull, Action onComplete)
         {
             arcView.transform.parent = nodeView.Rotor;
-            Rotate(nodeView, dir, pull);
+            Rotate(nodeView, dir, pull, onComplete);
         }
 
         // TODO: make pull cleaner
-        public void Rotate(NodeView nodeView, Direction dir, bool pull)
+        public void Rotate(NodeView nodeView, Direction dir, bool pull, Action onComplete)
         {
             // Set all connecting arcs as the parent of this node
             // so that all arcs will rotate accordingly
@@ -52,14 +52,14 @@ namespace Assets.Scripts.View.Game
             //var fieldViews = _puzzleState.GetFields(nodeView.Position);
 
             // Finally, rotate the node!
-            nodeView.Rotate(dir, OnViewUpdated);
+            nodeView.Rotate(dir, () => { OnViewUpdated(); onComplete(); });
         }
 
-        public void MoveRotate(List<NodeView> nodeViews, ArcView arcView, Direction dir)
+        public void MoveRotate(List<NodeView> nodeViews, ArcView arcView, Direction dir, Action onComplete)
         {
             var path = _puzzleState.PushNodePath;
 
-            arcView.MoveTo(nodeViews, () => Rotate(nodeViews[nodeViews.Count-1], arcView, dir, false));
+            arcView.MoveTo(nodeViews, () => Rotate(nodeViews[nodeViews.Count-1], arcView, dir, false, onComplete));
         }
 
         public void Highlight(IEnumerable<NodeView> nodes, bool enable)
