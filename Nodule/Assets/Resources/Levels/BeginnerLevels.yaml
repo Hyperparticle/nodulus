@@ -4,6 +4,87 @@ info:
   version: 1.0.0
 
 levels:
+  - name: First Steps
+    description: Moving in a straight line
+    nodes:
+      - [0, 0]
+      - [1, 0]
+      - [2, 0]
+      - [3, 0]
+      - [4, 0]
+      - [5, 0]
+    arcs:
+      - parent: [0, 0]
+        direction: Right
+
+  - name: Roundabout
+    description: Moving in different directions
+    nodes:
+      - [0, 1]
+      - [1, 1]
+      - [1, 2]
+      - [2, 2]
+      - [3, 2]
+      - [3, 1]
+      - [3, 0]
+      - [4, 0]
+    arcs:
+      - parent: [0, 1]
+        direction: Right
+
+  - name: Ladder
+    description: Multiple pieces
+    nodes:
+      - [0, 2]
+      - [1, 0]
+      - [1, 1]
+      - [1, 2]
+      - [3, 0]
+      - [3, 1]
+      - [3, 2]
+      - [5, 0]
+    arcs:
+      - parent: [0, 2]
+        direction: Right
+      - parent: [1, 2]
+        direction: Right
+
+  - name: Broken Ladder
+    description: A bit harder this time
+    nodes:
+      - [0, 2]
+      - [1, 0]
+      - [1, 1]
+      - [1, 2]
+      - [3, 0]
+      - [3, 1]
+      - [4, 0]
+      - [4, 2]
+    arcs:
+      - parent: [0, 2]
+        direction: Right
+      - parent: [1, 1]
+        direction: Right
+
+  - name: Barrier
+    description: Need to remove the obstacle
+    nodes:
+      - [0, 1]
+      - [2, 0]
+      - [2, 1]
+      - [3, 0]
+      - [3, 2]
+      - [4, 1]
+      - [5, 0]
+      - [6, 1]
+    arcs:
+      - parent: [0, 1]
+        direction: Right
+      - parent: [2, 0]
+        direction: Up
+      - parent: [3, 0]
+        direction: Up
+
   - name: Loop
     description: A Simple Challenge
     nodes:
@@ -18,7 +99,7 @@ levels:
       - [5, 0]
       - [6, 1]
     #start: [0, 1]  # The position of the start and final nodes. If left out, they are
-    #final: [6, 1]    # assumed as the first and last nodes in the list above
+    #final: [6, 1]  # assumed as the first and last nodes in the list above
     arcs:
       - parent: [0, 1]    # Arcs are constructed by specifying parent node coordinates
         direction: Right  # and the direction it points to (Right or Up)

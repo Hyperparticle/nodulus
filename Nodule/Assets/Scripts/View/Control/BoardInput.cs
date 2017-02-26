@@ -61,7 +61,17 @@ namespace Assets.Scripts.View.Control
         /// <summary>
         /// Called every time the screen is tapped
         /// </summary>
-        private void OnTap(TKTapRecognizer recognizer) {}
+        private void OnTap(TKTapRecognizer recognizer)
+        {
+            // Find the nearest node to the tap
+            var field = GetNearestField(recognizer);
+
+            if (field == null) {
+                return;
+            }
+
+            //_boardAction.Play(field);
+        }
 
         /// <summary>
         /// Called every time the screen is swiped
@@ -104,6 +114,12 @@ namespace Assets.Scripts.View.Control
             NodeView node;
             _nodeMap.TryGetValue(point, out node);
             return node;
+        }
+
+        private FieldView GetNearestField(TKTapRecognizer recognizer)
+        {
+            var pos = Camera.main.ScreenToWorldPoint(recognizer.startTouchLocation()) / _puzzleScale.Scaling;
+            return null;
         }
 
         private void OnPan(TKPanRecognizer recognizer)
