@@ -29,16 +29,6 @@ namespace Assets.Scripts.View.Game
         {
             Get = this;
 
-            var cam = Camera.main;
-            var p1 = cam.ViewportToWorldPoint(new Vector3(0, 0, cam.nearClipPlane));
-            var p2 = cam.ViewportToWorldPoint(new Vector3(1, 0, cam.nearClipPlane));
-            var p3 = cam.ViewportToWorldPoint(new Vector3(1, 1, cam.nearClipPlane));
-
-            var width = (p2 - p1).magnitude;
-            var height = (p3 - p2).magnitude;
-
-            CameraDimensions = new Vector2(width, height);
-
             transform.localScale = Vector3.one;
             transform.localPosition = Vector3.zero;
             transform.localRotation = Quaternion.identity;
@@ -46,25 +36,34 @@ namespace Assets.Scripts.View.Game
 
         public void Init(Point startNode, Point boardSize)
         {
+            CameraDimensions = GetCameraDimensions();
             Dimensions = new Vector2(boardSize.x, boardSize.y)*Scaling;
             GetClamp();
 
             transform.localEulerAngles = BoardRotation;
 
-            //transform.Translate(-Dimensions * BoardScaling / 2);
+            // Offset to show board with start node on left edge of the screen
+            //var cameraOffset = CameraDimensions.x/2f * Vector2.left; // Move board the left screen edge
+            //var startNodeOffset = -(Vector2)startNode * Scaling;   // Move node to bottom left screen corner
+            //var edgeOffset = NodeScaling * Vector2.right;          // Move node slightly right to prevent cutoff
+            //var offset = cameraOffset + startNode + edgeOffset;
+            //Offset = Clamp(offset);
 
-            var cameraOffset = CameraDimensions.x/2f * Vector2.left; // Move board the left screen edge
-            var startNodeOffset = -(Vector2)startNode * Scaling;   // Move node to bottom left screen corner
-            var edgeOffset = NodeScaling * Vector2.right;          // Move node slightly right to prevent cutoff
-
-            var offset = cameraOffset + startNodeOffset + edgeOffset;
-
-            Offset = Clamp(offset);
+            Offset = -Dimensions / 2f;
 
             LeanTween.moveLocal(gameObject, Offset, 1f)
                 .setEase(LeanTweenType.easeInOutSine);
 
-            //transform.Translate(offset);
+            var margin = NodeScaling * Vector2.one * 2f;
+            var scaledDimensions = Dimensions + margin;
+            var cameraZoomScale = new Vector2(scaledDimensions.x / CameraDimensions.x, scaledDimensions.y / CameraDimensions.y);
+            var cameraZoom = Camera.main.orthographicSize * cameraZoomScale;
+            var maxZoom = Mathf.Max(cameraZoom.x, cameraZoom.y);
+
+            LeanTween.value(Camera.main.orthographicSize, maxZoom, 1f)
+                .setEase(LeanTweenType.easeInOutSine)
+                .setDelay(0.2f)
+                .setOnUpdate(v => Camera.main.orthographicSize = v);
 
             //BoardScaling = CameraScript.Fit(Dimensions, BoardPadding, BoardPadding + 2.0f);
             //transform.localScale = Vector3.one * BoardScaling;
@@ -78,11 +77,31 @@ namespace Assets.Scripts.View.Game
             var margin = NodeScaling * Vector2.one; // Add margin to prevent node cutoff
             var overlap = Dimensions - CameraDimensions;
 
-            var clamp1 = CameraDimensions / 2f - Dimensions - margin;
-            var clamp2 = -CameraDimensions / 2f + margin;
+            var minClamp = CameraDimensions / 2f - Dimensions - margin;
+            var maxClamp = -CameraDimensions / 2f + margin;
 
-            MinClamp = new Vector2(Mathf.Min(clamp1.x, clamp2.x), Mathf.Min(clamp1.y, clamp2.y));
-            MaxClamp = new Vector2(Mathf.Max(clamp1.x, clamp2.x), Mathf.Max(clamp1.y, clamp2.y));
+            if (minClamp.x > maxClamp.x) {
+                minClamp.x = maxClamp.x; 
+            }
+            if (minClamp.y > maxClamp.y) {
+                minClamp.y = maxClamp.y = 0;
+            }
+
+            MinClamp = minClamp;
+            MaxClamp = maxClamp;
+        }
+
+        private Vector2 GetCameraDimensions()
+        {
+            var cam = Camera.main;
+            var p1 = cam.ViewportToWorldPoint(new Vector3(0, 0, cam.nearClipPlane));
+            var p2 = cam.ViewportToWorldPoint(new Vector3(1, 0, cam.nearClipPlane));
+            var p3 = cam.ViewportToWorldPoint(new Vector3(1, 1, cam.nearClipPlane));
+
+            var width = (p2 - p1).magnitude;
+            var height = (p3 - p2).magnitude;
+
+            return new Vector2(width, height);
         }
 
         public Vector2 Scale(Vector2 boardPos)
