@@ -28,14 +28,14 @@ namespace Assets.Scripts.View.Game
             OnViewUpdated();
         }
 
-        public void Rotate(NodeView nodeView, ArcView arcView, Direction dir, bool pull, Action onComplete)
+        public void Rotate(NodeView nodeView, ArcView arcView, Direction dir, bool pull)
         {
             arcView.transform.parent = nodeView.Rotor;
-            Rotate(nodeView, dir, pull, onComplete);
+            Rotate(nodeView, dir, pull);
         }
 
         // TODO: make pull cleaner
-        public void Rotate(NodeView nodeView, Direction dir, bool pull, Action onComplete)
+        public void Rotate(NodeView nodeView, Direction dir, bool pull)
         {
             // Set all connecting arcs as the parent of this node
             // so that all arcs will rotate accordingly
@@ -52,14 +52,14 @@ namespace Assets.Scripts.View.Game
             //var fieldViews = _puzzleState.GetFields(nodeView.Position);
 
             // Finally, rotate the node!
-            nodeView.Rotate(dir, () => { OnViewUpdated(); onComplete(); });
+            nodeView.Rotate(dir, () => OnViewUpdated());
         }
 
-        public void MoveRotate(List<NodeView> nodeViews, ArcView arcView, Direction dir, Action onComplete)
+        public void MoveRotate(List<NodeView> nodeViews, ArcView arcView, Direction dir)
         {
             var path = _puzzleState.PushNodePath;
 
-            arcView.MoveTo(nodeViews, () => Rotate(nodeViews[nodeViews.Count-1], arcView, dir, false, onComplete));
+            arcView.MoveTo(nodeViews, () => Rotate(nodeViews[nodeViews.Count-1], arcView, dir, false));
         }
 
         public void Highlight(IEnumerable<NodeView> nodes, bool enable)
@@ -83,6 +83,32 @@ namespace Assets.Scripts.View.Game
             {
                 fieldView.Highlight(enable);
             }
+        }
+
+        public void Shake(Direction dir)
+        {
+            LeanTween.cancel(gameObject);
+            transform.position = _puzzleScale.Offset;
+
+            var dirVector = dir.Vector();
+
+            var shakeAmt = 0.05f;
+            var initPos = transform.localPosition;
+            var shakePeriodTime = 0.1f;
+
+            LeanTween.moveLocal(gameObject, initPos + dirVector * shakeAmt, shakePeriodTime)
+                .setEase(LeanTweenType.easeInSine)
+                .setOnComplete(() => {
+                    LeanTween.moveLocal(gameObject, initPos, shakePeriodTime)
+                        .setEase(LeanTweenType.easeOutSine);
+                });
+            //    .setLoopClamp()
+            //    .setRepeat(-1);
+
+            //// Slow the shake down to zero
+            //LeanTween.value(gameObject, shakeAmt, 0f, dropOffTime)
+            //    .setEase(LeanTweenType.easeOutQuad)
+            //    .setOnUpdate(val => shakeTween.setTo(initPos + dirVector * shakeAmt * val));
         }
 
         private void OnViewUpdated()

@@ -70,6 +70,11 @@ namespace Assets.Scripts.View.Items
             _transit.Rotate90(dir, onComplete);
         }
 
+        public void WinAnimation()
+        {
+            _transit.RotateFast();
+        }
+        
         public void Highlight(bool enable)
         {
             if (Node.Final) {

@@ -91,11 +91,18 @@ namespace Assets.Scripts.View.Items
             var axis = rot * dir.Axis();
 
             // Rotate 90 degrees in the direction specified
-            // TODO: remove magic constants
             LeanTween.rotateAroundLocal(_rotor, axis, 90f, NodeRotateTime)
                 .setEase(LeanTweenType.easeInOutSine)
-                //.setOnComplete(OnRotateComplete)
                 .setOnComplete(onComplete);
+        }
+
+        public void RotateFast()
+        {
+            var rot = Quaternion.Inverse(_rotor.transform.localRotation);
+
+            LeanTween.rotateAroundLocal(_rotor, Direction.Right.Axis() + Direction.Down.Axis(), 360f, NodeRotateTime * 2)
+                .setEase(LeanTweenType.easeInOutSine);
+            LeanTween.scale(_rotor, Vector3.one * 2, NodeRotateTime * 2);
         }
     }
 }
