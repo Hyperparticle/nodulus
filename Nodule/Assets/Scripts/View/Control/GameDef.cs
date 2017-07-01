@@ -20,7 +20,7 @@ namespace Assets.Scripts.View.Control
         public Vector3 BoardRotation = new Vector3(22.5f, 12.25f, 0f);
 
         // Board Input
-        public float MinSwipeDistanceCm = 1.5f;
+        public float MinSwipeDistanceCm = 0.5f;
         public float MedSwipeDistanceCm = 3f;
         public float MaxSwipeDistanceCm = 4.5f;
 

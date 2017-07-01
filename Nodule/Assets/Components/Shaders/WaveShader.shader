@@ -1,4 +1,6 @@
-﻿// Upgrade NOTE: replaced '_Object2World' with 'unity_ObjectToWorld'
+﻿// Upgrade NOTE: replaced 'mul(UNITY_MATRIX_MVP,*)' with 'UnityObjectToClipPos(*)'
+
+// Upgrade NOTE: replaced '_Object2World' with 'unity_ObjectToWorld'
 // Upgrade NOTE: replaced '_World2Object' with 'unity_WorldToObject'
 
 Shader "Hyperparticle/Waves" {
@@ -119,7 +121,7 @@ Category {
                 output.color.a = _Alpha;
 			    output.color.rgb *= output.color.a;
                 
-                output.position = mul(UNITY_MATRIX_MVP, vertex.position);
+                output.position = UnityObjectToClipPos(vertex.position);
                 
                 UNITY_TRANSFER_FOG(output, output.position);
 
