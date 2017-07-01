@@ -49,6 +49,26 @@ levels:
       - parent: [1, 2]
         direction: Right
 
+  - name: Bridge
+    description: Jumping over pieces
+    nodes:
+      - [0, 2]
+      - [1, 2]
+      - [3, 2]
+      - [4, 0]
+      - [4, 2]
+      - [6, 0]
+      - [7, 0]
+    arcs:
+      - parent: [0, 2]
+        direction: Right
+      - parent: [1, 2]
+        direction: Right
+      - parent: [4, 0]
+        direction: Up
+      - parent: [4, 0]
+        direction: Right
+
   - name: Broken Ladder
     description: A bit harder this time
     nodes:
