@@ -49,7 +49,6 @@ namespace Assets.Scripts.View.Game
             // then calculate a scaled zoom value based on the ratio of the board dimensions to the camera dimensions
             // so that the board never gets cut off by the camera
             var margin = NodeScaling * new Vector2(2f, 3f);
-            var shift = NodeScaling * Vector2.down * 1f;
             var scaledDimensions = Dimensions + margin;
             var cameraZoomScale = new Vector2(scaledDimensions.x / CameraDimensions.x, scaledDimensions.y / CameraDimensions.y);
             var cameraZoom = Camera.main.orthographicSize * cameraZoomScale;

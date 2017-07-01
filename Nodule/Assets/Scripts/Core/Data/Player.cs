@@ -12,7 +12,7 @@ namespace Assets.Scripts.Core.Data
 
         public int NumMoves { get; private set; }
         public bool Win { get { return _playerState.IsFinal; } }
-
+        
         public Player(GameBoard gameBoard)
         {
             _playerState = new PlayerState(gameBoard);
@@ -31,10 +31,14 @@ namespace Assets.Scripts.Core.Data
 
         public bool PlayMove(IMove move)
         {
-            var result = move.Play();
+            var movePlayed = move.Play();
+            
+            if (movePlayed && move is PushMove) {
+                var pushMove = move as PushMove;
+                NumMoves++;
+            }
 
-            NumMoves = result ? NumMoves + 1 : NumMoves;
-            return result;
+            return movePlayed;
         }
     }
 }

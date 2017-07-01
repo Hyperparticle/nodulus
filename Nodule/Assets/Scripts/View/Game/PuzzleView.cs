@@ -60,15 +60,10 @@ namespace Assets.Scripts.View.Game
             // Set all connecting arcs as the parent of this node
             // so that all arcs will rotate accordingly
             var arcViews = _puzzleState.GetArcs(nodeView.Position);
-            
-            var stay = dir;
             foreach (var pair in arcViews)
             {
                 pair.Value.transform.parent = nodeView.Rotor;
             }
-
-            // TODO: cool field rotations
-            //var fieldViews = _puzzleState.GetFields(nodeView.Position);
 
             // Finally, rotate the node!
             nodeView.Shake(dir, () => OnViewUpdated());

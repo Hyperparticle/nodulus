@@ -111,8 +111,6 @@ namespace Assets.Scripts.View.Items
 
         public void RotateFast()
         {
-            var rot = Quaternion.Inverse(_rotor.transform.localRotation);
-
             LeanTween.rotateAroundLocal(_rotor, Direction.Right.Axis() + Direction.Down.Axis(), 360f, NodeRotateTime * 2)
                 .setEase(LeanTweenType.easeInOutSine);
             LeanTween.scale(_rotor, Vector3.one * 2, NodeRotateTime * 2);
