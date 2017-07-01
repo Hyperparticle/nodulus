@@ -96,6 +96,19 @@ namespace Assets.Scripts.View.Items
                 .setOnComplete(onComplete);
         }
 
+        public void Shake(Direction dir, Action onComplete)
+        {
+            // Grab the axis of the direction, and rotate it relative to the current rotation.
+            // This is accomplished by getting the rotation that undoes the current rotation, 
+            // and applying it to the absolute axis to get the relative axis we want
+            var rot = Quaternion.Inverse(_rotor.transform.localRotation);
+            var axis = rot * dir.Axis();
+            
+            LeanTween.rotateAroundLocal(_rotor, axis, 30f, NodeRotateTime)
+                .setEase(LeanTweenType.easeShake)
+                .setOnComplete(onComplete);
+        }
+
         public void RotateFast()
         {
             var rot = Quaternion.Inverse(_rotor.transform.localRotation);

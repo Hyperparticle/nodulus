@@ -98,6 +98,8 @@ namespace Assets.Scripts.View.Game
         public bool Win { get { return _puzzle.Win; } }
 
         public bool HasArcAt(Point pos, Direction dir) { return _arcMap.ContainsArc(pos, dir); }
+        public bool NodeOccupies(Point pos) { return _nodeMap.ContainsKey(pos); }
+        public bool ArcOccupies(Point pos) { return false; }
 
         public IDictionary<Direction, ArcView> GetArcs(Point pos)
         {
