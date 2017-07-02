@@ -1,0 +1,172 @@
+If you were using a previous version of Vectrosity, this guide explains the changes required to get your code to work in a newer version.
+
+VECTROSITY 5.4:
+
+• You must be using Unity 5.4 or later to use Vectrosity 5.4.
+
+• The DLL locations have moved from Plugins/Vectrosity to Vectrosity/Plugins. Remove the old Plugins/Vectrosity folder before importing the new version.
+
+
+----------
+
+VECTROSITY 5.1:
+
+• You must be using Unity 5.2.2 or later to use Vectrosity 5.1.
+
+
+• All Vectrosity-related material is now in Plugins/Vectrosity. Remove any older Vectrosity dlls/scripts and so on that may be located elsewhere.
+
+
+----------
+
+
+If you were using Vectrosity 4, this guide explains the changes required to get your code to work in Vectrosity 5.
+
+VECTROSITY 5.0:
+
+• You must be using Unity 5.2 or later to use Vectrosity 5.
+
+
+
+• The VectorLine constructor no longer uses a material. Instead, it uses a texture. Code like this:
+
+	public var lineMat : Material;
+	
+	function Start() {
+		var line = new VectorLine("Line", new List.<Vector2>(), lineMat, 2.0f);
+	}
+
+should be replaced with this:
+
+	public var lineTex : Texture;
+	
+	function Start() {
+		var line = new VectorLine("Line", new List.<Vector2>(), lineTex, 2.0f);
+	}
+
+If you want a default solid line with no texture, it can simply be omitted, rather than passing in null, so code like this:
+
+	var line = new VectorLine("Line", new List.<Vector2>(), null, 2.0f);
+
+should be:
+
+	var line = new VectorLine("Line", new List.<Vector2>(), 2.0f);
+
+By default, 2D lines use the default UI material, and 3D lines use the Vectrosity/Resources/DefaultLine3D material, which is unlit/transparent by default. (Changing the shader on this material changes the default shader for 3D lines.) If you want to assign a custom material, use VectorLine.material:
+
+		line.material = lineMat;
+
+Also, you can assign a different texture while keeping the same material:
+
+		line.texture = lineTex;
+
+
+
+• The VectorLine constructor no longer uses arrays; it can only use Lists. You can still use arrays by passing them into the List constructor, so code like this:
+
+	var points = new Vector3[100];
+	var line = new VectorLine("Line", points, null, 2.0f);
+
+should be:
+
+	var points = new Vector3[100];
+	var line = new VectorLine("Line", new List.<Vector3>(points), 2.0f);
+
+
+
+• If you used an array to initialize the line with a specific number of points that you changed later, you can pass in the size in the List constructor instead. So code like this:
+
+	var line = new VectorLine("Line", new Vector3[100], null, 2.0f);
+	line.points3[50] = Vector3.one;
+
+should be:
+
+	var line = new VectorLine("Line", new List.<Vector3>(100), 2.0f);
+	line.points3[50] = Vector3.one;
+
+
+
+• VectorPoints is removed. Instead, create a VectorLine and use LineType.Points. Code like this:
+
+	var points = new VectorPoints("Points", linePoints, null, 2.0f);
+
+should be:
+
+	var points = new VectorLine("Points), linePoints, 2.0f, LineType.Points);
+
+
+
+• VectorLine.SetColors no longer uses a Color32 array; it can only use a Color32 List. You can still use arrays by passing them into the List constructor, so assuming "colors" is Color32[], code like this:
+
+	line.SetColors (colors);
+
+should be:
+
+	line.SetColors (new List.<Color32>(colors));
+
+It may be better to switch your code from arrays to Lists, however, since that will have less GC allocation.
+
+
+
+• VectorLine.SetWidths no longer uses int or float arrays; it can only use List<int> or List<float>. You can still use arrays by passing them into the List constructor, so assuming "widths" is int[], code like this:
+
+	line.SetWidths (widths);
+
+should be:
+
+	line.SetColors (new List.<int>(widths));
+
+If widths was float[], then you'd use "new List.<float>(widths)". It may be better to switch your code from arrays to Lists, however, since that will have less GC allocation.
+
+
+
+• Multiple canvases are no longer required, since multiple lines totaling > 65K vertices will work on a single canvas. So VectorLine.canvases and VectorLine.canvases3D are removed, as well as VectorLine.canvasID. If you were using different GameObject layers on different vector canvases, you can now use VectorLine.layer to assign layers directly to VectorLines.
+
+
+
+• Lines drawn with Draw3D no longer use a canvas, so VectorLine.canvas3D is removed. Code that uses it should be deleted.
+
+
+
+• VectorLine.SetEndCap no longer uses a material. Also, the line texture is part of the end cap now, so two textures are required for EndCap.Front, EndCap.Back, and EndCap.Mirror (line texture plus cap texture), and three textures are required for EndCap.Both (line texture, front cap texture, and back cap texture). So code like this:
+
+	VectorLine.SetEndCap ("Arrow1", EndCap.Front, capMaterial, frontTex);
+	VectorLine.SetEndCap ("Arrow2", EndCap.Both, capMaterial, frontTex, backTex);
+
+should be:
+
+	VectorLine.SetEndCap ("Arrow1", EndCap.Front, lineTex, frontTex);
+	VectorLine.SetEndCap ("Arrow2", EndCap.Both, lineTex, frontTex, backTex);
+
+The line texture in the end cap overrides any line texture that was supplied when the line was created. So lines intended to have an end cap don't need any texture when they're initialized:
+
+	var line = new VectorLine("CappedLine", linePoints, 20.0f);
+	line.endCap = "Arrow2";
+
+Additionally, the line texture supplied for the end cap must be square. If you were using a tall thin line texture before, it should be stretched out in your image editing app to be square. The front and back cap textures don't need to be square, but the height of the cap textures must be the same as the line texture.
+
+If you're upgrading from a version of Vectrosity prior to 4.4, note that end caps can now have separate offsets for the front and back, and they can also be scaled.
+
+
+
+• If you were offsetting the rectTransform by 0.5 to align 1-pixel lines to the pixel, grid, you can use VectorLine.alignOddWidthToPixels instead, so code like this:
+
+	myLine.rectTransform.anchoredPosition = new Vector2(0.5f, 0.5f);
+
+should be:
+
+	myLine.alignOddWidthToPixels = true;
+
+
+
+• VectorLine.BytesToVector2Array and VectorLine.BytesToVector3Array return a List.<Vector2> and List.<Vector3>, respectively, rather than Vector2[] and Vector3[] arrays.
+
+
+
+• VectorLine.continuous is removed. Instead, use VectorLine.lineType. Code like this:
+
+	if (myLine.continuous) Debug.Log ("Continuous");
+
+should be:
+
+	if (myLine.lineType == LineType.Continuous) Debug.Log ("Continuous");

@@ -4,6 +4,7 @@ using Assets.Scripts.Core.Game;
 using Assets.Scripts.View.Data;
 using Assets.Scripts.View.Items;
 using UnityEngine;
+using System.Linq;
 
 namespace Assets.Scripts.View.Game
 {
@@ -19,6 +20,9 @@ namespace Assets.Scripts.View.Game
 
         private GameBoard _gameBoard;
 
+        private LatticeView _lattice;
+        private PuzzleScale _puzzleScale;
+
         public IDictionary<Point, NodeView> NodeMap
         {
             get { return _nodeMap; }
@@ -32,6 +36,12 @@ namespace Assets.Scripts.View.Game
         public ArcViewMap ArcMap
         {
             get { return _arcMap; }
+        }
+
+        private void Awake()
+        {
+            _lattice = GetComponentInChildren<LatticeView>();
+            _puzzleScale = GetComponent<PuzzleScale>();
         }
 
         public Puzzle SpawnBoard(int level)
@@ -65,6 +75,10 @@ namespace Assets.Scripts.View.Game
             }
 
             foreach (Transform child in transform) {
+                if (child.gameObject.GetComponent<LatticeView>() != null) {
+                    continue;
+                }
+
                 Destroy(child.gameObject, 1.5f);
             }
 
@@ -128,6 +142,8 @@ namespace Assets.Scripts.View.Game
 
         private void StartAnimations()
         {
+            _lattice.Init(_gameBoard.Size.x + 1, _gameBoard.Size.y + 1, _puzzleScale.Scaling);
+
             var i = 0;
             foreach (var nodeView in _nodeMap.Values) {
                 nodeView.WaveIn(i++);

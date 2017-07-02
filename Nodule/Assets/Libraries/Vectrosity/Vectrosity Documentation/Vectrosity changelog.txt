@@ -1,0 +1,679 @@
+Vectrosity Release Notes
+------------------------
+
+Vectrosity 5.4.2
+
+Fixes:
+	• Re-did fix for 5.4.1, since the original fix caused other issues.
+
+-----------
+
+Vectrosity 5.4.1
+
+Fixes:
+	• ObjectSetup with useDraw3D = true works with Unity 5.6.
+
+-----------
+
+Vectrosity 5.4
+
+Changes:
+	• Unity 5.4 is the minimum required version.
+	• Fully compatible with Unity 5.6.
+	• The DLL location is moved from Plugins/Vectrosity to Vectrosity/Plugins. If upgrading from an older version, delete the Plugins/Vectrosity folder first.
+	• VectorLine.SetCanvasCamera (camera, id) overload is removed, since it doesn't do anything considering VectorLine.canvases was removed a while ago. VectorLine.SetCanvasCamera (canvas) still exists of course.
+	• Added worldPositionStays parameter to VectorLine.SetMask, which is useful when using a canvas with screen space - camera (set it to false in this case).
+
+Fixes:
+	• Fixed case where using VectorLine.SetDistances could potentially result in an out of range error.
+	• Fixed error that would occur when VectorLine.smoothWidth = true but no line widths were set.
+	• Custom material behavior is consistent when using Draw3D.
+	• LineMaker and VectorLine2D editors work correctly on retina displays. 
+
+-----------
+
+Vectrosity 5.3
+
+Additions:
+	• VectorLine.SetEndCapIndex, which can be used to have the front or back end caps appear somewhere other than at the front and back of the line. e.g., if a line has some transparent segments at the front/back and some visible segments in the middle, SetEndCapIndex could be used to make the end caps match up with the visible segments (in which case SetEndCapColor should be used to make the end caps visible).
+
+Changes:
+	• If adding points to a line and custom per-segment line widths have been used, the custom line widths are retained instead of being reset to the line's default width.
+	• VectorManager.ObjectSetup can be called subsequently with the same VectorLine using any Visibility value, rather than just Visibility.None. e.g., starting with Visibility.Static and later switching to Visibility.Dynamic will work.
+	• In cases where an existing line would be parented to the VectorCanvas, if any one of a line's parent objects is already a canvas, then it stays on that canvas. The previous behavior was to only check if the root object was a canvas.
+	• The LineManager object no longer persists through scene changes. This shouldn't require any code changes.
+
+Fixes:
+	• Setting a VectorLine's end cap to the same value it was previously no longer adds triangles, and changing the end cap to a different one works properly.
+	• The GetPoint functions work correctly with lines that are using a .drawTransform which is rotated or scaled.
+	• Fixed visual glitch when setting VectorLine.drawStart to a value > 0 while using Joins.Fill.
+	• Using Visibility.Dynamic with ObjectSetup on an object that's been in the scene for longer than a frame (i.e., later than Awake or Start) works correctly if the object is currently visible in a camera.
+
+-----------
+
+Vectrosity 5.2.2
+
+Changes:
+	• VectorLine.textureOffset and VectorLine.textureScale can be used with 3D lines without having to call SetCamera3D first (in which case Camera.main is used by default).
+	• For 3D lines, VectorLine.material no longer creates a new material, so the link to the material supplied for VectorLine.material is maintained.
+	• Using VectorLine.Destroy cleans up meshes (and materials, for 3D lines, as long as a custom material wasn't used).
+
+Fixes:
+	• Removing all points from a line, calling VectorLine.Draw or Draw3D, then setting the color of a line no longer causes an error.
+	• Also, if removing all points from a line, adding more points than there were originally works properly.
+
+-----------
+
+Vectrosity 5.2.1
+
+Changes:
+	• Default 3D line material uses the Particles/Alpha Blended shader, which uses vertex colors so line colors will work out of the box.
+
+Fixes:
+	• Switching between using Draw and Draw3D on the same VectorLine works without errors.
+	• Fixed error that could occur in certain cases if a line uses end caps.
+
+-----------
+
+Vectrosity 5.2
+
+Additions:
+	• The VectorLine editor has the option to change the visual size of the gizmos used for manipulating line points.
+
+Changes:
+	• Improvements in rendering for lines with 3D points, so that line segments, which have points that are far off-screen, maintain a consistent width and typically don't need to be subdivided into smaller segments to prevent culling.
+	• Properties such as showing point coords, show style, etc. in the VectorLine editor are persistent when selecting different lines.
+	• VectorLine.points2 and VectorLine.points3 are no longer read-only.
+	• VectorLine.canvas can be referred to before VectorLine.Draw has been called.
+	• Using ObjectSetup with Visibility.Static doesn't use a reference to the list of points supplied with the line, but instead creates a new list. (So it will work properly with more than one object using the same list of points.)
+	• Improvements in the way normals and tangents are handled.
+
+Fixes:
+	• Fixed issue that would occur when adding points to a line, removing them all, then adding more points.
+	• Using VectorLine.AddTangents immediately after using ObjectSetup no longer throws an out of range exception.
+	• Fixed error that could occur with AddTangents if the line had been resized.
+	• Joins.Weld works correctly in the case where a line segment goes back over the previous line segment exactly.
+	• Fixed MissingReferenceException that could occur after stopping play mode with 2D lines.
+	• When setting VectorLine.lineType after creating a line, Draw3D works without errors.
+	• Fixed error that could occur in certain cases when using functions related to the distance of the line (e.g. VectorLine.GetLength).
+	• End caps work correctly with Joins.Fill.
+
+-----------
+
+Vectrosity 5.1
+
+Changes:
+	• Works with Unity 5.2.2, which is also required now, due to changes in the Unity API.
+	• VectorLine.SetCanvas has the option to pass in a worldPositionStays boolean, which is useful for things like setting lines to a canvas which has a CanvasScaler component that scales with screen size.
+	• 3D lines made with VectorLine.Draw can be clicked on and viewed in the editor without errors, and the list of points can be edited in the inspector. (The visual editor only works with 2D points, however.)
+	• Thanks to editor improvements in Unity 5.2.2, the folders for Vectrosity have been moved so everything is under Plugins/Vectrosity. If you're upgrading from an older version, make sure to remove Vectrosity stuff from other locations.
+
+Fixes:
+	• Fixed index out of range error that could potentially occur in certain cases with VectorLine.GetColor, GetWidth, and SetWidth.
+	• VectorLine.Resize uses the correct number of maximum points for discrete / continuous lines.
+	• Fixed extraneous triangle that could be drawn in certain cases when using VectorLine.drawEnd.
+
+-----------
+
+Vectrosity 5.0
+
+Additions:
+	• 2D VectorLines can be created in the editor. To create one, use the GameObject->UI->VectorLine menu item, or from the Create menu, choose UI->VectorLine. Various attributes can be edited in the inspector, and lines can be drawn and edited on the canvas. To use the line in a script, reference GetComponent(VectorObject2D).vectorLine. This can also be used for lines created in code at runtime (in the editor, not builds).
+	• VectorLine.texture, which is the texture used for drawing the line (since the texture is now separate from the material).
+	• VectorLine.layer, for setting the GameObject layer of the line (not to be confused with the rendering order controlled by VectorLine.drawDepth).
+	• VectorLine.alignOddWidthToPixels, which adjusts the line's RectTransform so that odd line widths (1, 3, etc.) are aligned to the pixel grid. Otherwise lines with odd widths are aligned "between" pixels, where straight horizontal or vertical lines can look blurred if FSAA is used.
+	• VectorLine.SetCanvas function, for setting a line to an arbitrary canvas.
+	• VectorLine.SetMask function, for masking a line.
+	• VectorLine.SetEndCapColor function, which can be used to set different colors for the end caps, rather than having them use the color of the line segment they're attached to.
+	• VectorLine.lineType, which returns type of the line (Continuous, Discrete, or Points). This can be changed after the line is created.
+
+Changes:
+	• Requires Unity 5.2 or later, due to changes in the way UI meshes are created.
+	• Lines are maskable; use VectorLine.SetMask to parent a line to a mask component in a UI canvas. This only applies to lines made with Draw, not Draw3D.
+	• VectorLine.canvases is removed, since canvases no longer have a 65K vertex limit, so there's no real need for more than one.
+	• Likewise, VectorLine.canvasID is removed.
+	• VectorLine.canvas3D and VectorLine.canvases3D are removed, since lines drawn with Draw3D are standard objects in the scene and aren't drawn with a canvas. So they can cast shadows etc.
+	• VectorLine.drawDepth does nothing with lines made with Draw3D, since they don't use a canvas.
+	• The VectorLine constructor no longer accepts Vector2 or Vector3 arrays, only List<Vector2> and List<Vector3>. You can easily convert an array to a List by using e.g. "new List.<Vector2>(myArray)" for Unityscript and "new List<Vector2>(myArray)" for C#.
+	• The capacity of the List used in the VectorLine constructor can be used to initialize the VectorLine.points2 or VectorLine.points3 list with the specified number of points. This is used in case you want to start the list with a number of points that you fill in later, rather than using List.Add. e.g., new List<Vector2>(50) will initialize the line with 50 points. The initial points are all Vector2.zero or Vector3.zero.
+	• The VectorLine constructor no longer uses a Material, but rather a Texture (which is optional). You can set VectorLine.material for those cases where you want to use something other than the default UI material (for 2D lines) or UI/Unlit/Transparent (for 3D lines).
+	• VectorLine.GetColor returns Color32 instead of Color.
+	• VectorLine.SetColors no longer accepts a Color32[] array, only List<Color32>.
+	• VectorLine.SetWidths no longer accepts int[] or float[] arrays, only List<int> or List<float>.
+	• VectorLine.SetEndCap no longer uses a material. The end caps use the same material as the rest of the line. Also, the line texture is part of the end cap, so two textures (line and cap) are required for EndCap.Front, Back, and Mirror, and three textures (line, front cap, end cap) are required for EndCap.Both. The line texture must be square, and the cap textures must be the same height as the line texture.
+	• Lines using "collider = true" take end caps into account for the collider.
+	• VectorLine.BytesToVector2Array is now VectorLine.BytesToVector2List, and it returns List<Vector2> instead of Vector2[].
+	• VectorLine.BytesToVector3Array is now VectorLine.BytesToVector3List, and it returns List<Vector3> instead of Vector3[].
+	• VectorLine.capLength works for Vector3 points as well as Vector2 points.
+	• VectorPoints is removed. Instead, create a VectorLine and use LineType.Points.
+	• VectorLine.continuous is removed; use VectorLine.lineType instead.
+	• Setting VectorLine.smoothColor updates all segment colors to reflect the changed value.
+	• The LineMaker editor script has been updated, and is now part of the standard package instead of being in a separate package.
+
+-----------
+
+Vectrosity 4.4
+
+Changes:
+	• VectorLine.SetEndCap can optionally have two offsets, where the front and end caps are offset separately, instead of a single offset that applies to both front and end.
+	• VectorLine.SetEndCap can also have scale values, which scale the front and end caps by the supplied amounts.
+
+Fixes:
+	• Joins.Weld works properly with lines where rendering for certain segments is skipped for reasons such as subsequent points with identical coords.
+	• VectorLine.Selected works if the 3D camera hasn't been set and a camera hasn't been passed in. (The ability to supply a camera was added 4.3.1 but somehow didn't make it to the release notes or docs.)
+	• VectorLine.SetColor works properly with smoothColor = true.
+
+-----------
+
+Vectrosity 4.3.2
+
+Fixes:
+	• Joins.Weld has better vertex placement with nearly parallel lines.
+
+-----------
+
+Vectrosity 4.3.1
+
+Changes:
+	• VectorLine.Selected can supply a camera manually.
+
+Fixes:
+	• VectorLine.endPointsUpdate works properly for lines made with Joins.Weld and 3D points.
+
+-----------
+
+Vectrosity 4.3
+
+Additions:
+	• VectorLine.MakeRoundedRect function, which is like MakeRect but has rounded corners with a user-defined radius and number of segments.
+	• VectorLine.is2D property, which returns true if the line was made with Vector2 points.
+
+Changes:
+	• VectorLine.SetColors and VectorLine.SetWidths can be called before Draw/Draw3D.
+
+Fixes:
+	• Fixed case where the canvas name could be incorrect when using VectorLine.canvasID with Draw3D.
+
+-----------
+
+Vectrosity 4.2
+
+Changes:
+	• VectorLine.SetColors now uses a Color32[] array or List<Color32>, instead of a Color[] array or List<Color>, which improves performance.
+	• VectorLine.SetColor also uses Color32 instead of Color.
+	• VectorLine.color also uses Color32 instead of Color.
+
+Fixes:
+	• Setting VectorLine.color works if there are no points added to the line yet and the line has end caps.
+	• Fixed certain cases where 3D line segments were incorrectly drawing when they should be behind the camera.
+
+-----------
+
+Vectrosity 4.1.3
+
+Changes:
+	• Even numbers are enforced with VectorLine.endPointsUpdate, when used with discrete lines.
+
+Fixes:
+	• Back end caps are colored correctly if using VectorLine.smoothColor = true.
+	• Fixed VectorLine.endPointsUpdate not working correctly with discrete lines when using even numbers.
+
+-----------
+
+Vectrosity 4.1.2
+
+Fixes:
+	• Creating new 3D lines after loading a new scene works properly.
+
+-----------
+
+Vectrosity 4.1.1
+
+Fixes:
+	• Creating new lines after loading a new scene works properly.
+
+-----------
+
+Vectrosity 4.1
+
+Additions:
+	• VectorLine.canvasID, for specifying different vector canvases for different lines. Among other things, this can be used to circumvent the 65K vertex limit for a canvas, where e.g. if two lines together would be over the limit, the second line could be set to line.canvasID = 1, therefore making two canvases.
+	• VectorLine.canvases and VectorLine.canvases3D, which returns a List<Canvas> of the vector canvases, which can be used to change parameters for multiple vector canvases in the event that there are more than one.
+	• VectorLine.MakeArc, for specifying part of a circle/ellipse.
+
+Changes:
+	• The Vector canvases are no longer retained between levels, so all existing VectorLines will be destroyed when loading a new level. You can use DontDestroyOnLoad on the canvas objects if you want them to be persistent between levels.
+	• VectorLine.SetCanvasCamera can optionally include a canvas ID, in case you're using more than one vector canvas.
+	• Since multiple vector canvases are possible now, VectorLine.canvas refers to the first one, i.e. VectorLine.canvases[0].
+	• When declaring a VectorLine with an existing points list, the line.points2 or points3 is now a reference to that list, instead of a copy. If the VectorLine is declared with an array, that's still copied to a List.
+
+Fixes:
+	• Draw3D won't cause "screen position out of view frustum" errors for specific cases where the x and y screen coords were 0 but the z coords differed.
+	• Fixed issue with Draw3D where certain camera positions could cause glitches, particularly with Joins.Weld.
+	• Fixed null ref error that could occur with ObjectSetup when using Brightness.Fog in certain cases.
+	• Using Joins.Weld with a discrete line can no longer cause any out of range errors.
+	• Fixed out of range error that could occur with SetWidth.
+	• Fixed case where SetColor could generate an error if used before Draw.
+
+-----------
+
+Vectrosity 4.0.5
+
+Fixes:
+	• SetCamera3D works properly even if the canvas hasn't been set up yet.
+	• VectorLine.smoothWidth works properly.
+
+-----------
+
+Vectrosity 4.0.4
+
+Changes:
+	• VectorLine.Selected can use an additional extraLength parameter, which is similar to extraWidth except it adds  the specified distance to the beginning and end of each line segment for the purposes of checking the line.
+
+Fixes:
+	• Lines that use a drawTransform where some of the axes are scaled to 0 no longer cause a "Screen position out of view frustum" error when the scene view is active.
+
+-----------
+
+Vectrosity 4.0.3
+
+Changes:
+	• Requires Unity 4.6f1 or higher, although it currently won't work with Unity 5, until Unity 5 integrates the 4.6f1 changes (which it doesn't as of Unity 5.0b12). If you need to use Vectrosity 4 with Unity 5, stick with 4.0.2 for now.
+	• TankZone is included again.
+
+Fixes:
+	• Works with RenderMode property changes in Unity 4.6f1.
+	• Joins.Weld with continuous lines using Draw3D works properly.
+	• End caps are drawn correctly when using Draw3D.
+	• Using a VectorLine.drawEnd of 0 with a discrete line erases the entire line instead of retaining the first line segment.
+	• VectorLine.active works. This also means VectorManager.ObjectSetup stuff works properly.
+
+-----------
+
+Vectrosity 4.0.2
+
+Fixes:
+	• Changing VectorLine.textureOffset after adding points to .points2 or .points3, and before calling Draw, no longer causes an error.
+	• VectorLine.capLength is taken into account when using VectorLine.textureScale.
+	• Updated some scripts for Unity 5 compatibility.
+
+-----------
+
+Vectrosity 4.0.1
+
+Fixes:
+	• Adding points to VectorLine.points2 or points3 works when drawing VectorPoints.
+	• VectorPoints.Draw3D draws quads correctly.
+
+-----------
+
+Vectrosity 4.0
+
+Changes:
+	• Lots of stuff! Vectrosity now uses Unity 4.6 UI functions. See the Vectrosity 4 upgrade guide for details about upgrading existing code from Vectrosity 3.
+	• Removed VectorLine.SetCamera and VectorLine.GetCamera.
+	• Added VectorLine.canvas and VectorLine.canvas3D static variables.
+	• VectorLine constructors can use List<Vector2> and List<Vector3> in addition to Vector2[] and Vector3[] arrays.
+	• The array supplied in the VectorLine constructor is no longer used after the VectorLine is created; use VectorLine.points2 or VectorLine.points3 instead.
+	• VectorLine.points2 is now List<Vector2> instead of a Vector2[] array, so lines can be dynamically resized by using List functions such as Add, RemoveAt, etc.
+	• VectorLine.points3 is now List<Vector3> instead of a Vector3[] array, and can be resized as described above.
+	• VectorLine constructors no longer use colors or color arrays. Instead colors are set after creating the line.
+	• VectorLine.color can be used to set the color for all segments in the line. Also, it no longer returns the first line segment color; VectorLine.color is always the "true" color of the line, even if all the line segments have been set to different values when using SetColor or SetColors.
+	• VectorLine.SetColors can use List<Color> in addition to a Color[] array.
+	• VectorLine.SetWidths can use List<float> or List<int> in addition to float[] and int[] arrays.
+	• Removed VectorLine.vectorLayer and VectorLine.vectorLayer3D.
+	• Removed VectorLine.useMeshLines and VectorLine.useMeshPoints.
+	• Added VectorLine.SetCanvasCamera, which is shortcut for setting the canvas.renderMode to RenderMode.OverlayCamera and setting the canvas.worldCamera to a specified camera.
+	• Removed VectorLine.SetCameraRenderTexture. Instead the camera rendering to a texture can be set with VectorLine.SetCanvasCamera.
+	• Removed VectorLine.SetDepth.
+	• Removed VectorLine.SetVectorCamDepth.
+	• Removed VectorLine.vectorObject.
+	• Added VectorLine.rectTransform.
+	• Removed VectorLine.SetLineParameters and VectorLine.MakeLine.
+	• Removed VectorLine.sortingOrder and VectorLine.sortingLayerID.
+	• Removed VectorLine.depth.
+	• Added VectorLine.drawDepth, where lines with higher numbers are drawn on top of lines with lower numbers.
+	• VectorLine.Resize only accepts an integer now, which non-destructively resizes the points list to the specified value (existing points in the list are untouched).
+	• Removed VectorLine.ZeroPoints. Instead you can use List.Clear() with VectorLine.points2/points3.
+	• Removed VectorLine.ResetTextureScale. Instead you can set line.textureScale to 0 and re-draw the line.
+	• Removed VectorLine.minDrawIndex and VectorLine.maxDrawIndex.
+	• Added VectorLine.endPointsUpdate, which is the number of points from the end of the line that's updated when drawn, and the rest is left untouched. This is an optimization used primarily when dynamically extending a line, where most of it remains the same and doesn't need to be re-computed, such as drawing a line with the mouse.
+	• VectorLine.MakeRect, when passing in a Rect, draws from the bottom-up, making it consistent with screen space coordinates.
+	• Screen resolution changes no longer affect existing lines.
+	• Removed VectorLine.mesh.
+	• The default material for VectorLines (if no material is supplied) now uses the UI/Default shader.
+	• In addition to the 65K vertex limit per line, there is a 65K total vertex limit for all lines. So e.g. using two continuous lines with 10000 points each (40K vertices) will fail.
+	• Typically 18% - 30% faster, depending on the type of line being drawn.
+
+Known issues:
+	• VectorLine.active does nothing, due to a Unity bug in 4.6b19, which has been verified and should be fixed in a future version. Once it's fixed, VectorLine.active should work without needing an update to Vectrosity. In the meantime, a possible workaround is to disable/enable VectorLine.canvas, though that will affect all VectorLines (but that may indeed be what you actually want). For individual lines, another possibility is to set VectorLine.drawEnd to 0 and re-draw the line to "deactivate" it, then set drawEnd back to points.Count-1 and re-draw to "reactivate" it.
+	However, this issue with VectorLine.active prevents VectorManager.ObjectSetup from working properly with Visibility.Dynamic and Visibility.Static. The TankZone demo has been updated for Vectrosity 4 but is currently not included because it relies heavily on VectorLine.active and therefore doesn't really work correctly.
+	• Setting VectorLine.canvas.sortingOrder has no apparent effect, due to a Unity bug in 4.6b19. It can be worked around by first changing the canvas sorting order, then using VectorLine.canvas.gameObject.SetActive(false) followed immediately by VectorLine.canvas.gameObject.SetActive(true), which forces the correct sorting order.
+
+-----------
+
+Vectrosity 3.1.2
+
+Changes:
+	• VectorLine.SetWidth has the same options as SetColor now. Namely, SetWidth(width) sets the entire line to the specified width, SetWidth(width, index) sets only the line segment indicated by the index to the specified width, and SetWidth(width, startIndex, endIndex) sets all the line segments from the start to the end indices to the specified width.
+
+Fixes:
+	• The last point in a VectorPoints object is colored correctly when using VectorLine.SetColors.
+
+-----------
+
+Vectrosity 3.1.1
+
+Fixes:
+	• Using .drawStart and .drawEnd with 1-pixel lines made with LineType.Continuous and VectorLine.useMeshLines = true works correctly.
+	• Colliders created for Continuous lines with .drawStart and .drawEnd are correct.
+
+-----------
+
+Vectrosity 3.1
+
+Additions:
+	• VectorLine.trigger, for setting whether a collider made with VectorLine.collider is a trigger or not.
+	• VectorLine.smoothColor, for setting whether line segment colors should be interpolated or not. This works with SetColor in addition to SetColors.
+
+Changes:
+	• VectorLine.SetColorsSmooth is removed, since .smoothColor makes it unnecessary.
+	• VectorLine.collider works with lines made with Vector3 points now, in addition to Vector2 points. This works for both Draw and Draw3D. Note that the colliders are still 2D and only work with 2D physics, so the camera shouldn't be rotated or else the collider won't match the line.
+	• VectorLine.SetCameraRenderTexture has an option to pass in CameraClearFlags, so you can use other values besides SolidColor (such as Depth).
+	• VectorPoints can use viewport coords with Draw (VectorLine.useViewportCoords = true).
+	• The VectorLine.GetPoint* functions can optionally use an index variable as an out parameter, which will contain the line segment index that corresponds with the distance. e.g., if a distance of 500 is located on the 10th line segment, then the index will be 9 (since 0 is the first segment).
+	• VectorLine.MakeSpline uses centripetal Catmull-Rom splines now instead of uniform, for better and more accurate curves, particularly those with spline points that are close together.
+
+Fixes:
+	• StopDrawing3DAuto works correctly.
+	• Fixed issue with SetLine/SetRay time value not working.
+	• Line colliders work correctly with minDrawIndex/maxDrawIndex/drawStart/drawEnd.
+	• Line mesh bounds update correctly if the vertical screen size has been changed but the horizontal size is the same.
+	• EndCap.Back works with Draw3D.
+	• Fixed problem with VectorLine.Selected not working with .drawStart if the line segment widths haven't been explicitly set.
+	• VectorLine.Selected works with lines made with viewport coords.
+	• The VectorLine.GetPoint* functions work with minDrawIndex/maxDrawIndex.
+
+-----------
+
+Vectrosity 3.0
+
+Additions:
+	• VectorLine.GetColor function, which returns the color of a specified line segment.
+	• VectorLine.SetWidth function, for setting the line width of a specified line segment.
+	• VectorLine.GetWidth function, which returns the line width of a specified line segment.
+	• VectorLine.collider property, which adds a 2D collider to a line when drawn. Only works with Draw, not Draw3D. Requires Unity 4.3 or later.
+	• VectorLine.physicsMaterial property, for setting the PhysicsMaterial2D of the collider. Requires Unity 4.3 or later.
+	• VectorLine.sortingLayerID and VectorLine.sortingOrder, for getting and setting the sorting layer and order-in-layer of lines. These control the drawing order in the same way that they do for sprites, and can be used to determine the drawing order when lines are mixed with sprites, as well as other lines. Requires Unity 4.3 or later.
+	• VectorLine.matrix, which is like drawing a line while passing in a transform, except you supply your own matrix. So the way the line is drawn will be modified by the supplied matrix.
+
+Changes:
+	• Requires Unity 4.0 as a minimum now, and Unity 4.3 for some functions (as mentioned above).
+	• In the spirit of "just set things once when creating the line and forget about it," some functions and function overloads have been removed and replaced with properties (see the upgrade guide for more details):
+		- Removed SetTextureScale, and added textureScale and textureOffset properties. Instead of "SetTextureScale (1.0)", do "myLine.textureScale = 1.0", and the texture scale will be set automatically when using Draw(), instead of having to call SetTextureScale manually. Likewise, use "myLine.textureOffset = 0.5" instead of passing 0.5 into SetTextureScale.
+		- Removed Draw/Draw3D overloads that accept a transform, and added drawTransform property. Instead of "Draw (transform)", do "myLine.drawTransform = transform" after creating the line, and use Draw/Draw3D as normal.
+		- Removed DrawViewport function and added useViewportCoords property. Instead of "DrawViewport()", do "myLine.useViewportCoords = true" after creating the line, and use the Draw function as normal.
+	• VectorLine.SetEndCap can optionally take an offset value, which will offset the front and back caps by a percentage of the cap's length. For example, using -1.0 for the offset will subtract 100% of the cap's length, so that the line will be as long as it would have been without the end caps. (Since end caps are normally added to the length of the line, which is what happens if you use 0.0 for the offset.)
+	• VectorLine.Destroy can accept arrays or generic Lists of VectorLines/VectorPoints.
+	• A value of 0 for VectorLine.maxDrawIndex no longer means "draw all the points". Instead it's set to "the length of the points array minus 1" by default. Using 0 now means "don't draw any points".
+	• Removed VectorLine.useMeshQuads, since there was no real advantage to using it, and potential drawbacks depending on the platform.
+
+Fixes:
+	• Fixed the "fix" for the Joins.Fill/extraneous triangle issue in Vectrosity 2.3, so now it works right (for reals).
+	• Fixed issue where lines using Joins.Fill with end caps could get messed up in some circumstances.
+	• VectorLine.SetColor sets end cap colors.
+	• The VectorLine.GetPoint functions return the correct point if the line is drawn with a transform.
+	• Lines drawn with Draw3DAuto won't generate error messages when loading new levels.
+	• Using a texture scale works with 2D lines that are drawn with a transform.
+	• Using a texture scale works correctly with lines drawn with viewport coords.
+	• End caps for 3D lines have the correct proportions when using Draw (as opposed to Draw3D).
+	• VectorLine.maxDrawIndex is clamped properly when setting.
+	• Updated some demo scripts to work properly when switching resolutions.
+
+-----------
+
+Vectrosity 2.3
+
+Additions:
+	• VectorLine.MakeCube, for making arbitrary cubes.
+	• VectorLine.Version function, which returns a string that contains version information, since it's not always obvious (such as if you're using the DLL).
+
+Changes:
+	• VectorLine.Selected can indicate the index of the line segment (or point, if using VectorPoints) that was selected, by passing in an index variable. Note that the "Selected (point, extraDistance)" override no longer exists; the two-parameter version is now "Selected (point, index)" if using Unityscript and "Selected (point, out index)" in C#. You can still use extraDistance, but now you must also use the index, e.g. "Selected (point, extraDistance, index)". In C# that's "Selected (point, extraDistance, out index)".
+	• VectorLine.SetCameraRenderTexture can use an optional boolean to specify the use of an orthographic camera.
+
+Fixes:
+	• VectorLine.SetColor works properly with VectorPoints, and with 1-pixel lines and points if useMeshLines/useMeshPoints are set.
+	• Using EndCap.Back with Draw3D works properly, and so does EndCap.Both if the back texture texture has a different aspect ratio than the front texture.
+	• VectorLine.Resize works properly with end caps.
+	• VectorLine.Destroy works properly with Draw3DAuto.
+	• VectorLine.Selected works with drawStart/drawEnd.
+	• VectorLine.Selected works properly with VectorPoints.
+	• VectorLine.Selected works with lines drawn with a Transform parameter.
+	• Using minDrawIndex or maxDrawIndex with Joins.Fill and 3D lines no longer creates an extraneous triangle at the end of the line connecting to Vector3.zero.
+
+-----------
+
+Vectrosity 2.2
+
+Additions:
+	• VectorLine.Selected, for determining if a line is selected by the mouse pointer. e.g., "if (Input.GetMouseButtonDown(0) && myLine.Selected(Input.mousePosition)) {print (myLine.name + " was clicked!");}" Note that the input coordinates must be in screen space (as provided by Input.mousePosition), not GUI space (as provided by Event.current.mousePosition inside OnGUI).
+	• VectorLine.mesh, in case you want to access the actual mesh of the VectorLine. e.g., "var bounds = myLine.mesh.bounds". This is because doing "myLine.vectorObject.GetComponent(MeshFilter).mesh.bounds" creates problems.
+	• VectorLine.AddTangents, which adds tangents to the line mesh, in case you use a material that has a shader that uses normalmapping. AddTangents calls AddNormals, if it hasn't already been called.
+	• Added some more characters to the standard character set (VectorChar.cs).
+
+Changes:
+	• Lines use triangles by default in Unity 4 now, due to the fact that MeshTopology.Quads/Lines/Points don't work consistently on all platforms. In cases where you know the target platform properly supports quads or lines or points, and you want to use them, you can turn those on with VectorLine.useMeshQuads = true, VectorLine.useMeshLines = true, and VectorLine.useMeshPoints = true respectively. Note that this must be done first thing before creating any VectorLines, since once a VectorLine is created, the method used for drawing lines can't be changed.
+	• SetColor can now optionally take an index, or two indices. In the case of one index, it will set that particular line segment to the specified color. So e.g. "myLine.SetColor (color.red, 3)" will set the third segment to red. In the case of two indices, the segments from the first index up to and including the second index will be set to the specified color. So "myLine.SetColor (color.blue, 2, 7)" will set the 2nd through 7th segments to blue.
+	• AddNormals can be called before a line is drawn now. Previously, a line would have to be drawn first before AddNormals could add correct information.
+	• Moved from Standard Assets to Plugins folder. So if you're updating from an earlier version, you'll need to remove the old version.
+
+Fixes:
+	• Using drawStart or drawEnd with Joins.Fill and 3D lines no longer creates an extraneous triangle at the end of the line connecting to Vector3.zero. (Actually that applied to 2D lines as well, but wasn't visible in the game view so it appeared correct in that case. Anyway it's fixed.)
+	• Using end caps with Draw3D works properly now.
+	• In Unity 4, the VectorCam uses HDR if the main camera uses HDR, preventing screen corruption.
+	• For VectorLine.MakeText, attempting to use a character that is not in the character set no longer causes an error; instead it's left blank.
+
+-----------
+
+Vectrosity 2.1
+
+Additions:
+	• VectorLine.SetEndCap for setting up end caps for lines, so they can have an additional texture for the front of the line, or the back, or both. Useful for things like making lines with arrow heads, or lines with rounded ends, etc.
+	• VectorLine.RemoveEndCap for removing a previously-defined end cap.
+	• VectorLine.endCap for telling a particular line to use a particular end cap as set up in SetEndCap. These are named, so an example would be: myLine.endCap = "arrow";
+	• VectorLine.continuousTexture, for making a texture tile once, evenly, over the length of a line regardless of how many points the line might have. e.g., myLine.continuousTexture = true;
+	• VectorLine.SetCameraRenderTexture, for telling the vector camera to render to a specified rendertexture, and you can optionally supply a background color (otherwise it will be black). e.g., VectorLine.SetCameraRenderTexture (myRenderTexture, Color.blue); After doing this, all lines will be drawn on the rendertexture and will not be visible in the normal camera view. Passing null for the rendertexture will set the vector camera back to normal. e.g., VectorLine.SetCameraRenderTexture (null); Note that this function can only be used with Unity Pro, since Pro is required for rendertextures.
+
+Changes:
+	• Vectrosity has its own namespace now, so scripts using it should import the namespace. For Unityscript and Boo, use "import Vectrosity;", and for C#, use "using Vectrosity;".
+	• The points made with VectorLine.MakeRect have been rearranged for discrete lines, so it works properly with Joins.Weld. (But doesn't result in any visual difference otherwise.)
+	• Some optimizations were made for Unity 4 features, so that less memory is used for line mesh indices, since quads are used instead of triangles, plus Color32 can be used for vertex colors. In the case of lines that are 1 pixel thick, actual lines are used rather than quads, which results in up to 4X speedup when using Draw (and even less memory used for line mesh indices). Note: Unity 4 is not required (Unity 3.4 is still the minimum). The source code will work on either Unity 3 or Unity 4. If you're using the .dll, then there are two versions, one for Unity 3 and one for Unity 4. Another note: currently, as of Unity 4b9, there's an issue where iOS won't render quads correctly. So if you need to publish on iOS right now using Unity 4, you should use the Unity 3 .dll, which still uses triangles for everything. This issue should be fixed with a later version of Unity 4.
+	• Related to the above, when using Unity 4, Draw3DAuto is not necessary for 3D lines that are 1 pixel thick. For best performance, just use Draw3D, and it will behave like Draw3DAuto. Draw3DAuto should still be used for 3D lines that are more than 1 pixel thick, or if you're using Unity 3.
+	• The GetPoint/GetPoint3D functions are clamped by a line's drawStart and drawEnd variables now.
+
+-----------
+
+Vectrosity 2.0.1
+
+Changes:
+	• Lines drawn with Draw3DAuto always update every frame regardless of whether the camera is moving.
+
+Fixes:
+	• Uncommented erroneously commented line in VisibilityControl.
+	• Passing a time into SetLine etc. works.
+
+-----------
+
+Vectrosity 2.0
+
+Changes:
+	• A big one: the Vector class is no more! Instead, it's merged with VectorLine. This allows for a better architecture, generally greater ease of use, some minor performance improvements, and it doesn't conflict with the Vector class in Flash. The downside is that it breaks pretty much all previous code that uses Vectrosity. So that's not exactly trivial. (And that's why this is version 2.0.) The upside is that converting code to the new system is pretty straightforward; see the Vectrosity Upgrade Guide. For example, Vector.DrawLine(myLine) just becomes myLine.Draw(). It took less than 10 minutes to convert all the demo scripts.
+	• DrawPoints is also gone, but don't panic: instead, Draw and Draw3D will draw both VectorPoints and VectorLine.
+	• Draw3DAuto also now works with both VectorPoints and VectorLine.
+	• VectorManager.ObjectSetup can use lines made with VectorPoints as well as VectorLine too.
+	• When using Joins.Fill, you no longer need to take into consideration whether the first and last points in the points array match, since that's handled automatically now. The first and last points can be made the same or different at any time, and it will always be drawn correctly.
+	• ZeroPoints (formerly ZeroPointsInLine) can use an end index in addition to a start index, so you can erase a range instead of always to the end of the points array.
+	• The LineMaker utility now has a button for loading previously-saved line files.
+	• The LineMaker utility will list the indices of any selected line segments, so you can use this info for things like setting certain colors for specific line segments in a vector object.
+
+Additions:
+	• VectorLine.drawStart and VectorLine.drawEnd for drawing sections of a line. This is different than minDrawIndex and maxDrawIndex, which are optimizations for updating only part of a line when the rest of it stays the same. In comparison, using drawStart and drawEnd actually draws the specified range and erases the rest of the line, so it can be used for things like animating part of a line (see the PartialLine example scene).
+	• A VectorLine's joins can be changed at any time by using VectorLine.joins. i.e., myLine.joins = Joins.Fill. (Keeping in mind the limitations for joins...e.g., trying to set a discrete line to Joins.Fill won't do anything.)
+	• VectorLine.maxWeldDistance for preventing artifacts when using Joins.Weld. If line segments are nearly parallel, the intersection point for welds can extend too far, so maxWeldDistance prevents this by canceling the weld if that happens (for that line segment only). By default, maxWeldDistance is twice the thickness of the line as specified when the line is created.
+	• VectorLine.material for changing the material of a VectorLine at any time, instead of just when the line is created. e.g., myLine.material = newMaterial;
+	• VectorLine.AddNormals, which adds normals to the line mesh, in case you use a material that has a shader which needs normals. e.g., myLine.AddNormals();
+	• VectorLine.GetCamera, which returns the vector camera made with SetCamera. (SetCamera also returns this camera, but you can use GetCamera at any time.)
+	• The Vectrosity core scripts are provided as a .dll as well as source code. This can be more convenient to work with in some cases. To use it, copy Vectrosity.dll into your Unity project instead of importing the VectrosityCore package. (Note that the LineMaker utility is not part of the .dll, so you will still need to import the VectrosityCore package if you want to use that. If you're using the .dll, you can deselect everything except the LineMaker.js script when importing the VectrosityCore package.)
+
+Fixes:
+	• minDrawIndex works correctly with continuous lines made with Vector3 points.
+	• Fixed MissingReferenceException error when stopping play mode in the editor when using ObjectSetup.
+	• Fixed case where Joins.Weld sometimes didn't weld first and last points in a loop if they were supposedly the same.
+
+-----------
+
+Vectrosity 1.5
+
+Additions:
+	• Vector.MakeWireframeInLine, for making automatic wireframes from a mesh. Essentially the same as if you used the LineMaker utility on an object and clicked "Connect all points", except you can use it at runtime on arbitrary meshes. (Note: not animated meshes, sorry; that's impossible because the state of animated meshes can't be read in Unity.)
+	• Vector.DrawLineViewport, for drawing 2D lines with normalized viewport coordinates. This works like the coordinates for GUIText and GUITexture, where (0.0, 0.0) is the lower-left corner, and (1.0, 1.0) is the upper-right corner. This means lines drawn with DrawLineViewport will be in the same relative position regardless of screen resolution. e.g, using [Vector2(.5, .5), Vector2(1.0, .5)] will always result in a line that starts in the middle of the screen and ends at the right edge.
+	• Vector.GetLinePoint and Vector.GetLinePoint3D, for getting a position on a 2D or 3D line based on length. Can be used for things like making an object travel along a spline at a constant speed.
+	• Vector.GetLinePoint01 and Vector.GetLinePoint3D01: as above, but you can use a 0..1 percentage length instead of unit length. e.g., using 0.5 returns a point halfway along the line.
+	• Vector.GetLineLength, which returns the total length of a given line.
+	• Vector.SetLineDistances: use this if you've changed the position of any points in a VectorLine after using GetLineLength, GetLinePoint, etc. and want to use those functions again. For performance reasons this isn't done automatically.
+	• In addition to being used for GameObject and mesh names, the "name" property is now directly available for VectorLines. e.g., Debug.Log(myLine.name);. Changing the VectorLine name property will change the GameObject and mesh names appropriately.
+
+Changes:
+	• Requires Unity 3.4.
+	• Vector.Active replaced with VectorLine.active, so it's more consistent with the way Unity works. e.g., myLine.active = false.
+	• Vector.SetColorsSmooth can now be used even if the line wasn't created with colors originally.
+	• Vector.SetWidths can use an int array now for the line widths (instead of only a float array).
+	• VectorLine.continuousLine is now VectorLine.continuous, since "continuousLine" was kind of redundant in context.
+
+Fixes:
+	• Vector.DestroyLine works with VectorPoints again.
+	• Rotation and scale for objects used with the LineMaker utility is properly respected when generating lines.
+
+-----------
+
+Vectrosity 1.4.2
+
+Changes:
+	• The default material that's used when passing in null for a line material works with transparency better.
+	• Vector.MakeTextInLine can use a Vector3 for the start position (for lines using Vector3 points).
+
+Fixes:
+	• Joins.Weld works with DrawLine3D properly.
+	• MakeTextInLine works if it's used with an array that has the exact number number of points necessary for the text (which would happen if MakeTextInLine was called twice on the same VectorLine with the same text, for example).
+
+-----------
+
+Vectrosity 1.4
+
+Additions:
+	• Joins.Weld, for welding vertices between line segments. This makes for better quality thick lines when used with textures, since Joins.Fill only looks good with solid-colored lines. Also, unlike Joins.Fill, discrete lines can use Joins.Weld--any line segments where the end point of one is equal to the start point of the next will be welded. Joins.Fill is faster, however.
+	• minDrawIndex and maxDrawIndex properties for VectorLines, so you can easily just update part of a line. This applies to Vector.SetColors as well as the various DrawLine and DrawPoints functions.
+	• Vector.DrawLine3DAuto, for making 3D lines automatically always be updated correctly regardless of camera movement. This way you don't need to always update lines with Vector.DrawLine3D yourself anymore...you can just call DrawLine3DAuto once and forget about it.
+	• Vector.StopDrawingLine3DAuto, in case you want the auto-update for DrawLine3DAuto to stop.
+	• Vector.MakeSplineInLine for making Catmull-Rom splines, so you can set up an arbitrary number of points, and the resultant curve will pass through those points.
+	• Vector.Active, so you can disable and re-enable lines without destroying and recreating them.
+	• Vector.DrawPoints3D, like DrawLine3D but for points.
+	• Vector.SetRay and Vector.SetRay3D for an equivalent of Debug.DrawRay that works in builds. e.g., "Vector.SetRay(Color.green, transform.position, transform.forward*5.0);" Naturally, SetRay draws a standard overlay line and SetRay3D draws a line in the scene.
+	• Vector.GetSegmentNumber tells you how many line segments are possible in a given VectorLine. (Just a small convenience function; saves you from having to remember points-1 for continuous lines and points/2 for discrete lines.)
+	• Some more example scripts and scenes in the VectrosityDemos package.
+
+Changes:
+	• Vector.MakeCircleInLine and Vector.MakeEllipseInLine can optionally take an up vector now, so that circles/ellipses in 3D space can be oriented on any plane, instead of just the X/Y plane.
+	• Lowercase letters are included for use with Vector.MakeTextInLine, so you don't have to make your own.
+	• The segment cap length and line depth parameters have been removed when declaring VectorLines. In practice, these were usually left at the default, so including them in the declaration made things more complicated than necessary. If you need to specify these, you can set the line.capLength and line.depth properties instead, after the line is declared. If you're upgrading from an older version, this will probably cause some code breakage, but it's easy to fix, and makes declaring VectorLines nicer from now on.
+	• Vector.SetLayer has been removed. Use VectorLine.layer now if you need to set the layer, e.g. "myLine.layer = 16;".
+	• Vector.SetDepth only works for standard transforms now, not VectorLines. To set the depth of a line, use VectorLine.depth instead. e.g., "myLine.depth = 10;".
+	• Vector.DestroyLine and Vector.DestroyObject require "ref" to be used with VectorLines when used with C# now. e.g., "Vector.DestroyLine(ref myLine);"
+	• The BoundsMaker editor script is no more. The invisible bounds meshes it made are now created automatically as necessary. If you've made any bounds meshes, you can delete them since they're not used anymore. If you want a GameObject to use a standard mesh and not have it be replaced with a bounds mesh, add "false" to the end of the parameters when using ObjectSetup.
+	• It's no longer necessary to attach the VectorManager script to an object in the scene in order to use VectorManager functions. If you're upgrading from an older version and you have VectorManager attached to an object, you should remove it.
+	• Joins.Open is removed; use Joins.None instead...it was kind of silly having two enum values that did the same thing. Along the same lines, Visibility.NotControlled is removed (use Visibility.None) along with Brightness.Normal (use Brightness.None). 
+	• Vector.SetColor and Vector.SetColors can now be used even if the line wasn't created with colors originally.
+	• VectorPoints can be made with Vector3 arrays now.
+	• MakeCircleInLine etc. work properly with points.
+	• DrawLine3D makes vectorLines use Vector.vectorLayer3D by default (and vectorLayer3D is 0 by default). This means mixing DrawLine with DrawLine3D will normally just work, and you don't need to mess with setting layers of lines manually. If you want VectorLines used with DrawLine3D to use another default layer besides 0, then do "Vector.vectorLayer3D = x", where x is the layer you want. You can still use VectorLine.layer to make any line render in any given layer.
+	• Vector.SetTextureScale can have a transform passed in now, so that it will work properly with lines that are drawn with a transform passed in.
+	• Vector.SetCamera returns the vector camera now, so if you're doing funky things with the vector camera, you can just do "var vectorCam = Vector.SetCamera();" instead of using GameObject.Find and so on.
+	• If a line has multiple widths, setting VectorLine.lineWidth causes all widths to have that value.
+	• SetLine and SetLine3D can optionally take a time value now, so they are drawn for the specified number of seconds and then destroyed. e.g., "Vector.SetLine(Color.red, 5.0, Vector3.zero, Vector3(5, 5, 5));" (Also works with DrawRay and DrawRay3D.)
+	• For the shorter forms of MakeCircleInLine, MakeEllipseInLine, MakeCurveInLine, and MakeSplineInLine, you can further leave off the number of segments, and it will use the entire existing points array in the line as appropriate.
+	• VectorManager.ObjectSetup can be used to add/remove the visibility and brightness scripts. e.g., "VectorManager.ObjectSetup (gameObject, line, Visibility.Dynamic, Brightness.None);" removes Brightness.Fog if it had been set previously.
+	• Removed VectorManager.DestroyObject since it's not needed anymore.
+
+Fixes:
+	• Using Joins.Fill with DrawLine3D works correctly now (also Joins.Fill is more efficient in general).
+	• When using Vector.SetTextureScale with a 3D line, if SetCamera3D hasn't been set up yet, it will automatically be called instead of generating an error.
+	• Setting VectorLine.lineWidth works again (broken in Vectrosity 1.3).
+	• Fixed multiple line segment widths being drawn incorrectly in certain circumstances.
+	• Using SetTextureScale with lines that have multiple widths works correctly now.
+
+-----------
+
+Vectrosity 1.3
+
+Additions:
+	• VectorLine.Resize for changing the number of segments that make up a line, instead of having to destroy and recreate it.
+	• Vector.MakeCharsInLine for making vector text.
+	• Vector.SetWidths for setting the pixel width of each line segment in a VectorLine. Pass in an array of floats, one entry for each line segment.
+	• VectorLine.smoothWidth for whether or not line segment widths should be interpolated between segments.
+
+Changes:
+	• Vector.SetTextureScale and Vector.ResetTextureScale work for 3D lines as well as 2D lines.
+	• Some miscellaneous minor speedups; line drawing is 2-5% faster depending on the function.
+	• VectorLine.vertexColors changed to VectorLine.lineColors, to make it consistent with lineVertices and lineUVs.
+	• Improved documentation.
+	• Simpler handling for 3D vector objects using VectorManager functions, thanks to OnDestroy in Unity 3.2.
+
+Fixes:
+	• VisibilityControlStatic accounts for rotated objects now.
+
+-----------
+
+Vectrosity 1.2
+
+Additions:
+	• Vector.SetColorsSmooth for making line segment colors be interpolated between segments.
+	• Vector.SetLine and Vector.SetLine3D for making basic lines as simply as possible.
+	• A VectorPoints class, for using Vector.DrawPoints without the hacks that were required previously.
+	• A new example script in the VectrosityDemos package: DrawLinesTouch, for touchscreen line-drawing.
+
+Changes:
+	• Passing in "null" for the line material will use a default material, which works properly with vertex colors and the line depth parameter. Useful if you just need a standard line material without any textures.
+	• Vector.SetCamera is optional now. It will be called for you when necessary, as long as your camera is tagged "Main Camera". (If not, you can still call it manually.)
+	• Vector.MakeCurveInLine, Vector.MakeRectInLine, and Vector.MakeCircleInLine/MakeEllipseInLine work for 3D lines as well as 2D lines.
+	• Vector.SetCamera has an additional parameter, useOrtho (default is false), which makes the vector camera be orthographic. This can make lines render slightly more accurately, but may cause anomalies with 3D lines in certain cases.
+	• Dynamic typing removed from DrawCurve.js in the VectrosityDemos package, so it will build on mobile devices.
+
+-----------
+
+Vectrosity 1.1
+
+Additions:
+	• Vector.MakeCircleInLine and Vector.MakeEllipseInLine.
+	• Vector.MakeCurveInLine for bezier curves.
+	• Vector.SetTextureScale for setting a uniform texture scale, useful for dotted/dashed/etc. lines.
+	• Vector.ResetTextureScale in case you want to reset the line UVs back to normal after using SetTextureScale.
+	• Vector.DrawLine3D for drawing 3D vector lines in 3D space, where they can be occluded by 3D objects.
+	• Vector.SetCamera3D for setting up the camera exclusively for 3D lines. In this case the standard vector camera is not used.
+	• Vector.SetLayer for setting the layer of 3D lines, in case you're using SetCamera instead of SetCamera3D because you want to mix normal lines with 3D lines.
+	• Vector.SetVectorCamDepth for setting the depth of the vector camera (surprise!).  Rather than setting Vector.cam.depth, since Vector.cam is now private.
+	• VectorManager.useDrawLine3D variable for telling VectorManager whether it should use DrawLine3D or not.
+	• VectorManager.DestroyObject for destroying 3D vectorline objects.
+	• Some new example scripts in the VectrosityDemos package.
+
+Changes:
+	• Removed LineType parameter from MakeRectInLine. Instead, the line type is picked up automatically from the line that's passed in; there doesn't seem to be a reason to specify it manually.
+	• LineMaker now forces strings to use periods for decimals, which fixes problems some European users were having. If this behavior isn't desired for some reason, remove the first line of the Initialize function in the LineMaker script (the line that has the CurrentCulture stuff in it).
+	• Additional overloads for defining 2D VectorLines: the default end cap width is 0.0, so if you're not using it, you can do things like "VectorLine("Name", linePoints, material, width)" without having to put 0.0 for the end cap in there.
+	• This is more of an internal thing, but in case anyone was using these: VectorLine.use2Dlines is gone (check whether points2 is not null instead), and VectorLine.points is now VectorLine.points3 (just because it's a less confusing name, since it's a Vector3 array, and points2 is a Vector2 array).
+
+-----------
+
+Vectrosity 1.0
+
+Initial release.

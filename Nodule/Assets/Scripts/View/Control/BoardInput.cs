@@ -35,7 +35,6 @@ namespace Assets.Scripts.View.Control
             var swipeRecognizers = new[] {
                 new TKSwipeRecognizer(0.5f) { minimumNumberOfTouches = 0, maximumNumberOfTouches = 1, timeToSwipe = 1f },
                 new TKSwipeRecognizer(2f) { minimumNumberOfTouches = 0, maximumNumberOfTouches = 1, timeToSwipe = 1f }
-                //new TKSwipeRecognizer(MaxSwipeDistanceCm) { minimumNumberOfTouches = 0, maximumNumberOfTouches = 1 } 
             };
 
             foreach (var swipe in swipeRecognizers) {

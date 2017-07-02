@@ -1,0 +1,9 @@
+If you want to use the DLL and are using Unity 5.4 or Unity 5.5, import the Vectrosity5-Unity5.4 package.
+
+If you want to use the DLL and are using Unity 5.6 or later, import the Vectrosity5-Unity5.6 package.
+
+If you want to use the source code, import the Vectrosity5Source package. This is only recommended if you want to make modifications to the code. The source works with Unity 5.4 and above.
+
+Note that you must import only ONE of the above packages at a time!
+
+If you want to import the Unity5Demos package, import one of the above packages first.
