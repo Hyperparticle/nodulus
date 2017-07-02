@@ -124,7 +124,7 @@ namespace Assets.Scripts.View.Control
 
         private void OnPan(TKPanRecognizer recognizer)
         {
-            _panScript.PanTowards(recognizer.deltaTranslation);
+            //_panScript.PanTowards(recognizer.deltaTranslation);
         }
     }
 }
