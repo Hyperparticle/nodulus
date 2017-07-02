@@ -60,7 +60,7 @@ namespace Assets.Scripts.View.Game
                 } else if (canRotate) {
                     _puzzleView.Rotate(nodeView, dir, true);
                 } else {
-                    OnViewUpdated();
+                    _puzzleView.Shake(nodeView, dir);
                 }
             } else if (movePlayed && _puzzleState.IsPulled) {
                 _puzzleView.Rotate(nodeView, _puzzleState.PulledArcView, dir, true);
