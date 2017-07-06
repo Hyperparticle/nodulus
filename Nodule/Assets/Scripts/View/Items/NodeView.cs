@@ -53,6 +53,11 @@ namespace Assets.Scripts.View.Items
             if (!inStartIsland && !node.Final) {
                 _colorizer.Darken(0f);
             }
+
+            // Grow and shrink the final node
+            if (node.Final) {
+                PulseScale();
+            }
         }
 
         public void WaveIn(int delay)
@@ -91,6 +96,13 @@ namespace Assets.Scripts.View.Items
             } else {
                 _colorizer.Darken();
             }
+        }
+
+        private void PulseScale()
+        {
+            LeanTween.scale(Rotor.gameObject, Rotor.transform.localScale + Vector3.one, 1f)
+                .setEase(LeanTweenType.easeInOutSine)
+                .setLoopPingPong(-1);
         }
     }
 }

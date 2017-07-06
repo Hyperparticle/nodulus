@@ -106,11 +106,11 @@ namespace Assets.Scripts.View.Game
 
             var dirVector = dir.Vector();
 
-            var shakeAmt = 0.10f;
+            var shakeAmount = 0.10f;
             var initPos = transform.localPosition;
             var shakePeriodTime = 0.1f;
 
-            LeanTween.moveLocal(gameObject, initPos + dirVector * shakeAmt, shakePeriodTime)
+            LeanTween.moveLocal(gameObject, initPos + dirVector * shakeAmount, shakePeriodTime)
                 .setEase(LeanTweenType.easeInSine)
                 .setOnComplete(() => {
                     LeanTween.moveLocal(gameObject, initPos, shakePeriodTime)

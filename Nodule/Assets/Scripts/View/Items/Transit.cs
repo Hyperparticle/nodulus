@@ -94,6 +94,8 @@ namespace Assets.Scripts.View.Items
             LeanTween.rotateAroundLocal(_rotor, axis, 90f, NodeRotateTime)
                 .setEase(LeanTweenType.easeOutBack)
                 .setOnComplete(onComplete);
+
+            SlightPush(dir);
         }
 
         public void Shake(Direction dir, Action onComplete)
@@ -107,13 +109,27 @@ namespace Assets.Scripts.View.Items
             LeanTween.rotateAroundLocal(_rotor, axis, 30f, NodeRotateTime)
                 .setEase(LeanTweenType.easeShake)
                 .setOnComplete(onComplete);
+
+            SlightPush(dir);
+        }
+
+        private void SlightPush(Direction dir)
+        {
+            var pushAmount = 0.05f;
+
+            LeanTween.moveLocal(_rotor, dir.Vector() * pushAmount, NodeRotateTime / 2f)
+                .setEase(LeanTweenType.easeSpring)
+                .setLoopPingPong(1);
         }
 
         public void RotateFast()
         {
-            LeanTween.rotateAroundLocal(_rotor, Direction.Right.Axis() + Direction.Down.Axis(), 360f, NodeRotateTime * 2)
+            LeanTween.cancel(_rotor);
+
+            //LeanTween.rotateAroundLocal(_rotor, Direction.Right.Axis() + Direction.Down.Axis(), 360f, NodeRotateTime * 2)
+            LeanTween.rotateAroundLocal(_rotor, Direction.Right.Axis() + Direction.Down.Axis(), 720f, NodeRotateTime * 3)
                 .setEase(LeanTweenType.easeInOutSine);
-            LeanTween.scale(_rotor, _rotor.transform.localScale * 2, NodeRotateTime * 2);
+            //LeanTween.scale(_rotor, _rotor.transform.localScale * 2, NodeRotateTime * 2);
         }
     }
 }

@@ -1,6 +1,8 @@
 using Assets.Scripts.Core.Data;
+using Assets.Scripts.Core.Items;
 using Assets.Scripts.View.Control;
 using Assets.Scripts.View.Items;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
@@ -101,10 +103,24 @@ namespace Assets.Scripts.View.Game
                 LeanTween.cancel(gameObject);
 
                 foreach (var node in _puzzleState.PlayerNodes.Where(nodeView => nodeView.Node.Final)) {
+                    ConnectArcs(node);
                     node.WinAnimation();
                 }
 
                 _puzzleState.NextLevel(LevelDelay);
+            }
+        }
+
+        private void ConnectArcs(NodeView node) {
+            var arcs = node.Node.Connections
+                .Where(field => field.HasArc)
+                .Select(field => field.Arc);
+
+            var c = new List<Arc>(arcs);
+
+            foreach (var arc in arcs) {
+                var connectedArcs = _puzzleState.GetArcs(arc.Position)[arc.Direction];
+                connectedArcs.transform.parent = node.Rotor.transform;
             }
         }
     }
