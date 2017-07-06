@@ -62,11 +62,11 @@ namespace Assets.Scripts.View.Game
                 } else {
                     _puzzleView.Shake(nodeView, dir);
                 }
-            } else if (movePlayed && _puzzleState.IsPulled) {
+            } else if (_puzzleState.IsPulled) {
                 _puzzleView.Rotate(nodeView, _puzzleState.PulledArcView, dir, true);
                 GameAudio.Play(Clip.MovePull);
                 _puzzleView.Shake(dir);
-            } else if (movePlayed && !_puzzleState.IsPulled) {
+            } else if (!_puzzleState.IsPulled) {
                 // If a push move has been played, move the arc to the node, then rotate it
                 _puzzleView.MoveRotate(_puzzleState.PushNodePath, _puzzleState.PulledArcView, dir);
                 GameAudio.Play(Clip.MovePush);

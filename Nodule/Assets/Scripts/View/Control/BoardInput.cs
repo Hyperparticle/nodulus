@@ -14,7 +14,7 @@ namespace Assets.Scripts.View.Control
     {
         private BoardAction _boardAction;
         private PuzzleScale _puzzleScale;
-        private PanScript _panScript;
+        //private PanScript _panScript;
 
         private IDictionary<Point, NodeView> _nodeMap;
 
@@ -26,7 +26,7 @@ namespace Assets.Scripts.View.Control
         {
             _puzzleScale = GetComponent<PuzzleScale>();
             _boardAction = GetComponent<BoardAction>();
-            _panScript = GetComponent<PanScript>();
+            //_panScript = GetComponent<PanScript>();
         }
 
         void Start()

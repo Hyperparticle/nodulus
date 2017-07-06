@@ -106,7 +106,7 @@ namespace Assets.Scripts.View.Game
 
             var dirVector = dir.Vector();
 
-            var shakeAmt = 0.05f;
+            var shakeAmt = 0.10f;
             var initPos = transform.localPosition;
             var shakePeriodTime = 0.1f;
 

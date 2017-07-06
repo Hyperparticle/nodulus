@@ -92,7 +92,7 @@ namespace Assets.Scripts.View.Items
 
             // Rotate 90 degrees in the direction specified
             LeanTween.rotateAroundLocal(_rotor, axis, 90f, NodeRotateTime)
-                .setEase(LeanTweenType.easeInOutSine)
+                .setEase(LeanTweenType.easeOutBack)
                 .setOnComplete(onComplete);
         }
 
@@ -113,7 +113,7 @@ namespace Assets.Scripts.View.Items
         {
             LeanTween.rotateAroundLocal(_rotor, Direction.Right.Axis() + Direction.Down.Axis(), 360f, NodeRotateTime * 2)
                 .setEase(LeanTweenType.easeInOutSine);
-            LeanTween.scale(_rotor, Vector3.one * 2, NodeRotateTime * 2);
+            LeanTween.scale(_rotor, _rotor.transform.localScale * 2, NodeRotateTime * 2);
         }
     }
 }
