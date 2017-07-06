@@ -34,7 +34,6 @@ namespace Assets.Scripts.Core.Data
             var movePlayed = move.Play();
             
             if (movePlayed && move is PushMove) {
-                var pushMove = move as PushMove;
                 NumMoves++;
             }
 

@@ -116,8 +116,6 @@ namespace Assets.Scripts.View.Game
                 .Where(field => field.HasArc)
                 .Select(field => field.Arc);
 
-            var c = new List<Arc>(arcs);
-
             foreach (var arc in arcs) {
                 var connectedArcs = _puzzleState.GetArcs(arc.Position)[arc.Direction];
                 connectedArcs.transform.parent = node.Rotor.transform;

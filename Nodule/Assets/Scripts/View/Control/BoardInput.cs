@@ -117,7 +117,7 @@ namespace Assets.Scripts.View.Control
 
         private FieldView GetNearestField(TKTapRecognizer recognizer)
         {
-            var pos = Camera.main.ScreenToWorldPoint(recognizer.startTouchLocation()) / _puzzleScale.Scaling;
+            //var pos = Camera.main.ScreenToWorldPoint(recognizer.startTouchLocation()) / _puzzleScale.Scaling;
             return null;
         }
 
