@@ -6,18 +6,18 @@ namespace View.Game
 
         public GameObject Particles;
 
-//        private GameObject _particleObject;
-//        private ParticleSystem _particleSystem;
-//        private ParticleSystem.EmissionModule _emission;
+        private GameObject _particleObject;
+        private ParticleSystem _particleSystem;
+        private ParticleSystem.EmissionModule _emission;
 
-//        private void Start() {
-//            _particleObject = Instantiate(Particles, transform);
-//            _particleObject.name = "Particles";
-//
-//            _particleSystem = _particleObject.GetComponent<ParticleSystem>();
-//            _emission = _particleSystem.emission;
-//            _emission.enabled = false;
-//        }
+        private void Start() {
+            _particleObject = Instantiate(Particles, transform);
+            _particleObject.name = "Particles";
+
+            _particleSystem = _particleObject.GetComponent<ParticleSystem>();
+            _emission = _particleSystem.emission;
+            _emission.enabled = false;
+        }
 
 //        private void Update()
 //        {
