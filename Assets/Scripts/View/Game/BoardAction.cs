@@ -116,8 +116,7 @@ namespace View.Game
                 }
 
                 _puzzleState.NextLevel(LevelDelay);
-            } 
-            else if (_moveQueue.Count > 0) {
+            } else if (_moveQueue.Count > 0) {
                 var move = _moveQueue.Dequeue();
                 Play(move.Item1, move.Item2);
             }
