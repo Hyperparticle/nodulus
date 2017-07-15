@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Core.Data;
 using UnityEngine;
 using View.Items;
@@ -41,18 +42,34 @@ namespace View.Game
             // so that all arcs will rotate accordingly
             var arcViews = _puzzleState.GetArcs(nodeView.Position);
 
+            NodeView stayNodeView = null;
+            ArcView stayArcView = null;
+            
             var stay = pull ? dir : dir.Opposite();
             foreach (var pair in arcViews) {
-                pair.Value.transform.parent = pair.Key == stay ?
-                    nodeView.transform :
-                    nodeView.Rotor;
+                if (pair.Key == stay) {
+                    // This arc should not rotate with the node, do something else with it
+                    var stayNode = pair.Value.Arc.ParentNode.Equals(nodeView.Node) ? 
+                        pair.Value.Arc.ConnectedNode : pair.Value.Arc.ParentNode;
+                    stayNodeView = _puzzleState.PlayerNodes
+                        .FirstOrDefault(node => node.Node.Equals(stayNode));
+                    stayArcView = pair.Value;
+                } else {
+                    pair.Value.transform.parent = nodeView.Rotor;
+                }
             }
 
             // TODO: cool field rotations
             //var fieldViews = _puzzleState.GetFields(nodeView.Position);
 
             // Finally, rotate the node!
-            nodeView.Rotate(dir, OnViewUpdated);
+            nodeView.Rotate(dir,  OnViewUpdated);
+
+            // Do a small rotate to the node that stays put
+            if (stayNodeView != null) {
+                stayArcView.transform.parent = stayNodeView.Rotor;
+                stayNodeView.SlightRotate(dir.Opposite(), stayArcView.Arc.Length);
+            }
         }
 
         public void Shake(NodeView nodeView, Direction dir)
@@ -105,8 +122,9 @@ namespace View.Game
             var dirVector = dir.Vector();
 
             var shakeAmount = 0.025f;
-            var initPos = transform.localPosition;
             var shakePeriodTime = 0.1f;
+            
+            var initPos = transform.localPosition;
 
             LeanTween.moveLocal(gameObject, initPos + dirVector * shakeAmount, shakePeriodTime)
                 .setEase(LeanTweenType.easeInSine)
@@ -114,19 +132,23 @@ namespace View.Game
                     LeanTween.moveLocal(gameObject, initPos, shakePeriodTime)
                         .setEase(LeanTweenType.easeOutSine);
                 });
-            //    .setLoopClamp()
-            //    .setRepeat(-1);
-
-            //// Slow the shake down to zero
-            //LeanTween.value(gameObject, shakeAmt, 0f, dropOffTime)
-            //    .setEase(LeanTweenType.easeOutQuad)
-            //    .setOnUpdate(val => shakeTween.setTo(initPos + dirVector * shakeAmt * val));
         }
 
         private void OnViewUpdated()
         {
             if (ViewUpdated != null) {
                 ViewUpdated();
+            }
+        }
+
+        public void ConnectArcs(NodeView nodeView) {
+            var connectedArcs = nodeView.Node.Connections
+                .Where(field => field.HasArc)
+                .Select(field => field.Arc)
+                .Select(arc => _puzzleState.GetArcs(arc.Position)[arc.Direction]);
+
+            foreach (var arc in connectedArcs) {
+                arc.transform.parent = nodeView.Rotor.transform;
             }
         }
     }

@@ -122,6 +122,18 @@ namespace View.Items
                 .setLoopPingPong(1);
         }
 
+        public void SlightRotate(Direction dir, int arcLength)
+        {
+            var rotAngle = 7.5f / arcLength;
+            
+            var rot = Quaternion.Inverse(_rotor.transform.localRotation);
+            var axis = rot * dir.Axis();
+
+            LeanTween.rotateAroundLocal(_rotor, axis, rotAngle, NodeRotateTime / 2f)
+                .setEase(LeanTweenType.easeInOutSine)
+                .setLoopPingPong(1);
+        }
+
         public void RotateFast()
         {
             LeanTween.cancel(_rotor);

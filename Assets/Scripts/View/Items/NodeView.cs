@@ -79,6 +79,11 @@ namespace View.Items
             _transit.Shake(dir, onComplete);
         }
 
+        public void SlightRotate(Direction dir, int arcLength)
+        {
+            _transit.SlightRotate(dir, arcLength);
+        }
+
         public void WinAnimation()
         {
             _transit.RotateFast();

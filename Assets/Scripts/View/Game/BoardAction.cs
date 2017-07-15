@@ -111,7 +111,7 @@ namespace View.Game
                 LeanTween.cancel(gameObject);
 
                 foreach (var node in _puzzleState.PlayerNodes.Where(nodeView => nodeView.Node.Final)) {
-                    ConnectArcs(node);
+                    _puzzleView.ConnectArcs(node);
                     node.WinAnimation();
                 }
 
@@ -119,17 +119,6 @@ namespace View.Game
             } else if (_moveQueue.Count > 0) {
                 var move = _moveQueue.Dequeue();
                 Play(move.Item1, move.Item2);
-            }
-        }
-
-        private void ConnectArcs(NodeView node) {
-            var arcs = node.Node.Connections
-                .Where(field => field.HasArc)
-                .Select(field => field.Arc);
-
-            foreach (var arc in arcs) {
-                var connectedArcs = _puzzleState.GetArcs(arc.Position)[arc.Direction];
-                connectedArcs.transform.parent = node.Rotor.transform;
             }
         }
     }
