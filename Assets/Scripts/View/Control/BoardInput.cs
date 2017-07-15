@@ -33,8 +33,8 @@ namespace View.Control
         {
             // Add event handlers for swiping the screen
             var swipeRecognizers = new[] {
-                new TKSwipeRecognizer(0.5f) { minimumNumberOfTouches = 0, maximumNumberOfTouches = 1, timeToSwipe = 1f },
-                new TKSwipeRecognizer(2f) { minimumNumberOfTouches = 0, maximumNumberOfTouches = 1, timeToSwipe = 1f }
+                new TKSwipeRecognizer(0.5f) { minimumNumberOfTouches = 1, maximumNumberOfTouches = 10, timeToSwipe = 1f },
+//                new TKSwipeRecognizer(2f) { minimumNumberOfTouches = 0, maximumNumberOfTouches = 10, timeToSwipe = 1f }
             };
 
             foreach (var swipe in swipeRecognizers) {
@@ -46,10 +46,6 @@ namespace View.Control
             var tapRecognizer = new TKTapRecognizer();
             tapRecognizer.gestureRecognizedEvent += OnTap;
             TouchKit.addGestureRecognizer(tapRecognizer);
-
-            var panRecognizer = new TKPanRecognizer { minimumNumberOfTouches = 2, maximumNumberOfTouches = 3 };
-            panRecognizer.gestureRecognizedEvent += OnPan;
-            TouchKit.addGestureRecognizer(panRecognizer);
 
             var touch = new TKAnyTouchRecognizer(new TKRect());
             TouchKit.addGestureRecognizer(touch);
@@ -119,11 +115,6 @@ namespace View.Control
         {
             //var pos = Camera.main.ScreenToWorldPoint(recognizer.startTouchLocation()) / _puzzleScale.Scaling;
             return null;
-        }
-
-        private void OnPan(TKPanRecognizer recognizer)
-        {
-            //_panScript.PanTowards(recognizer.deltaTranslation);
         }
     }
 }

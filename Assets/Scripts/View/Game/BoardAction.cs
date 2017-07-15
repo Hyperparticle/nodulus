@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using Core.Data;
 using UnityEngine;
@@ -17,13 +18,15 @@ namespace View.Game
         private PuzzleView _puzzleView;
         private PuzzleState _puzzleState;
         private Text _moveText;
-//        private readonly Queue<Utility.Tuple<NodeView, Direction>> _moveQueue 
-//            = new Queue<Utility.Tuple<NodeView, Direction>>(); 
+        private readonly Queue<Utility.Tuple<NodeView, Direction>> _moveQueue 
+            = new Queue<Utility.Tuple<NodeView, Direction>>(); 
             
         public GameAudio GameAudio;
 
         // A lock to prevent multiple moves to be played at the same time
         private bool _viewUpdating;
+
+        private readonly int _maxMovesInQueue = 2;
 
         private void Awake()
         {
@@ -39,10 +42,12 @@ namespace View.Game
         /// </summary>
         public void Play(NodeView nodeView, Direction dir)
         {
-            // TODO: there's a race condition if this function is called multiple times in a second
             if (_viewUpdating || LeanTween.isTweening(nodeView.gameObject)) {
                 // If the animations are running, queue up the move
-//                _moveQueue.Enqueue(new Utility.Tuple<NodeView, Direction>(nodeView, dir));
+                if (_moveQueue.Count < 4) {
+                    _moveQueue.Enqueue(new Utility.Tuple<NodeView, Direction>(nodeView, dir));
+                }
+                
                 return;
             }
 
@@ -112,10 +117,10 @@ namespace View.Game
 
                 _puzzleState.NextLevel(LevelDelay);
             } 
-//            else if (_moveQueue.Count > 0) {
-//                var move = _moveQueue.Dequeue();
-//                Play(move.Item1, move.Item2);
-//            }
+            else if (_moveQueue.Count > 0) {
+                var move = _moveQueue.Dequeue();
+                Play(move.Item1, move.Item2);
+            }
         }
 
         private void ConnectArcs(NodeView node) {

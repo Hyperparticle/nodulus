@@ -16,39 +16,39 @@ namespace View.Control
             _puzzleScale = GetComponentInChildren<PuzzleScale>();
         }
 
-        //public void PanTo(Vector2 boardPosition)
-        //{
-        //    var scaledPos = _puzzleScale.Scale(boardPosition) + _puzzleScale.Offset;
+//        public void PanTo(Vector2 boardPosition)
+//        {
+//            var scaledPos = _puzzleScale.Scale(boardPosition) + _puzzleScale.Offset;
+//
+//            LeanTween.moveLocal(gameObject, -scaledPos, 1f)
+//                .setEase(LeanTweenType.easeInOutSine);
+//        }
 
-        //    LeanTween.moveLocal(gameObject, -scaledPos, 1f)
-        //        .setEase(LeanTweenType.easeInOutSine);
-        //}
-
-        public void PanTowards(Vector3 delta)
-        {
-            var pos = transform.localPosition + delta / 150;
-            transform.localPosition = _puzzleScale.Clamp(pos);
-            _lastPosition = Input.mousePosition;
-        }
-
-        private void Update()
-        {
-            if (Input.GetKeyDown(PanCode))
-            {
-                _lastPosition = Input.mousePosition;
-            }
-
-            // Pan if dragging
-            if (Input.GetKey(PanCode))
-            {
-                var delta = -_lastPosition + Input.mousePosition;
-                var deltaPos = delta * MouseSensitivity;
-                var pos = transform.localPosition + deltaPos;
-
-                transform.localPosition = _puzzleScale.Clamp(pos);
-
-                _lastPosition = Input.mousePosition;
-            }
-        }
+//        public void PanTowards(Vector3 delta)
+//        {
+//            var pos = transform.localPosition + delta / 150;
+//            transform.localPosition = _puzzleScale.Clamp(pos);
+//            _lastPosition = Input.mousePosition;
+//        }
+//
+//        private void Update()
+//        {
+//            if (Input.GetKeyDown(PanCode))
+//            {
+//                _lastPosition = Input.mousePosition;
+//            }
+//
+//            // Pan if dragging
+//            if (Input.GetKey(PanCode))
+//            {
+//                var delta = -_lastPosition + Input.mousePosition;
+//                var deltaPos = delta * MouseSensitivity;
+//                var pos = transform.localPosition + deltaPos;
+//
+//                transform.localPosition = _puzzleScale.Clamp(pos);
+//
+//                _lastPosition = Input.mousePosition;
+//            }
+//        }
     }
 }
