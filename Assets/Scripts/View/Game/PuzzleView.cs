@@ -61,15 +61,15 @@ namespace View.Game
 
             // TODO: cool field rotations
             //var fieldViews = _puzzleState.GetFields(nodeView.Position);
-
-            // Finally, rotate the node!
-            nodeView.Rotate(dir,  OnViewUpdated);
-
+            
             // Do a small rotate to the node that stays put
-            if (stayNodeView != null) {
+            if (stayNodeView != null && !LeanTween.isTweening(stayNodeView.gameObject)) {
                 stayArcView.transform.parent = stayNodeView.Rotor;
                 stayNodeView.SlightRotate(dir.Opposite(), stayArcView.Arc.Length);
             }
+
+            // Finally, rotate the node!
+            nodeView.Rotate(dir,  OnViewUpdated);
         }
 
         public void Shake(NodeView nodeView, Direction dir)
@@ -77,8 +77,7 @@ namespace View.Game
             // Set all connecting arcs as the parent of this node
             // so that all arcs will rotate accordingly
             var arcViews = _puzzleState.GetArcs(nodeView.Position);
-            foreach (var pair in arcViews)
-            {
+            foreach (var pair in arcViews) {
                 pair.Value.transform.parent = nodeView.Rotor;
             }
 
@@ -108,8 +107,7 @@ namespace View.Game
 
         public void Highlight(IEnumerable<FieldView> fields, bool enable)
         {
-            foreach (var fieldView in fields)
-            {
+            foreach (var fieldView in fields) {
                 fieldView.Highlight(enable);
             }
         }

@@ -17,7 +17,9 @@ namespace View.Game
 
         private PuzzleView _puzzleView;
         private PuzzleState _puzzleState;
+        private PuzzleSpawner _puzzleSpawner;
         private Text _moveText;
+        
         private readonly Queue<Utility.Tuple<NodeView, Direction>> _moveQueue 
             = new Queue<Utility.Tuple<NodeView, Direction>>(); 
             
@@ -32,6 +34,7 @@ namespace View.Game
         {
             _puzzleView = GetComponent<PuzzleView>();
             _puzzleState = GetComponent<PuzzleState>();
+            _puzzleSpawner = GetComponent<PuzzleSpawner>();
             _moveText = GameObject.FindGameObjectWithTag("MoveText").GetComponent<Text>();
 
             _puzzleView.ViewUpdated += OnViewUpdated;
@@ -42,7 +45,7 @@ namespace View.Game
         /// </summary>
         public void Play(NodeView nodeView, Direction dir)
         {
-            if (_viewUpdating || LeanTween.isTweening(nodeView.gameObject)) {
+            if (_viewUpdating || LeanTween.isTweening(nodeView.gameObject) || !_puzzleSpawner.FinishedSpawn) {
                 // If the animations are running, queue up the move
                 if (_moveQueue.Count < 4) {
                     _moveQueue.Enqueue(new Utility.Tuple<NodeView, Direction>(nodeView, dir));

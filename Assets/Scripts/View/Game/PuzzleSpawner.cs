@@ -1,7 +1,9 @@
 using System.Collections.Generic;
+using System.Linq;
 using Core.Data;
 using Core.Game;
 using UnityEngine;
+using View.Control;
 using View.Data;
 using View.Items;
 
@@ -35,6 +37,12 @@ namespace View.Game
         public ArcViewMap ArcMap
         {
             get { return _arcMap; }
+        }
+
+        // TODO: find a way to indicate that the animations are fully complete
+        public bool FinishedSpawn
+        {
+            get { return true; }
         }
 
         private void Awake()
