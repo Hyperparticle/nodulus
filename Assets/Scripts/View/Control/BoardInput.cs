@@ -1,10 +1,10 @@
 using System.Collections.Generic;
-using Assets.Scripts.Core.Data;
-using Assets.Scripts.View.Game;
-using Assets.Scripts.View.Items;
+using Core.Data;
 using UnityEngine;
+using View.Game;
+using View.Items;
 
-namespace Assets.Scripts.View.Control
+namespace View.Control
 {
     /// <summary>
     /// Handles all initial inputs to the game board (i.e., screen swipes and taps)
@@ -22,14 +22,14 @@ namespace Assets.Scripts.View.Control
         public float MedSwipeDistanceCm { get { return GameDef.Get.MedSwipeDistanceCm; } }
         public float MaxSwipeDistanceCm { get { return GameDef.Get.MedSwipeDistanceCm; } }
 
-        void Awake()
+        private void Awake()
         {
             _puzzleScale = GetComponent<PuzzleScale>();
             _boardAction = GetComponent<BoardAction>();
             //_panScript = GetComponent<PanScript>();
         }
 
-        void Start()
+        private void Start()
         {
             // Add event handlers for swiping the screen
             var swipeRecognizers = new[] {
@@ -47,7 +47,7 @@ namespace Assets.Scripts.View.Control
             tapRecognizer.gestureRecognizedEvent += OnTap;
             TouchKit.addGestureRecognizer(tapRecognizer);
 
-            var panRecognizer = new TKPanRecognizer() { minimumNumberOfTouches = 2, maximumNumberOfTouches = 3 };
+            var panRecognizer = new TKPanRecognizer { minimumNumberOfTouches = 2, maximumNumberOfTouches = 3 };
             panRecognizer.gestureRecognizedEvent += OnPan;
             TouchKit.addGestureRecognizer(panRecognizer);
 
@@ -83,7 +83,7 @@ namespace Assets.Scripts.View.Control
         {
             // Find the nearest node to the swipe (within 1 grid unit), and the swipe direction
             var swipeDirection = recognizer.completedSwipeDirection.ToDirection();
-            var node = GetNearestNode(recognizer, recognizer.startPoint) ?? GetNearestNode(recognizer, recognizer.endPoint);
+            var node = GetNearestNode(recognizer.startPoint) ?? GetNearestNode(recognizer.endPoint);
 
             // If the swipe is invalid, don't do anything
             if (node == null || swipeDirection == Direction.None) {
@@ -97,7 +97,7 @@ namespace Assets.Scripts.View.Control
         /// <summary>
         /// Finds the nearest node to the gesture
         /// </summary>
-        private NodeView GetNearestNode(TKSwipeRecognizer recognizer, Vector2 screenPoint)
+        private NodeView GetNearestNode(Vector2 screenPoint)
         {
             // TODO: make this more robust
 
@@ -106,7 +106,7 @@ namespace Assets.Scripts.View.Control
             var scaledPos = (Vector2) (startTouch - transform.position);
 
             // Remove any scaling, and round the position to the nearest integer
-            var pos = (scaledPos)/_puzzleScale.Scaling;
+            var pos = scaledPos/_puzzleScale.Scaling;
             var point = Point.Round(pos);
 
             // Retrieve the node, if it exists

@@ -1,10 +1,9 @@
-using System;
 using System.Collections.Generic;
 using System.Text;
-using Assets.Scripts.Core.Data;
-using Assets.Scripts.Core.Items;
+using Core.Data;
+using Core.Items;
 
-namespace Assets.Scripts.Core.Builders
+namespace Core.Builders
 {
     public static class BoardPrinter
     {
@@ -19,11 +18,11 @@ namespace Assets.Scripts.Core.Builders
             IEnumerable<Field> pullFields, IEnumerable<Field> pushFields)
         {
             // Represent the board as an array of chars
-            var grid = new char[2*size.x + 1, 2*size.y + 1];
+            var grid = new char[2*size.X + 1, 2*size.Y + 1];
             Reset(grid);
 
             foreach (var node in nodes) {
-                grid[2*node.Position.x, 2*node.Position.y] = Node;
+                grid[2*node.Position.X, 2*node.Position.Y] = Node;
             }
 
             foreach (var arc in arcs) {
@@ -33,11 +32,11 @@ namespace Assets.Scripts.Core.Builders
 
                 if (arc.Direction.IsHorizontal()) {
                     for (var i = 1; i < 2*arc.Length; i++) {
-                        grid[2*arc.Position.x + i, 2*arc.Position.y] = ArcH;
+                        grid[2*arc.Position.X + i, 2*arc.Position.Y] = ArcH;
                     }
                 } else {
                     for (var i = 1; i < 2*arc.Length; i++) {
-                        grid[2*arc.Position.x, 2*arc.Position.y + i] = ArcV;
+                        grid[2*arc.Position.X, 2*arc.Position.Y + i] = ArcV;
                     }
                 }
             }
@@ -45,11 +44,11 @@ namespace Assets.Scripts.Core.Builders
             foreach (var field in pullFields) {
                 if (field.Direction.IsHorizontal()) {
                     for (var i = 1; i < 2*field.Length; i++) {
-                        grid[2*field.Position.x + i, 2*field.Position.y] = PullField;
+                        grid[2*field.Position.X + i, 2*field.Position.Y] = PullField;
                     }
                 } else {
                     for (var i = 1; i < 2*field.Length; i++) {
-                        grid[2*field.Position.x, 2*field.Position.y + i] = PullField;
+                        grid[2*field.Position.X, 2*field.Position.Y + i] = PullField;
                     }
                 }
             }
@@ -57,11 +56,11 @@ namespace Assets.Scripts.Core.Builders
             foreach (var field in pushFields) {
                 if (field.Direction.IsHorizontal()) {
                     for (var i = 1; i < 2*field.Length; i++) {
-                        grid[2*field.Position.x + i, 2*field.Position.y] = PushField;
+                        grid[2*field.Position.X + i, 2*field.Position.Y] = PushField;
                     }
                 } else {
                     for (var i = 1; i < 2*field.Length; i++) {
-                        grid[2*field.Position.x, 2*field.Position.y + i] = PushField;
+                        grid[2*field.Position.X, 2*field.Position.Y + i] = PushField;
                     }
                 }
             }

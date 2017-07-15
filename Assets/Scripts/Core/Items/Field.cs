@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Assets.Scripts.Core.Data;
+using Core.Data;
 
-namespace Assets.Scripts.Core.Items
+namespace Core.Items
 {
     public class Field : IBoardItem
     {
@@ -89,7 +89,8 @@ namespace Assets.Scripts.Core.Items
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj)) return false;
-            return obj is Field && Equals((Field) obj);
+            var field = obj as Field;
+            return field != null && Equals(field);
         }
 
         public override int GetHashCode()

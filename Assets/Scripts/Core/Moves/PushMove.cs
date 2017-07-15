@@ -1,8 +1,8 @@
-using Assets.Scripts.Core.Data;
-using Assets.Scripts.Core.Game;
-using Assets.Scripts.Core.Items;
+using Core.Data;
+using Core.Game;
+using Core.Items;
 
-namespace Assets.Scripts.Core.Moves
+namespace Core.Moves
 {
     public class PushMove : IMove
     {

@@ -1,5 +1,5 @@
-using Assets.Scripts.Core.Data;
-using Assets.Scripts.Core.Game;
+using Core.Data;
+using Core.Game;
 using NUnit.Framework;
 
 namespace Assets.Editor

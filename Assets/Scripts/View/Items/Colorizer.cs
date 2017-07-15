@@ -1,8 +1,8 @@
-using Assets.Scripts.Utility;
-using Assets.Scripts.View.Control;
 using UnityEngine;
+using Utility;
+using View.Control;
 
-namespace Assets.Scripts.View.Items
+namespace View.Items
 {
     public class Colorizer : MonoBehaviour
     {
@@ -19,7 +19,7 @@ namespace Assets.Scripts.View.Items
             set {
                 _primaryColor = value;
                 _primaryHsb = new HsbColor(_primaryColor);
-                _darkHsb = new HsbColor(_primaryHsb.h, _primaryHsb.s, _primaryHsb.b*DarkBrightnessScale, _primaryHsb.a);
+                _darkHsb = new HsbColor(_primaryHsb.H, _primaryHsb.S, _primaryHsb.B*DarkBrightnessScale, _primaryHsb.A);
                 CurrentColor = _primaryColor;
             }
         }
@@ -44,7 +44,7 @@ namespace Assets.Scripts.View.Items
 
         private Material _material;
 
-        void Awake()
+        private void Awake()
         {
             _material = GetComponent<Renderer>().material;
         }
@@ -64,11 +64,11 @@ namespace Assets.Scripts.View.Items
             _previousColor = CurrentColor;
 
             if (time < float.Epsilon) {
-                CurrentColor = Brightness(CurrentColor, _primaryHsb.b);
+                CurrentColor = Brightness(CurrentColor, _primaryHsb.B);
                 return;
             }
 
-            LeanTween.value(gameObject, CurrentHsb.b, _primaryHsb.b, time)
+            LeanTween.value(gameObject, CurrentHsb.B, _primaryHsb.B, time)
                 .setOnUpdate(b => CurrentColor = Brightness(CurrentColor, b))
                 .setDelay(delay)
                 .setEase(ease);
@@ -89,11 +89,11 @@ namespace Assets.Scripts.View.Items
             _previousColor = CurrentColor;
 
             if (time < float.Epsilon) {
-                CurrentColor = Brightness(CurrentColor, _darkHsb.b);
+                CurrentColor = Brightness(CurrentColor, _darkHsb.B);
                 return;
             }
 
-            LeanTween.value(gameObject, CurrentHsb.b, _darkHsb.b, time)
+            LeanTween.value(gameObject, CurrentHsb.B, _darkHsb.B, time)
                 .setOnUpdate(b => CurrentColor = Brightness(CurrentColor, b))
                 .setDelay(delay)
                 .setEase(ease);
@@ -171,7 +171,7 @@ namespace Assets.Scripts.View.Items
 
         private static Color Brightness(Color color, float b)
         {
-            return new HsbColor(color) {b = b}.ToColor();
+            return new HsbColor(color) {B = b}.ToColor();
         }
     }
 }

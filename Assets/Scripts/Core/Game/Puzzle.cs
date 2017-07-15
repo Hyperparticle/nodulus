@@ -1,10 +1,9 @@
 using System.Collections.Generic;
-using System.Linq;
-using Assets.Scripts.Core.Data;
-using Assets.Scripts.Core.Items;
-using Assets.Scripts.Core.Moves;
+using Core.Data;
+using Core.Items;
+using Core.Moves;
 
-namespace Assets.Scripts.Core.Game
+namespace Core.Game
 {
     /// <summary>
     /// A Puzzle specifies the rules and methods for interacting 

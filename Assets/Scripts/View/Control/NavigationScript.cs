@@ -1,11 +1,11 @@
 using System;
 using System.Collections.Generic;
-using Assets.Scripts.View.Game;
-using Assets.Scripts.View.Items;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using View.Game;
+using View.Items;
 
-namespace Assets.Scripts.View.Control
+namespace View.Control
 {
     public class NavigationScript : MonoBehaviour
     {
@@ -17,7 +17,7 @@ namespace Assets.Scripts.View.Control
             { ButtonState.Select, puzzleState => SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex) }
         };
 
-        void Awake()
+        private void Awake()
         {
             _puzzleState = GameObject.FindGameObjectWithTag("PuzzleGame")
                 .GetComponent<PuzzleState>();
@@ -29,7 +29,7 @@ namespace Assets.Scripts.View.Control
             }
         }
 
-        void Start()
+        private void Start()
         {
             // Slide right
             var pos = transform.localPosition;

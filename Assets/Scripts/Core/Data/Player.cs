@@ -1,9 +1,8 @@
-using System.Collections.Generic;
-using Assets.Scripts.Core.Game;
-using Assets.Scripts.Core.Items;
-using Assets.Scripts.Core.Moves;
+using Core.Game;
+using Core.Items;
+using Core.Moves;
 
-namespace Assets.Scripts.Core.Data
+namespace Core.Data
 {
     public class Player
     {

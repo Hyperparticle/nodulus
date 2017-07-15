@@ -1,13 +1,13 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Assets.Scripts.Core.Builders;
-using Assets.Scripts.Core.Data;
+using Core.Builders;
+using Core.Data;
 using UnityEngine;
 using YamlDotNet.Serialization;
 using YamlDotNet.Serialization.NamingConventions;
 
-namespace Assets.Scripts.Core.Game
+namespace Core.Game
 {
     public class Levels
     {
@@ -36,7 +36,10 @@ namespace Assets.Scripts.Core.Game
         
         public static LevelPack DeserializeLevel()
         {
-            var deserializer = new Deserializer(namingConvention: new CamelCaseNamingConvention());
+            var builder = new DeserializerBuilder();
+            builder.WithNamingConvention(new CamelCaseNamingConvention());
+            
+            var deserializer = builder.Build();
             
             var file = Resources.Load<TextAsset>(BeginnerLevels);
             var reader = new StringReader(file.text);

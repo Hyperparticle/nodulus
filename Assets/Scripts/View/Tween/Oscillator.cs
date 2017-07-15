@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Assets.Scripts.View.Tween
+namespace View.Tween
 {
     public class Oscillator : MonoBehaviour
     {
@@ -8,7 +8,7 @@ namespace Assets.Scripts.View.Tween
         public LeanTweenType MoveEase = LeanTweenType.easeInOutSine;
         public Vector3 MoveDirection = Vector3.right;
 
-        void Start()
+        private void Start()
         {
             LeanTween.moveLocal(gameObject, transform.localPosition + MoveDirection, MoveTime)
                 .setEase(MoveEase)

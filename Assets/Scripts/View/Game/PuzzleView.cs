@@ -1,10 +1,10 @@
 using System;
 using System.Collections.Generic;
-using Assets.Scripts.Core.Data;
-using Assets.Scripts.View.Items;
+using Core.Data;
 using UnityEngine;
+using View.Items;
 
-namespace Assets.Scripts.View.Game
+namespace View.Game
 {
     /// <summary>
     /// Handles all basic initialization logic to create and destroy the gameboard
@@ -16,7 +16,7 @@ namespace Assets.Scripts.View.Game
 
         public event Action ViewUpdated;
 
-        void Awake()
+        private void Awake()
         {
             _puzzleScale = GetComponent<PuzzleScale>();
             _puzzleState = GetComponent<PuzzleState>();
@@ -52,7 +52,7 @@ namespace Assets.Scripts.View.Game
             //var fieldViews = _puzzleState.GetFields(nodeView.Position);
 
             // Finally, rotate the node!
-            nodeView.Rotate(dir, () => OnViewUpdated());
+            nodeView.Rotate(dir, OnViewUpdated);
         }
 
         public void Shake(NodeView nodeView, Direction dir)
@@ -66,13 +66,11 @@ namespace Assets.Scripts.View.Game
             }
 
             // Finally, rotate the node!
-            nodeView.Shake(dir, () => OnViewUpdated());
+            nodeView.Shake(dir, OnViewUpdated);
         }
 
         public void MoveRotate(List<NodeView> nodeViews, ArcView arcView, Direction dir)
         {
-            var path = _puzzleState.PushNodePath;
-
             arcView.MoveTo(nodeViews, () => Rotate(nodeViews[nodeViews.Count-1], arcView, dir, false));
         }
 
@@ -106,7 +104,7 @@ namespace Assets.Scripts.View.Game
 
             var dirVector = dir.Vector();
 
-            var shakeAmount = 0.10f;
+            var shakeAmount = 0.025f;
             var initPos = transform.localPosition;
             var shakePeriodTime = 0.1f;
 

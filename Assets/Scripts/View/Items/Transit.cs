@@ -1,9 +1,9 @@
 using System;
-using Assets.Scripts.Core.Data;
-using Assets.Scripts.View.Control;
+using Core.Data;
 using UnityEngine;
+using View.Control;
 
-namespace Assets.Scripts.View.Items
+namespace View.Items
 {
     /// <summary>
     /// Performs transition animations
@@ -31,7 +31,7 @@ namespace Assets.Scripts.View.Items
         public LeanTweenType WaveOutMoveEase { get { return GameDef.Get.WaveOutMoveEase; } }
         public LeanTweenType WaveOutColorEase { get { return GameDef.Get.WaveOutColorEase; } }
 
-        void Awake()
+        private void Awake()
         {
             _audioSource = GetComponent<AudioSource>();
             _audioSource.time = 0.5f;

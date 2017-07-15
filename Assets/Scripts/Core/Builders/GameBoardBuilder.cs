@@ -1,10 +1,10 @@
 using System.Collections.Generic;
 using System.Linq;
-using Assets.Scripts.Core.Data;
-using Assets.Scripts.Core.Game;
-using Assets.Scripts.Core.Items;
+using Core.Data;
+using Core.Game;
+using Core.Items;
 
-namespace Assets.Scripts.Core.Builders
+namespace Core.Builders
 {
     public class GameBoardBuilder 
     {
@@ -34,7 +34,7 @@ namespace Assets.Scripts.Core.Builders
 
             // Place all nodes on the board, and return success if all placements were valid
             var success = nodes
-                .Select(node => gameBoard.PlaceNode(node))
+                .Select(gameBoard.PlaceNode)
                 .All(valid => valid);
 
             return success;

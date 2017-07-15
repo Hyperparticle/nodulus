@@ -1,12 +1,11 @@
 using System.Collections.Generic;
-using Assets.Scripts.Core.Data;
-using Assets.Scripts.Core.Game;
-using Assets.Scripts.View.Data;
-using Assets.Scripts.View.Items;
+using Core.Data;
+using Core.Game;
 using UnityEngine;
-using System.Linq;
+using View.Data;
+using View.Items;
 
-namespace Assets.Scripts.View.Game
+namespace View.Game
 {
     public class PuzzleSpawner : MonoBehaviour
     {
@@ -75,11 +74,11 @@ namespace Assets.Scripts.View.Game
             }
 
             foreach (Transform child in transform) {
-                if (child.gameObject.GetComponent<LatticeView>() != null) {
-                    continue;
+                // Only destroy board pieces
+                if (child.gameObject.GetComponent<NodeView>() ??
+                    child.gameObject.GetComponent<ArcView>() != null) {
+                        Destroy(child.gameObject, 1.5f);
                 }
-
-                Destroy(child.gameObject, 1.5f);
             }
 
             _nodeMap.Clear();
@@ -142,7 +141,7 @@ namespace Assets.Scripts.View.Game
 
         private void StartAnimations()
         {
-            _lattice.Init(_gameBoard.Size.x + 1, _gameBoard.Size.y + 1, _puzzleScale.Scaling);
+            _lattice.Init(_gameBoard.Size.X + 1, _gameBoard.Size.Y + 1, _puzzleScale.Scaling);
 
             var i = 0;
             foreach (var nodeView in _nodeMap.Values) {

@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Assets.Scripts.Core.Data
+namespace Core.Data
 {
     /// <summary>
     /// Represents the four cardinal directions (but can be extended to allow more)

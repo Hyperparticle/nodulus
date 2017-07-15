@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using System.Linq;
-using Assets.Scripts.Core.Data;
+using Core.Data;
 
-namespace Assets.Scripts.Core.Items
+namespace Core.Items
 {
     /// <summary>
     /// A Node represents a point in grid space, allowing arcs to 
@@ -57,7 +57,7 @@ namespace Assets.Scripts.Core.Items
         public int GetDistance(Node end)
         {
             var diff = end.Position - Position;
-            return diff.x != 0 ? diff.x : diff.y;
+            return diff.X != 0 ? diff.X : diff.Y;
         }
 
         public override string ToString()
@@ -68,7 +68,8 @@ namespace Assets.Scripts.Core.Items
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj)) return false;
-            return obj is Node && Equals((Node) obj);
+            var node = obj as Node;
+            return node != null && Equals(node);
         }
 
         public override int GetHashCode()

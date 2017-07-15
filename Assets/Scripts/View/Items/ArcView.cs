@@ -1,10 +1,10 @@
 using System;
-using Assets.Scripts.Core.Items;
-using Assets.Scripts.View.Control;
-using UnityEngine;
 using System.Collections.Generic;
+using Core.Items;
+using UnityEngine;
+using View.Control;
 
-namespace Assets.Scripts.View.Items
+namespace View.Items
 {
     /// <summary>
     /// An ArcView represents the view for an arc in the gameboard. It is responsible
@@ -23,7 +23,7 @@ namespace Assets.Scripts.View.Items
 
         public Arc Arc { get; private set; }
 
-        void Awake()
+        private void Awake()
         {
             _arcScale = GetComponent<ScaleScript>();
             _colorizer = GetComponent<Colorizer>();

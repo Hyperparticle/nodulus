@@ -1,13 +1,8 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Assets.Scripts.Core.Data;
-using Assets.Scripts.Utility;
-using Assets.Scripts.View.Items;
+using Core.Data;
+using View.Items;
 
-namespace Assets.Scripts.View.Data
+namespace View.Data
 {
     public class FieldViewMap
     {

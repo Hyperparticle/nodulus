@@ -1,10 +1,8 @@
 using System;
-using System.Collections;
-using Assets.Scripts.View.Control;
-using Assets.Scripts.View.Game;
 using UnityEngine;
+using View.Control;
 
-namespace Assets.Scripts.View.Items
+namespace View.Items
 {
     public class ButtonScript : MonoBehaviour
     {
@@ -16,7 +14,7 @@ namespace Assets.Scripts.View.Items
         public LeanTweenType ButtonEase { get { return GameDef.Get.ButtonEase; } }
         private const float ButtonDistance = 0.5f;
 
-        void OnMouseDown()
+        private void OnMouseDown()
         {
             if (LeanTween.isTweening(gameObject)) {
                 return;

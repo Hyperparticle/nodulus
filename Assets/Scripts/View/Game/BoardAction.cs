@@ -1,13 +1,11 @@
-using Assets.Scripts.Core.Data;
-using Assets.Scripts.Core.Items;
-using Assets.Scripts.View.Control;
-using Assets.Scripts.View.Items;
-using System.Collections.Generic;
 using System.Linq;
+using Core.Data;
 using UnityEngine;
 using UnityEngine.UI;
+using View.Control;
+using View.Items;
 
-namespace Assets.Scripts.View.Game
+namespace View.Game
 {
     /// <summary>
     /// Given an action, this component modifies the puzzle model and view accordingly.
@@ -19,12 +17,15 @@ namespace Assets.Scripts.View.Game
         private PuzzleView _puzzleView;
         private PuzzleState _puzzleState;
         private Text _moveText;
+//        private readonly Queue<Utility.Tuple<NodeView, Direction>> _moveQueue 
+//            = new Queue<Utility.Tuple<NodeView, Direction>>(); 
+            
         public GameAudio GameAudio;
 
         // A lock to prevent multiple moves to be played at the same time
         private bool _viewUpdating;
 
-        void Awake()
+        private void Awake()
         {
             _puzzleView = GetComponent<PuzzleView>();
             _puzzleState = GetComponent<PuzzleState>();
@@ -38,7 +39,10 @@ namespace Assets.Scripts.View.Game
         /// </summary>
         public void Play(NodeView nodeView, Direction dir)
         {
+            // TODO: there's a race condition if this function is called multiple times in a second
             if (_viewUpdating || LeanTween.isTweening(nodeView.gameObject)) {
+                // If the animations are running, queue up the move
+//                _moveQueue.Enqueue(new Utility.Tuple<NodeView, Direction>(nodeView, dir));
                 return;
             }
 
@@ -97,8 +101,7 @@ namespace Assets.Scripts.View.Game
             // Update MoveText
             _moveText.text = _puzzleState.NumMoves.ToString();
 
-            if (_puzzleState.Win)
-            {
+            if (_puzzleState.Win) {
                 GameAudio.Play(Clip.WinBoard);
                 LeanTween.cancel(gameObject);
 
@@ -108,7 +111,11 @@ namespace Assets.Scripts.View.Game
                 }
 
                 _puzzleState.NextLevel(LevelDelay);
-            }
+            } 
+//            else if (_moveQueue.Count > 0) {
+//                var move = _moveQueue.Dequeue();
+//                Play(move.Item1, move.Item2);
+//            }
         }
 
         private void ConnectArcs(NodeView node) {

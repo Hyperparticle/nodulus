@@ -1,4 +1,4 @@
-namespace Assets.Scripts.Core.Data
+namespace Core.Data
 {
     /// <summary>
     /// A Point with a direction. Useful for uniquely identifying 

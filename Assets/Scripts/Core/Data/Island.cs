@@ -1,10 +1,8 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using Assets.Scripts.Core.Items;
+using Core.Items;
 
-namespace Assets.Scripts.Core.Data
+namespace Core.Data
 {
     /// <summary>
     /// An Island is a subgraph of the game board grid. It maintains a collection 
@@ -136,25 +134,23 @@ namespace Assets.Scripts.Core.Data
             }
 
             // Find all parent node connections
-            foreach (var connection in start.Connections
-                .Where(connection => !nodes.Contains(connection.ParentNode)))
+            if (start.Connections
+                .Where(connection => !nodes.Contains(connection.ParentNode))
+                .Select(connection => FindPath(connection.ParentNode, end, nodes, path))
+                .Any(found => found))
             {
-                var found = FindPath(connection.ParentNode, end, nodes, path);
-                if (found) {
-                    path.Add(start);
-                    return true;
-                }
+                path.Add(start);
+                return true;
             }
 
             // Find all connected node connections
-            foreach (var connection in start.Connections
-                .Where(connection => !nodes.Contains(connection.ConnectedNode)))
+            if (start.Connections
+                .Where(connection => !nodes.Contains(connection.ConnectedNode))
+                .Select(connection => FindPath(connection.ConnectedNode, end, nodes, path))
+                .Any(found => found))
             {
-                var found = FindPath(connection.ConnectedNode, end, nodes, path);
-                if (found) {
-                    path.Add(start);
-                    return true;
-                }
+                path.Add(start);
+                return true;
             }
 
             return false;

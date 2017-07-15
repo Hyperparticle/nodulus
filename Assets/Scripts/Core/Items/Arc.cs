@@ -1,6 +1,6 @@
-using Assets.Scripts.Core.Data;
+using Core.Data;
 
-namespace Assets.Scripts.Core.Items
+namespace Core.Items
 {
     /// <summary>
     /// An Arc represents a visible connection between two nodes, allowing a traversible
@@ -67,12 +67,13 @@ namespace Assets.Scripts.Core.Items
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj)) return false;
-            return obj is Arc && Equals((Arc) obj);
+            var arc = obj as Arc;
+            return arc != null && Equals(arc);
         }
 
         public override int GetHashCode()
         {
-            return (Field != null ? Field.GetHashCode() : 0);
+            return Field != null ? Field.GetHashCode() : 0;
         }
 
         public bool Equals(Arc other)

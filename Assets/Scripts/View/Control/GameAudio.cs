@@ -1,14 +1,13 @@
-using System.Collections;
 using UnityEngine;
 
-namespace Assets.Scripts.View.Control
+namespace View.Control
 {
     public class GameAudio : MonoBehaviour
     {
         public AudioClip[] AudioClips;
         private AudioSource _audioSource;
 
-        void Awake()
+        private void Awake()
         {
             _audioSource = GetComponent<AudioSource>();
         }

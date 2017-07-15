@@ -1,7 +1,7 @@
 using System.Collections.Generic;
-using Assets.Scripts.Core.Items;
+using Core.Items;
 
-namespace Assets.Scripts.Core.Data
+namespace Core.Data
 {
     /// <summary>
     /// Maintains a disjoint set of node islands. This is used to determine if two nodes are 

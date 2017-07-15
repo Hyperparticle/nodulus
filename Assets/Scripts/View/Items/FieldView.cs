@@ -1,8 +1,8 @@
-using Assets.Scripts.Core.Items;
-using Assets.Scripts.View.Control;
+using Core.Items;
 using UnityEngine;
+using View.Control;
 
-namespace Assets.Scripts.View.Items
+namespace View.Items
 {
     /// <summary>
     /// A FieldView represents the view for an field in the gameboard. It is responsible
@@ -25,7 +25,7 @@ namespace Assets.Scripts.View.Items
             get { return new Vector3(transform.localScale.x, 1) + transform.localPosition; }
         }
 
-        void Awake()
+        private void Awake()
         {
             _fieldScale = GetComponent<ScaleScript>();
             _colorizer = GetComponent<Colorizer>();

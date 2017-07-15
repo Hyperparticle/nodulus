@@ -1,9 +1,9 @@
-using Assets.Scripts.Core.Data;
-using Assets.Scripts.Core.Items;
-using Assets.Scripts.View.Game;
+using Core.Data;
+using Core.Items;
 using UnityEngine;
+using View.Game;
 
-namespace Assets.Scripts.View.Items
+namespace View.Items
 {
     public class ScaleScript : MonoBehaviour
     {

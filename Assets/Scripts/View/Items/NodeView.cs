@@ -1,11 +1,10 @@
 using System;
-using System.Collections.Generic;
-using Assets.Scripts.Core.Data;
-using Assets.Scripts.Core.Items;
-using Assets.Scripts.View.Control;
+using Core.Data;
+using Core.Items;
 using UnityEngine;
+using View.Control;
 
-namespace Assets.Scripts.View.Items
+namespace View.Items
 {
     /// <summary>
     /// A NodeView represents the view for an node in the gameboard. It is responsible
@@ -34,7 +33,7 @@ namespace Assets.Scripts.View.Items
             return Node.Fields[dir];
         }
 
-        void Awake()
+        private void Awake()
         {
             _nodeScale = GetComponent<ScaleScript>();
             _colorizer = GetComponentInChildren<Colorizer>();

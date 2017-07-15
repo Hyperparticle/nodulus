@@ -1,10 +1,7 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Assets.Scripts.Core.Data;
+using Core.Data;
 
-namespace Assets.Scripts.View.Data
+namespace View.Data
 {
     public struct RotateRequest
     {

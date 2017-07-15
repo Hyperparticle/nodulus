@@ -1,11 +1,9 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using Assets.Scripts.Core.Game;
-using Assets.Scripts.Core.Items;
+using Core.Game;
+using Core.Items;
 
-namespace Assets.Scripts.Core.Data
+namespace Core.Data
 {
     public class PlayerState
     {

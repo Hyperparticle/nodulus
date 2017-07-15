@@ -1,39 +1,41 @@
 ﻿using System;
 using UnityEngine;
 
-namespace Assets.Scripts.Utility
+namespace Utility
 {
     [System.Serializable]
     public struct HsbColor
     {
-        public float h;
-        public float s;
-        public float b;
-        public float a;
+        public float H;
+        public float S;
+        public float B;
+        public float A;
+
+        private const float Tolerance = float.Epsilon * 64;
 
         public HsbColor(float h, float s, float b, float a)
         {
-            this.h = h;
-            this.s = s;
-            this.b = b;
-            this.a = a;
+            this.H = h;
+            this.S = s;
+            this.B = b;
+            this.A = a;
         }
 
         public HsbColor(float h, float s, float b)
         {
-            this.h = h;
-            this.s = s;
-            this.b = b;
-            this.a = 1f;
+            this.H = h;
+            this.S = s;
+            this.B = b;
+            this.A = 1f;
         }
 
         public HsbColor(Color col)
         {
             var temp = FromColor(col);
-            h = temp.h;
-            s = temp.s;
-            b = temp.b;
-            a = temp.a;
+            H = temp.H;
+            S = temp.S;
+            B = temp.B;
+            A = temp.A;
         }
 
         public static HsbColor FromColor(Color color)
@@ -56,52 +58,52 @@ namespace Assets.Scripts.Utility
 
             if (max > min)
             {
-                if (g == max)
+                if (Math.Abs(g - max) < Tolerance)
                 {
-                    ret.h = (b - r) / dif * 60f + 120f;
+                    ret.H = (b - r) / dif * 60f + 120f;
                 }
-                else if (b == max)
+                else if (Math.Abs(b - max) < Tolerance)
                 {
-                    ret.h = (r - g) / dif * 60f + 240f;
+                    ret.H = (r - g) / dif * 60f + 240f;
                 }
                 else if (b > g)
                 {
-                    ret.h = (g - b) / dif * 60f + 360f;
+                    ret.H = (g - b) / dif * 60f + 360f;
                 }
                 else
                 {
-                    ret.h = (g - b) / dif * 60f;
+                    ret.H = (g - b) / dif * 60f;
                 }
-                if (ret.h < 0)
+                if (ret.H < 0)
                 {
-                    ret.h = ret.h + 360f;
+                    ret.H = ret.H + 360f;
                 }
             }
             else
             {
-                ret.h = 0;
+                ret.H = 0;
             }
 
-            ret.h *= 1f / 360f;
-            ret.s = (dif / max) * 1f;
-            ret.b = max;
+            ret.H *= 1f / 360f;
+            ret.S = dif / max * 1f;
+            ret.B = max;
 
             return ret;
         }
 
         public static Color ToColor(HsbColor hsbColor)
         {
-            var r = hsbColor.b;
-            var g = hsbColor.b;
-            var b = hsbColor.b;
+            var r = hsbColor.B;
+            var g = hsbColor.B;
+            var b = hsbColor.B;
 
-            if (hsbColor.s == 0) return new Color(Mathf.Clamp01(r), Mathf.Clamp01(g), Mathf.Clamp01(b), hsbColor.a);
+            if (Math.Abs(hsbColor.S) < Tolerance) return new Color(Mathf.Clamp01(r), Mathf.Clamp01(g), Mathf.Clamp01(b), hsbColor.A);
 
-            var max = hsbColor.b;
-            var dif = hsbColor.b * hsbColor.s;
-            var min = hsbColor.b - dif;
+            var max = hsbColor.B;
+            var dif = hsbColor.B * hsbColor.S;
+            var min = hsbColor.B - dif;
 
-            var h = hsbColor.h * 360f;
+            var h = hsbColor.H * 360f;
 
             if (h < 60f)
             {
@@ -146,7 +148,7 @@ namespace Assets.Scripts.Utility
                 b = 0;
             }
 
-            return new Color(Mathf.Clamp01(r), Mathf.Clamp01(g), Mathf.Clamp01(b), hsbColor.a);
+            return new Color(Mathf.Clamp01(r), Mathf.Clamp01(g), Mathf.Clamp01(b), hsbColor.A);
         }
 
         public Color ToColor()
@@ -156,40 +158,39 @@ namespace Assets.Scripts.Utility
 
         public override string ToString()
         {
-            return "H:" + h + " S:" + s + " B:" + b;
+            return "H:" + H + " S:" + S + " B:" + B;
         }
 
-        private const float Tolerance = float.Epsilon * 10;
         public static HsbColor Lerp(HsbColor a, HsbColor b, float t)
         {
             float h, s;
 
             //check special case black (color.b==0): interpolate neither hue nor saturation!
             //check special case grey (color.s==0): don't interpolate hue!
-            if (Math.Abs(a.b) < Tolerance)
+            if (Math.Abs(a.B) < Tolerance)
             {
-                h = b.h;
-                s = b.s;
+                h = b.H;
+                s = b.S;
             }
-            else if (Math.Abs(b.b) < Tolerance)
+            else if (Math.Abs(b.B) < Tolerance)
             {
-                h = a.h;
-                s = a.s;
+                h = a.H;
+                s = a.S;
             }
             else
             {
-                if (Math.Abs(a.s) < Tolerance)
+                if (Math.Abs(a.S) < Tolerance)
                 {
-                    h = b.h;
+                    h = b.H;
                 }
-                else if (Math.Abs(b.s) < Tolerance)
+                else if (Math.Abs(b.S) < Tolerance)
                 {
-                    h = a.h;
+                    h = a.H;
                 }
                 else
                 {
                     // works around bug with LerpAngle
-                    var angle = Mathf.LerpAngle(a.h * 360f, b.h * 360f, t);
+                    var angle = Mathf.LerpAngle(a.H * 360f, b.H * 360f, t);
                     while (angle < 0f)
                         angle += 360f;
                     while (angle > 360f)
@@ -197,10 +198,10 @@ namespace Assets.Scripts.Utility
                     h = angle / 360f;
                 }
 
-                s = Mathf.Lerp(a.s, b.s, t);
+                s = Mathf.Lerp(a.S, b.S, t);
             }
 
-            return new HsbColor(h, s, Mathf.Lerp(a.b, b.b, t), Mathf.Lerp(a.a, b.a, t));
+            return new HsbColor(h, s, Mathf.Lerp(a.B, b.B, t), Mathf.Lerp(a.A, b.A, t));
         }
     }
 }

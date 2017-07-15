@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Assets.Scripts.View.Control
+namespace View.Control
 {
     public class CameraScript : MonoBehaviour
     {

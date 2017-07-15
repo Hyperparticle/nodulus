@@ -1,7 +1,7 @@
-using Assets.Scripts.View.Game;
 using UnityEngine;
+using View.Game;
 
-namespace Assets.Scripts.View.Control
+namespace View.Control
 {
     public class PanScript : MonoBehaviour
     {
@@ -11,7 +11,7 @@ namespace Assets.Scripts.View.Control
         private PuzzleScale _puzzleScale;
         private Vector3 _lastPosition;
 
-        void Awake()
+        private void Awake()
         {
             _puzzleScale = GetComponentInChildren<PuzzleScale>();
         }
@@ -31,7 +31,7 @@ namespace Assets.Scripts.View.Control
             _lastPosition = Input.mousePosition;
         }
 
-        void Update()
+        private void Update()
         {
             if (Input.GetKeyDown(PanCode))
             {

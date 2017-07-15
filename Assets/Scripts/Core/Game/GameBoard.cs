@@ -1,10 +1,9 @@
-using System;
 using System.Collections.Generic;
-using Assets.Scripts.Core.Builders;
-using Assets.Scripts.Core.Data;
-using Assets.Scripts.Core.Items;
+using Core.Builders;
+using Core.Data;
+using Core.Items;
 
-namespace Assets.Scripts.Core.Game
+namespace Core.Game
 {
     /// <summary>
     /// A GameBoard is a <seealso cref="Grid"/> that keeps track of 

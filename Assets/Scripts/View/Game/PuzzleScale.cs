@@ -1,8 +1,8 @@
-using Assets.Scripts.Core.Data;
-using Assets.Scripts.View.Control;
+using Core.Data;
 using UnityEngine;
+using View.Control;
 
-namespace Assets.Scripts.View.Game
+namespace View.Game
 {
     public class PuzzleScale : MonoBehaviour
     {
@@ -23,7 +23,7 @@ namespace Assets.Scripts.View.Game
 
         public Vector2 CameraDimensions { get; private set; }
 
-        void Awake()
+        private void Awake()
         {
             Get = this;
 
@@ -35,7 +35,7 @@ namespace Assets.Scripts.View.Game
         public void Init(Point startNode, Point boardSize)
         {
             CameraDimensions = GetCameraDimensions();
-            Dimensions = new Vector2(boardSize.x, boardSize.y)*Scaling;
+            Dimensions = new Vector2(boardSize.X, boardSize.Y)*Scaling;
             GetClamp();
 
             transform.localEulerAngles = BoardRotation;
@@ -62,7 +62,6 @@ namespace Assets.Scripts.View.Game
 
         private void GetClamp()
         {
-            var boardOffset = CameraDimensions;
             var margin = NodeScaling * Vector2.one; // Add margin to prevent node cutoff
 
             var minClamp = CameraDimensions / 2f - Dimensions - margin;

@@ -1,10 +1,10 @@
 using UnityEngine;
 
-namespace Assets.Scripts.View.Control
+namespace View.Control
 {
     public class GameDef : MonoBehaviour
     {
-        void Awake()
+        private void Awake()
         {
             Get = this;
         }

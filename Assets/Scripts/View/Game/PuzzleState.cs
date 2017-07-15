@@ -1,14 +1,13 @@
 using System.Collections.Generic;
 using System.Linq;
-using Assets.Scripts.Core.Data;
-using Assets.Scripts.Core.Game;
-using Assets.Scripts.View.Control;
-using Assets.Scripts.View.Data;
-using Assets.Scripts.View.Items;
+using Core.Data;
+using Core.Game;
 using UnityEngine;
-using Assets.Scripts.Core.Items;
+using View.Control;
+using View.Data;
+using View.Items;
 
-namespace Assets.Scripts.View.Game
+namespace View.Game
 {
     public class PuzzleState : MonoBehaviour
     {
@@ -106,14 +105,14 @@ namespace Assets.Scripts.View.Game
             return _arcMap.GetArcs(pos);
         }
 
-        void Awake()
+        private void Awake()
         {
             _puzzleSpawner = GetComponent<PuzzleSpawner>();
             _puzzleView = GetComponent<PuzzleView>();
             _boardInput = GetComponent<BoardInput>();
         }
 
-        void Start()
+        private void Start()
         {
             // Start with level 0
             Init(0);
@@ -157,7 +156,7 @@ namespace Assets.Scripts.View.Game
             // Push move
             if (IsPulled) {
                 FieldView fieldView;
-                bool pushMove = _fieldMap.TryGetField(nodeView.Position, dir, out fieldView) &&
+                var pushMove = _fieldMap.TryGetField(nodeView.Position, dir, out fieldView) &&
                        PushArc(nodeView, fieldView);
 
                 if (pushMove) {
@@ -171,7 +170,7 @@ namespace Assets.Scripts.View.Game
 
             // Pull move
             ArcView arcView;
-            bool pullMove = _arcMap.TryGetArc(nodeView.Position, dir.Opposite(), out arcView) &&
+            var pullMove = _arcMap.TryGetArc(nodeView.Position, dir.Opposite(), out arcView) &&
                    PullArc(arcView, dir);
             _lastNodePulled = nodeView;
             return pullMove;
