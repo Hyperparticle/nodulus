@@ -1,15 +1,19 @@
-# Nodule
+# Nodulus
 
-## Themes
+Nodulus is a puzzle game designed for touch that involves twisting and turning rods attached to cubes, created using Unity3D.
 
-### Theme 1
-Node Color: C3260BFF
-Node Final Color: 095EC1FF
-Arc Color: 4CB00CFF
-Field Color: 20A31564
+## Contributing
 
-### Theme 2
-Node Color: 20A315FF
-Node Final Color: C5320DFF
-Arc Color: 607D8BFF
-Field Color: 20A31564
+Have a cool idea for this game and want to build it into the game? Just open a GitHub issue with your idea for feedback.
+
+## Libraries and Resources Used
+
+1. [TouchKit](https://github.com/prime31/TouchKit)
+2. [LeanTween](https://www.assetstore.unity3d.com/en/#!/content/3595)
+3. [YamlDotNet for Unity](https://www.assetstore.unity3d.com/en/#!/content/36292)
+4. [Post Processing Stack](https://www.assetstore.unity3d.com/en/#!/content/83912)
+5. [Dice](https://www.assetstore.unity3d.com/en/#!/content/26670)
+6. [Dust Particle System](https://forum.unity3d.com/threads/new-simple-dust-particle-system.341921/)
+
+## Credits
+Created by Dan Kondratyuk. Open sourced under the [MIT license](LICENSE.md). :heart:
