@@ -13,7 +13,6 @@ Have a cool idea for this game and want to build it into the game? Just open a G
 3. [YamlDotNet for Unity](https://www.assetstore.unity3d.com/en/#!/content/36292)
 4. [Post Processing Stack](https://www.assetstore.unity3d.com/en/#!/content/83912)
 5. [Dice](https://www.assetstore.unity3d.com/en/#!/content/26670)
-6. [Dust Particle System](https://forum.unity3d.com/threads/new-simple-dust-particle-system.341921/)
 
 ## Credits
 Created, designed, and developed by Dan Kondratyuk. Please give credit to this project if you use it elsewhere. Open sourced under the [MIT license](LICENSE.md). :heart:
