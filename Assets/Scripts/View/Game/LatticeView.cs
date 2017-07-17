@@ -71,12 +71,15 @@ namespace View.Game
                 linePoints.Add(new Vector3((horizontalLinesCount - 1) * distanceBetweenLines, i * distanceBetweenLines, ZOffset));
             }
 
-            _grid = new VectorLine("Grid", linePoints, LineWidth) { drawTransform = transform.parent.parent, color = GridColor };
+            _grid = new VectorLine("Grid", linePoints, LineWidth) {
+                drawTransform = transform.parent.parent,
+                color = GridColor
+            };
             _grid.SetColor(new Color(GridColor.r, GridColor.g, GridColor.b, 0f));
             _grid.Draw3DAuto();
 
             _grid.rectTransform.SetPositionAndRotation(transform.position, transform.rotation);
-
+            
             LeanTween.value(gameObject, 0f, _gridAlpha, FadeTime)
                 .setDelay(FadeInDelay)
                 .setOnUpdate(a => _grid.SetColor(new Color(GridColor.r, GridColor.g, GridColor.b, a)))

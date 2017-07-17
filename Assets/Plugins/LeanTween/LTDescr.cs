@@ -91,8 +91,6 @@ public class LTDescr
 
 	public LTDescrOptional _optional = new LTDescrOptional();
 
-	private static uint global_counter = 0;
-
 	public override string ToString(){
 		return (trans!=null ? "name:"+trans.gameObject.name : "gameObject:null")+" toggle:"+toggle+" passed:"+passed+" time:"+time+" delay:"+delay+" direction:"+direction+" from:"+from+" to:"+to+" diff:"+diff+" type:"+type+" ease:"+easeType+" useEstimatedTime:"+useEstimatedTime+" id:"+id+" hasInitiliazed:"+hasInitiliazed;
 	}
@@ -141,6 +139,7 @@ public class LTDescr
 	public void reset(){
 		this.toggle = this.useRecursion = this.usesNormalDt = true;
 		this.trans = null;
+		this.spriteRen = null;
 		this.passed = this.delay = this.lastVal = 0.0f;
 		this.hasUpdateCallback = this.useEstimatedTime = this.useFrames = this.hasInitiliazed = this.onCompleteOnRepeat = this.destroyOnComplete = this.onCompleteOnStart = this.useManualTime = this.hasExtraOnCompletes = false;
 		this.easeType = LeanTweenType.linear;
@@ -153,9 +152,7 @@ public class LTDescr
 		this.from = this.to = Vector3.zero;
 		this._optional.reset();
 
-		global_counter++;
-		if(global_counter>0x8000)
-			global_counter = 0;
+
 	}
 
 	// Initialize and Internal Methods
@@ -382,14 +379,14 @@ public class LTDescr
 			this.easeInternal = this.alpha;
 			break;	
 			#else
-			SpriteRenderer ren = trans.gameObject.GetComponent<SpriteRenderer>();
+			SpriteRenderer ren = trans.GetComponent<SpriteRenderer>();
 			if(ren!=null){
 				this.fromInternal.x = ren.color.a;
 			}else{
-				if(trans.gameObject.GetComponent<Renderer>()!=null && trans.gameObject.GetComponent<Renderer>().material.HasProperty("_Color")){
-					this.fromInternal.x = trans.gameObject.GetComponent<Renderer>().material.color.a;
-				}else if(trans.gameObject.GetComponent<Renderer>()!=null && trans.gameObject.GetComponent<Renderer>().material.HasProperty("_TintColor")){
-					Color col = trans.gameObject.GetComponent<Renderer>().material.GetColor("_TintColor");
+				if(trans.GetComponent<Renderer>()!=null && trans.GetComponent<Renderer>().material.HasProperty("_Color")){
+					this.fromInternal.x = trans.GetComponent<Renderer>().material.color.a;
+				}else if(trans.GetComponent<Renderer>()!=null && trans.GetComponent<Renderer>().material.HasProperty("_TintColor")){
+					Color col = trans.GetComponent<Renderer>().material.GetColor("_TintColor");
 					this.fromInternal.x = col.a;
 				}else if(trans.childCount>0){
 					foreach (Transform child in trans) {
@@ -438,7 +435,7 @@ public class LTDescr
 	public LTDescr setTextAlpha(){
 		this.type = TweenAction.TEXT_ALPHA;
 		this.initInternal = ()=>{
-			this.uiText = trans.gameObject.GetComponent<UnityEngine.UI.Text>();
+			this.uiText = trans.GetComponent<UnityEngine.UI.Text>();
 			this.fromInternal.x = this.uiText != null ? this.uiText.color.a : 1f;
 		};
 		this.easeInternal = ()=>{ textAlphaRecursive( trans, easeMethod().x, this.useRecursion ); };
@@ -485,15 +482,15 @@ public class LTDescr
 			}
 			}
 			#else
-			SpriteRenderer renColor = trans.gameObject.GetComponent<SpriteRenderer>();
+			SpriteRenderer renColor = trans.GetComponent<SpriteRenderer>();
 			if(renColor!=null){
 				this.setFromColor( renColor.color );
 			}else{
-				if(trans.gameObject.GetComponent<Renderer>()!=null && trans.gameObject.GetComponent<Renderer>().material.HasProperty("_Color")){
-					Color col = trans.gameObject.GetComponent<Renderer>().material.color;
+				if(trans.GetComponent<Renderer>()!=null && trans.GetComponent<Renderer>().material.HasProperty("_Color")){
+					Color col = trans.GetComponent<Renderer>().material.color;
 					this.setFromColor( col );
-				}else if(trans.gameObject.GetComponent<Renderer>()!=null && trans.gameObject.GetComponent<Renderer>().material.HasProperty("_TintColor")){
-					Color col = trans.gameObject.GetComponent<Renderer>().material.GetColor ("_TintColor");
+				}else if(trans.GetComponent<Renderer>()!=null && trans.GetComponent<Renderer>().material.HasProperty("_TintColor")){
+					Color col = trans.GetComponent<Renderer>().material.GetColor ("_TintColor");
 					this.setFromColor( col );
 				}else if(trans.childCount>0){
 					foreach (Transform child in trans) {
@@ -571,7 +568,7 @@ public class LTDescr
 	public LTDescr setTextColor(){
 		this.type = TweenAction.TEXT_COLOR;
 		this.initInternal = ()=>{
-			this.uiText = trans.gameObject.GetComponent<UnityEngine.UI.Text>();
+			this.uiText = trans.GetComponent<UnityEngine.UI.Text>();
 			this.setFromColor( this.uiText != null ? this.uiText.color : Color.white );
 		};
 		this.easeInternal = ()=>{
@@ -591,11 +588,11 @@ public class LTDescr
 	public LTDescr setCanvasAlpha(){
 		this.type = TweenAction.CANVAS_ALPHA;
 		this.initInternal = ()=>{
-			this.uiImage = trans.gameObject.GetComponent<UnityEngine.UI.Image>();
+			this.uiImage = trans.GetComponent<UnityEngine.UI.Image>();
 			if(this.uiImage!=null){
 				this.fromInternal.x = this.uiImage.color.a;
 			}else{
-				this.rawImage = trans.gameObject.GetComponent<UnityEngine.UI.RawImage>();
+				this.rawImage = trans.GetComponent<UnityEngine.UI.RawImage>();
 				if(this.rawImage != null){
 					this.fromInternal.x = this.rawImage.color.a;
 				}else{
@@ -614,7 +611,7 @@ public class LTDescr
 			}
 			if(this.useRecursion){
 				alphaRecursive( this.rectTransform, val, 0 );
-				textAlphaRecursive( this.rectTransform, val);
+				textAlphaChildrenRecursive( this.rectTransform, val);
 			}
 		};
 		return this;
@@ -622,7 +619,7 @@ public class LTDescr
 
 	public LTDescr setCanvasGroupAlpha(){
 		this.type = TweenAction.CANVASGROUP_ALPHA;
-		this.initInternal = ()=>{this.fromInternal.x = trans.gameObject.GetComponent<CanvasGroup>().alpha;};
+		this.initInternal = ()=>{this.fromInternal.x = trans.GetComponent<CanvasGroup>().alpha;};
 		this.easeInternal = ()=>{ this.trans.GetComponent<CanvasGroup>().alpha = easeMethod().x; };
 		return this;
 	}
@@ -630,9 +627,9 @@ public class LTDescr
 	public LTDescr setCanvasColor(){
 		this.type = TweenAction.CANVAS_COLOR;
 		this.initInternal = ()=>{
-			this.uiImage = trans.gameObject.GetComponent<UnityEngine.UI.Image>();
+			this.uiImage = trans.GetComponent<UnityEngine.UI.Image>();
 			if(this.uiImage==null){
-				this.rawImage = trans.gameObject.GetComponent<UnityEngine.UI.RawImage>();
+				this.rawImage = trans.GetComponent<UnityEngine.UI.RawImage>();
 				this.setFromColor( this.rawImage!=null ? this.rawImage.color : Color.white );
 			}else{
 				this.setFromColor( this.uiImage.color );
@@ -724,7 +721,7 @@ public class LTDescr
 	public LTDescr setCanvasPlaySprite(){
 		this.type = TweenAction.CANVAS_PLAYSPRITE;
 		this.initInternal = ()=>{
-			this.uiImage = trans.gameObject.GetComponent<UnityEngine.UI.Image>();
+			this.uiImage = trans.GetComponent<UnityEngine.UI.Image>();
 			this.fromInternal.x = 0f;
 		};
 		this.easeInternal = ()=>{
@@ -1111,8 +1108,23 @@ public class LTDescr
 		}
 	}
 
+	private static void textAlphaChildrenRecursive( Transform trans, float val, bool useRecursion = true ){
+		
+		if(useRecursion && trans.childCount>0){
+			foreach (Transform child in trans) {
+				UnityEngine.UI.Text uiText = child.GetComponent<UnityEngine.UI.Text>();
+				if(uiText!=null){
+					Color c = uiText.color;
+					c.a = val;
+					uiText.color = c;
+				}
+				textAlphaChildrenRecursive(child, val);
+			}
+		}
+	}
+
 	private static void textAlphaRecursive( Transform trans, float val, bool useRecursion = true ){
-		UnityEngine.UI.Text uiText = trans.gameObject.GetComponent<UnityEngine.UI.Text>();
+		UnityEngine.UI.Text uiText = trans.GetComponent<UnityEngine.UI.Text>();
 		if(uiText!=null){
 			Color c = uiText.color;
 			c.a = val;
@@ -1128,7 +1140,7 @@ public class LTDescr
 	private static void textColorRecursive(Transform trans, Color toColor ){
 		if(trans.childCount>0){
 			foreach (Transform child in trans) {
-				UnityEngine.UI.Text uiText = child.gameObject.GetComponent<UnityEngine.UI.Text>();
+				UnityEngine.UI.Text uiText = child.GetComponent<UnityEngine.UI.Text>();
 				if(uiText!=null){
 					uiText.color = toColor;
 				}
@@ -1171,6 +1183,15 @@ public class LTDescr
 		return this;
 	}
 
+	/**
+	* Set Axis optional axis for tweens where it is relevant
+	* 
+	* @method setAxis
+	* @param {Vector3} axis either the tween rotates around, or the direction it faces in the case of setOrientToPath
+	* @return {LTDescr} LTDescr an object that distinguishes the tween
+	* @example
+	* LeanTween.move( ltLogo, path, 1.0f ).setEase(LeanTweenType.easeOutQuad).setOrientToPath(true).setAxis(Vector3.forward);
+	*/
 	public LTDescr setAxis( Vector3 axis ){
 		this._optional.axis = axis;
 		return this;
@@ -1484,12 +1505,9 @@ public class LTDescr
 
 	private Vector3 easeInOutExpo(){
 		val = this.ratioPassed * 2f;
-		val = Mathf.Pow(2f, 10f * (val - 1f));
-		if (val < 1f)
-			return new Vector3(this.diffDiv2.x * val + this.from.x, this.diffDiv2.y * val + this.from.y, this.diffDiv2.z * val + this.from.z);
+		if (val < 1) return this.diffDiv2 * Mathf.Pow(2, 10 * (val - 1)) + this.from;
 		val--;
-		val = (-Mathf.Pow(2f, -10f * val) + 2f);
-		return new Vector3(this.diffDiv2.x * val + this.from.x, this.diffDiv2.y * val + this.from.y, this.diffDiv2.z * val + this.from.z);
+		return this.diffDiv2 * (-Mathf.Pow(2, -10 * val) + 2) + this.from;
 	}
 
 	private Vector3 easeInCirc(){
@@ -1523,24 +1541,26 @@ public class LTDescr
 			this.diff.z - LeanTween.easeOutBounce(0, this.diff.z, val) + this.from.z);
 	}
 
-	private Vector3 easeOutBounce(){
+	private Vector3 easeOutBounce ()
+	{
 		val = ratioPassed;
-		if (val < (1 / 2.75f)){
-			val = (7.5625f * val * val);
-			return this.diff * val + this.from;
-		}else if (val < (2 / 2.75f)){
-			val -= (1.5f / 2.75f);
-			val = (7.5625f * (val) * val + .75f);
-			return this.diff * val + this.from;
-		}else if (val < (2.5 / 2.75)){
-			val -= (2.25f / 2.75f);
-			val = (7.5625f * (val) * val + .9375f);
-			return this.diff * val + this.from;
-		}else{
-			val -= (2.625f / 2.75f);
-			val = 7.5625f * (val) * val + .984375f;
-			return this.diff * val + this.from;
+		float valM, valN; // bounce values
+		if (val < (valM = 1 - 1.75f * this.overshoot / 2.75f)) {
+			val = 1 / valM / valM * val * val;
+		} else if (val < (valN = 1 - .75f * this.overshoot / 2.75f)) {
+			val -= (valM + valN) / 2;
+			// first bounce, height: 1/4
+			val = 7.5625f * val * val + 1 - .25f * this.overshoot * this.overshoot;
+		} else if (val < (valM = 1 - .25f * this.overshoot / 2.75f)) {
+			val -= (valM + valN) / 2;
+			// second bounce, height: 1/16
+			val = 7.5625f * val * val + 1 - .0625f * this.overshoot * this.overshoot;
+		} else { // valN = 1
+			val -= (valM + 1) / 2;
+			// third bounce, height: 1/64
+			val = 7.5625f * val * val + 1 - .015625f * this.overshoot * this.overshoot;
 		}
+		return this.diff * val + this.from;
 	}
 
 	private Vector3 easeInOutBounce(){
@@ -1698,6 +1718,7 @@ public class LTDescr
 		this.from = from;
 		// this.hasInitiliazed = true; // this is set, so that the "from" value isn't overwritten later on when the tween starts
 		this.diff = this.to - this.from;
+		this.diffDiv2 = this.diff * 0.5f;
 		return this;
 	}
 
@@ -1715,10 +1736,26 @@ public class LTDescr
 		return this;
 	}
 
-	public LTDescr setId( uint id ){
+	public LTDescr setId( uint id, uint global_counter ){
 		this._id = id;
 		this.counter = global_counter;
 		// Debug.Log("Global counter:"+global_counter);
+		return this;
+	}
+
+	/**
+	* Set the point of time the tween will start in
+	* @method setPassed
+	* @param {float} passedTime:float the length of time in seconds the tween will start in
+	* @return {LTDescr} LTDescr an object that distinguishes the tween
+	* @example
+	* int tweenId = LeanTween.moveX(gameObject, 5f, 2.0f ).id;<br>
+	* // Later<br>
+	* LTDescr descr = description( tweenId );<br>
+	* descr.setPassed( 1f );<br>
+	*/
+	public LTDescr setPassed( float passed ){
+		this.passed = passed;
 		return this;
 	}
 

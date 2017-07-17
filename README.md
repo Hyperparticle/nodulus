@@ -16,4 +16,4 @@ Have a cool idea for this game and want to build it into the game? Just open a G
 6. [Dust Particle System](https://forum.unity3d.com/threads/new-simple-dust-particle-system.341921/)
 
 ## Credits
-Created by Dan Kondratyuk. Open sourced under the [MIT license](LICENSE.md). :heart:
+Created, designed, and developed by Dan Kondratyuk. Please give credit to this project if you use it elsewhere. Open sourced under the [MIT license](LICENSE.md). :heart:

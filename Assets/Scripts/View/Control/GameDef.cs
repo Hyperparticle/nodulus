@@ -12,33 +12,33 @@ namespace View.Control
         // TODO: Move all constants to a configuration file
 
         // Board Scaling
-        public float Scaling = 2.5f;
+        public float Scaling = 2f;
         public float NodeScaling = 1.0f;
         public float EdgeScaling = 1.0f;
         public float BoardScaling = 1.0f;
         public float BoardPadding = 1.0f;
-        public Vector3 BoardRotation = new Vector3(22.5f, 12.25f, 0f);
+        public Vector3 BoardRotation = new Vector3(24f, 12f, 0f);
 
         // Board Input
-        public float MinSwipeDistanceCm = 0.5f;
+        public float MinSwipeDistanceCm = 1.5f;
         public float MedSwipeDistanceCm = 3f;
         public float MaxSwipeDistanceCm = 4.5f;
 
         // Item Colors
         // TODO: add color themes
-        public Color NodeColor = new Color32(195, 38, 11, 255);
-        public Color NodeFinalColor = new Color32(9, 94, 193, 255);
-        public Color ArcColor = new Color32(76, 176, 12, 255);
-        public Color FieldColor = new Color32(32, 163, 21, 100);
+        public Color NodeColor = new Color32(85, 134, 171, 255);
+        public Color NodeFinalColor = new Color32(119, 231, 115, 255);
+        public Color ArcColor = new Color32(155, 182, 181, 255);
+        public Color FieldColor = new Color32(45, 67, 75, 90);
 
         // Colorizer
-        public float DarkBrightnessScale = 0.40f;
-        public float ColorTransitionTime = 0.5f;
-        public LeanTweenType ColorEase = LeanTweenType.easeInOutSine;
+        public float DarkBrightnessScale = 0.5f;
+        public float ColorTransitionTime = 0.275f;
+        public LeanTweenType ColorEase = LeanTweenType.easeOutBack;
 
         // Moves
-        public float NodeRotateTime = 0.33f;
-        public float ArcMoveTime = 0.25f;
+        public float NodeRotateTime = 0.275f;
+        public float ArcMoveTime = 0.2f;
         public LeanTweenType ArcMoveEase = LeanTweenType.easeInOutSine;
 
         // Buttons

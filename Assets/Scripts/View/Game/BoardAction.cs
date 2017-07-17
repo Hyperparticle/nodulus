@@ -47,7 +47,7 @@ namespace View.Game
         {
             if (_viewUpdating || LeanTween.isTweening(nodeView.gameObject) || !_puzzleSpawner.FinishedSpawn) {
                 // If the animations are running, queue up the move
-                if (_moveQueue.Count < 4) {
+                if (_moveQueue.Count < _maxMovesInQueue) {
                     _moveQueue.Enqueue(new Utility.Tuple<NodeView, Direction>(nodeView, dir));
                 }
                 
