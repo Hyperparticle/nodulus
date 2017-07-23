@@ -25,6 +25,8 @@ namespace View.Game
 
         private NodeView _lastNodePulled;
 
+        public int StartLevel = 0;
+
         public ArcView PulledArcView { get; private set; }
         public bool IsPulled { get { return _puzzle.IsPulled; } }
         public Point PullPosition { get { return _playerState.PullPosition; } }
@@ -114,8 +116,8 @@ namespace View.Game
 
         private void Start()
         {
-            // Start with level 0
-            Init(0);
+            // Start with the initially defined start level
+            Init(StartLevel);
         }
 
         /// <summary>
@@ -123,6 +125,11 @@ namespace View.Game
         /// </summary>
         public void Init(int level)
         {
+            if (level < 0 || level > _puzzleSpawner.LevelCount) {
+                Debug.LogWarning("Requested level is outside of bounds, ignoring");
+                return;
+            }
+            
             // Destroy the previous level
             _puzzleSpawner.DestroyBoard();
 

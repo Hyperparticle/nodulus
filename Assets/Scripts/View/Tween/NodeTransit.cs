@@ -2,13 +2,14 @@ using System;
 using Core.Data;
 using UnityEngine;
 using View.Control;
+using View.Items;
 
-namespace View.Items
+namespace View.Tween
 {
     /// <summary>
     /// Performs transition animations
     /// </summary>
-    public class Transit : MonoBehaviour
+    public class NodeTransit : MonoBehaviour
     {
         private AudioSource _audioSource;
         private GameObject _rotor;
@@ -56,7 +57,7 @@ namespace View.Items
 
             // Start a nice animation effect
             LeanTween.moveLocal(gameObject, pos, WaveInTime)
-                .setOnStart(() => _audioSource.PlayDelayed(WaveInAudioDelay))
+                .setOnStart(() => _audioSource.PlayDelayed(WaveInAudioDelay)) 
                 .setDelay(moveDelay)
                 .setEase(WaveInMoveEase);
 

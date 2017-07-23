@@ -44,6 +44,8 @@ namespace View.Game
         {
             get { return true; }
         }
+        
+        public int LevelCount { get { return Levels.LevelCount; } }
 
         private void Awake()
         {
@@ -54,9 +56,11 @@ namespace View.Game
         public Puzzle SpawnBoard(int level)
         {
             // Create the game board model
-            _gameBoard = Levels.BuildLevel(level);
+            var newGameBoard = Levels.BuildLevel(level);
 
-            if (_gameBoard == null) {
+            if (newGameBoard != null) {
+                _gameBoard = newGameBoard;
+            } else {
                 Debug.LogError(string.Format("The game board for level {0} is in an invalid format", level));
             }
 
@@ -149,7 +153,7 @@ namespace View.Game
 
         private void StartAnimations()
         {
-            _lattice.Init(_gameBoard.Size.X + 1, _gameBoard.Size.Y + 1, _puzzleScale.Scaling);
+            _lattice.Init(_gameBoard.Size.Y + 1, _gameBoard.Size.X + 1, _puzzleScale.Scaling);
 
             var i = 0;
             foreach (var nodeView in _nodeMap.Values) {

@@ -3,6 +3,7 @@ using Core.Data;
 using Core.Items;
 using UnityEngine;
 using View.Control;
+using View.Tween;
 
 namespace View.Items
 {
@@ -19,7 +20,7 @@ namespace View.Items
 
         private ScaleScript _nodeScale;
         private Colorizer _colorizer;
-        private Transit _transit;
+        private NodeTransit _nodeTransit;
 
         public Node Node { get; private set; }
 
@@ -37,7 +38,7 @@ namespace View.Items
         {
             _nodeScale = GetComponent<ScaleScript>();
             _colorizer = GetComponentInChildren<Colorizer>();
-            _transit = GetComponent<Transit>();
+            _nodeTransit = GetComponent<NodeTransit>();
         }
 
         public void Init(Node node, bool inStartIsland, int delay)
@@ -61,32 +62,32 @@ namespace View.Items
 
         public void WaveIn(int delay)
         {
-            _transit.WaveIn(delay);
+            _nodeTransit.WaveIn(delay);
         }
 
         public void WaveOut(int delay)
         {
-            _transit.WaveOut(delay);
+            _nodeTransit.WaveOut(delay);
         }
 
         public void Rotate(Direction dir, Action onComplete)
         {
-            _transit.Rotate90(dir, onComplete);
+            _nodeTransit.Rotate90(dir, onComplete);
         }
 
         public void Shake(Direction dir, Action onComplete)
         {
-            _transit.Shake(dir, onComplete);
+            _nodeTransit.Shake(dir, onComplete);
         }
 
         public void SlightRotate(Direction dir, int arcLength)
         {
-            _transit.SlightRotate(dir, arcLength);
+            _nodeTransit.SlightRotate(dir, arcLength);
         }
 
         public void WinAnimation()
         {
-            _transit.RotateFast();
+            _nodeTransit.RotateFast();
         }
         
         public void Highlight(bool enable)

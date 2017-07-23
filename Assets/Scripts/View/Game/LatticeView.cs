@@ -1,6 +1,9 @@
 ﻿using System.Collections.Generic;
+using Core.Data;
 using UnityEngine;
 using Vectrosity;
+using View.Items;
+using View.Tween;
 
 namespace View.Game
 {
@@ -10,6 +13,10 @@ namespace View.Game
         //public int verticalLinesCount = 5;
 
         //public float distanceBetweenLines = 2.0f;
+        
+        public GameObject GridLinePrefab;
+        public GameObject GridPointPrefab;
+        public GameObject RotorPrefab;
 
         public float LineWidth = 5.0f;
         public float ZOffset = 0.5f; // Depth offset
@@ -26,33 +33,102 @@ namespace View.Game
 
         private float _gridAlpha;
 
+        private List<GameObject> _gridObjects = new List<GameObject>();
+
+        private float _nodeWidth;
+
         private void Awake()
         {
-            _gridAlpha = GridColor.a;
-
-            _grid = new VectorLine("Grid", new List<Vector3>(), 0f) { color = GridColor };
-            _grid.Draw3DAuto();
-
-            _dots = new VectorLine("Dots", new List<Vector3>(), 0f) { color = GridColor };
-            _dots.Draw3DAuto();
+            _nodeWidth = RotorPrefab.transform.localScale.x;
+//            _gridAlpha = GridColor.a;
         }
 
         public void Init(int horizontalLinesCount, int verticalLinesCount, float distanceBetweenLines)
         {
-            LeanTween.value(gameObject, _gridAlpha, 0f, FadeTime)
-                .setOnUpdate(a => {
-                    _grid.SetColor(new Color(GridColor.r, GridColor.g, GridColor.b, a));
-                    _dots.SetColor(new Color(GridColor.r, GridColor.g, GridColor.b, a));
-                })
-                .setEase(LeanTweenType.easeInOutSine)
-                .setOnComplete(() => {
-                    // Destroy the old grid, create a new one
-                    VectorLine.Destroy(ref _grid);
-                    VectorLine.Destroy(ref _dots);
+//            LeanTween.value(gameObject, _gridAlpha, 0f, FadeTime)
+//                .setOnUpdate(a => {
+//                    _grid.SetColor(new Color(GridColor.r, GridColor.g, GridColor.b, a));
+//                    _dots.SetColor(new Color(GridColor.r, GridColor.g, GridColor.b, a));
+//                })
+//                .setEase(LeanTweenType.easeInOutSine)
+//                .setOnComplete(() => {
+//                    // Destroy the old grid, create a new one
+//                    VectorLine.Destroy(ref _grid);
+//                    VectorLine.Destroy(ref _dots);
+//
+//                    CreateNewLineGrid(horizontalLinesCount, verticalLinesCount, distanceBetweenLines);
+//                    CreateNewDotGrid(horizontalLinesCount, verticalLinesCount, distanceBetweenLines);
+//                });
 
-                    CreateNewLineGrid(horizontalLinesCount, verticalLinesCount, distanceBetweenLines);
-                    CreateNewDotGrid(horizontalLinesCount, verticalLinesCount, distanceBetweenLines);
-                });
+            foreach (var gridLine in _gridObjects) {
+                Destroy(gridLine);
+            }
+            
+            _gridObjects.Clear();
+            
+            // Horizontal lines down Y axis
+            for (var i = 0; i < horizontalLinesCount; i++) {
+                var gridLine = Instantiate(GridLinePrefab);
+                _gridObjects.Add(gridLine);
+                
+                gridLine.transform.SetParent(transform);
+                gridLine.name = "GridLineHorizontal " + i;
+                gridLine.transform.localRotation = Quaternion.identity;
+
+                gridLine.transform.localPosition = new Vector3(
+                    distanceBetweenLines * (verticalLinesCount - 1) / 2f, 
+                    i * distanceBetweenLines,
+                    ZOffset
+                );
+                
+                var scale = transform.localScale;
+                scale.Scale(new Vector3(distanceBetweenLines * (verticalLinesCount - 1) * _nodeWidth, 1, 1));
+                gridLine.transform.localScale = scale;
+                
+                gridLine.GetComponent<GridTransit>().WaveIn(i, Vector3.right);
+            }
+
+            // Vertical lines across X axis
+            for (var i = 0; i < verticalLinesCount; i++) {
+                var gridLine = Instantiate(GridLinePrefab);
+               _gridObjects.Add(gridLine);
+                
+                gridLine.transform.SetParent(transform);
+                gridLine.name = "GridLineVertical " + i;
+                gridLine.transform.localRotation = Quaternion.identity;
+
+                gridLine.transform.localPosition = new Vector3(
+                    i * distanceBetweenLines,
+                    distanceBetweenLines * (horizontalLinesCount - 1) / 2f,
+                    ZOffset
+                );
+                
+                var scale = transform.localScale;
+                scale.Scale(new Vector3(1, distanceBetweenLines * (horizontalLinesCount - 1) * _nodeWidth, 1));
+                gridLine.transform.localScale = scale;
+                
+                gridLine.GetComponent<GridTransit>().WaveIn(i, Vector3.up);
+            }
+
+            for (var i = 0; i < horizontalLinesCount; i++) {
+                for (var j = 0; j < verticalLinesCount; j++) {
+                    var gridPoint = Instantiate(GridPointPrefab);
+                    _gridObjects.Add(gridPoint);
+                
+                    gridPoint.transform.SetParent(transform);
+                    gridPoint.name = "GridPoint (" + i + "," + j + ")";
+                    gridPoint.transform.localRotation = Quaternion.identity;
+
+                    gridPoint.transform.localPosition = new Vector3(
+                        j * distanceBetweenLines, 
+                        i * distanceBetweenLines,
+                        ZOffset
+                    );
+                    
+                    gridPoint.GetComponent<GridTransit>().WaveIn(i + j, Vector3.down);
+                }
+            }
+            
         }
 
         private void CreateNewLineGrid(int horizontalLinesCount, int verticalLinesCount, float distanceBetweenLines)
