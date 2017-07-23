@@ -7,12 +7,13 @@ namespace View.Game
     public class PuzzleScale : MonoBehaviour
     {
         // Constants
-        public float Scaling { get { return GameDef.Get.Scaling; } }
-        public float NodeScaling { get { return GameDef.Get.NodeScaling; } }
-        public float EdgeScaling { get { return GameDef.Get.EdgeScaling; } } 
-        public float BoardScaling { get { return GameDef.Get.BoardScaling; } }
-        public float BoardPadding { get { return GameDef.Get.BoardPadding; } }
-        public Vector3 BoardRotation { get { return GameDef.Get.BoardRotation; } }
+        public float Scaling => GameDef.Get.Scaling;
+
+        public float NodeScaling => GameDef.Get.NodeScaling;
+        public float EdgeScaling => GameDef.Get.EdgeScaling;
+        public float BoardScaling => GameDef.Get.BoardScaling;
+        public float BoardPadding => GameDef.Get.BoardPadding;
+        public Vector3 BoardRotation => GameDef.Get.BoardRotation;
 
         public Vector2 Dimensions { get; private set; }
 
@@ -78,7 +79,7 @@ namespace View.Game
             MaxClamp = maxClamp;
         }
 
-        private Vector2 GetCameraDimensions()
+        private static Vector2 GetCameraDimensions()
         {
             var cam = Camera.main;
             var p1 = cam.ViewportToWorldPoint(new Vector3(0, 0, cam.nearClipPlane));

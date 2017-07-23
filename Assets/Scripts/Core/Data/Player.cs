@@ -6,26 +6,25 @@ namespace Core.Data
 {
     public class Player
     {
-        private readonly PlayerState _playerState;
-        public PlayerState PlayerState { get { return _playerState; } }
+        public PlayerState PlayerState { get; }
 
         public int NumMoves { get; private set; }
-        public bool Win { get { return _playerState.IsFinal; } }
-        
+        public bool Win => PlayerState.IsFinal;
+
         public Player(GameBoard gameBoard)
         {
-            _playerState = new PlayerState(gameBoard);
+            PlayerState = new PlayerState(gameBoard);
             MoveTo(gameBoard.StartNode);
         }
 
         public void MoveTo(Node node)
         {
-            _playerState.MoveTo(node);
+            PlayerState.MoveTo(node);
         }
 
         public bool IsProximal(Field field)
         {
-            return _playerState.Contains(field.ParentNode) || _playerState.Contains(field.ConnectedNode);
+            return PlayerState.Contains(field.ParentNode) || PlayerState.Contains(field.ConnectedNode);
         }
 
         public bool PlayMove(IMove move)

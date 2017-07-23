@@ -9,21 +9,21 @@ namespace Core.Items
     {
         public const int MaxLength = 10;
         
-        public Point Position { get { return ParentNode.Position; } }
-        public Point ConnectedPosition { get { return ConnectedNode.Position; } }
-        public bool IsEnabled { get { return true; } }
-        public int Length { get; private set; }
-        public Direction Direction { get; private set; }
-        public PointDir PointDir { get; private set; }
+        public Point Position => ParentNode.Position;
+        public Point ConnectedPosition => ConnectedNode.Position;
+        public bool IsEnabled => true;
+        public int Length { get; }
+        public Direction Direction { get; }
+        public PointDir PointDir { get; }
 
-        public Node ParentNode { get; private set; }
-        public Node ConnectedNode { get; private set; }
+        public Node ParentNode { get; }
+        public Node ConnectedNode { get; }
 
         public Arc Arc { get; private set; }
-        public bool HasArc { get { return Arc != null; } }
-        
-        public ICollection<Field> Overlap { get; private set; }
-        public PointDir ConnectedPointDir { get; private set; }
+        public bool HasArc => Arc != null;
+
+        public ICollection<Field> Overlap { get; }
+        public PointDir ConnectedPointDir { get; }
 
 
         // Note: parent should be the top left node
@@ -83,7 +83,7 @@ namespace Core.Items
 
         public override string ToString()
         {
-            return string.Format("{0} -> {1} [{2}]", Position, ConnectedPosition, Length);
+            return $"{Position} -> {ConnectedPosition} [{Length}]";
         }
 
         public override bool Equals(object obj)

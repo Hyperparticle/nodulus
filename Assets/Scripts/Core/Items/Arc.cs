@@ -8,20 +8,20 @@ namespace Core.Items
     /// </summary>
     public class Arc : IBoardItem
     {
-        public Point Position { get { return ParentNode.Position; } }
-        public Point ConnectedPosition { get { return ConnectedNode.Position; } }
-        public bool IsEnabled { get { return true; } }
-        public int Length { get; private set; }
-        public Direction Direction { get { return Field == null ? Direction.None : Field.Direction; } }
+        public Point Position => ParentNode.Position;
+        public Point ConnectedPosition => ConnectedNode.Position;
+        public bool IsEnabled => true;
+        public int Length { get; }
+        public Direction Direction => Field?.Direction ?? Direction.None;
 
-        public Node ParentNode { get { return Field.ParentNode; } }
-        public Node ConnectedNode { get { return Field.ConnectedNode; } }
+        public Node ParentNode => Field.ParentNode;
+        public Node ConnectedNode => Field.ConnectedNode;
         public Field Field { get; private set; }
 
         /// <summary>
         /// True if this arc is in its pulled state.
         /// </summary>
-        public bool IsPulled { get { return Field == null; } }
+        public bool IsPulled => Field == null;
 
         public Arc(Field field)
         {
@@ -31,10 +31,7 @@ namespace Core.Items
         public void Pull()
         {
             // Disconnect this Arc from an existing field
-            if (Field != null) {
-                Field.DisconnectArc(this);
-            }
-
+            Field?.DisconnectArc(this);
             Field = null;
         }
 
@@ -61,7 +58,7 @@ namespace Core.Items
 
         public override string ToString()
         {
-            return IsPulled ? string.Format("PULLED [{0}]", Length) : Field.ToString();
+            return IsPulled ? $"PULLED [{Length}]" : Field.ToString();
         }
 
         public override bool Equals(object obj)

@@ -14,27 +14,26 @@ namespace View.Control
     {
         private BoardAction _boardAction;
         private PuzzleScale _puzzleScale;
-        //private PanScript _panScript;
 
         private IDictionary<Point, NodeView> _nodeMap;
 
-        public float MinSwipeDistanceCm { get { return GameDef.Get.MinSwipeDistanceCm; } }
-        public float MedSwipeDistanceCm { get { return GameDef.Get.MedSwipeDistanceCm; } }
-        public float MaxSwipeDistanceCm { get { return GameDef.Get.MedSwipeDistanceCm; } }
+        public float MinSwipeDistanceCm => GameDef.Get.MinSwipeDistanceCm;
 
         private void Awake()
         {
             _puzzleScale = GetComponent<PuzzleScale>();
             _boardAction = GetComponent<BoardAction>();
-            //_panScript = GetComponent<PanScript>();
         }
 
         private void Start()
         {
             // Add event handlers for swiping the screen
             var swipeRecognizers = new[] {
-                new TKSwipeRecognizer(0.5f) { minimumNumberOfTouches = 1, maximumNumberOfTouches = 10, timeToSwipe = 1f },
-//                new TKSwipeRecognizer(2f) { minimumNumberOfTouches = 0, maximumNumberOfTouches = 10, timeToSwipe = 1f }
+                new TKSwipeRecognizer(MinSwipeDistanceCm) {
+                    minimumNumberOfTouches = 1,
+                    maximumNumberOfTouches = 10,
+                    timeToSwipe = 1f
+                }
             };
 
             foreach (var swipe in swipeRecognizers) {
@@ -62,14 +61,14 @@ namespace View.Control
         /// </summary>
         private void OnTap(TKTapRecognizer recognizer)
         {
-            // Find the nearest node to the tap
-            var field = GetNearestField(recognizer);
+//            // Find the nearest node to the tap
+//            var field = GetNearestField(recognizer);
+//
+//            if (field == null) {
+//                return;
+//            }
 
-            if (field == null) {
-                return;
-            }
-
-            //_boardAction.Play(field);
+//            _boardAction.Play(field);
         }
 
         /// <summary>
@@ -111,10 +110,10 @@ namespace View.Control
             return node;
         }
 
-        private FieldView GetNearestField(TKTapRecognizer recognizer)
-        {
-            //var pos = Camera.main.ScreenToWorldPoint(recognizer.startTouchLocation()) / _puzzleScale.Scaling;
-            return null;
-        }
+//        private FieldView GetNearestField(TKTapRecognizer recognizer)
+//        {
+//            var pos = Camera.main.ScreenToWorldPoint(recognizer.startTouchLocation()) / _puzzleScale.Scaling;
+//            return null;
+//        }
     }
 }

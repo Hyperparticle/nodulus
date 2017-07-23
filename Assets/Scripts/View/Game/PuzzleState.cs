@@ -28,9 +28,10 @@ namespace View.Game
         public int StartLevel = 0;
 
         public ArcView PulledArcView { get; private set; }
-        public bool IsPulled { get { return _puzzle.IsPulled; } }
-        public Point PullPosition { get { return _playerState.PullPosition; } }
-        public int NumMoves { get { return _puzzle.NumMoves; } }
+        public bool IsPulled => _puzzle.IsPulled;
+        public Point PullPosition => _playerState.PullPosition;
+        public int NumMoves => _puzzle.NumMoves;
+        public float ElapsedTime { get; private set; }
 
         public List<NodeView> PushNodePath { get; private set; }
 
@@ -96,7 +97,7 @@ namespace View.Game
             }
         }
 
-        public bool Win { get { return _puzzle.Win; } }
+        public bool Win => _puzzle.Win;
 
         public bool HasArcAt(Point pos, Direction dir) { return _arcMap.ContainsArc(pos, dir); }
         public bool NodeOccupies(Point pos) { return _nodeMap.ContainsKey(pos); }
@@ -118,6 +119,11 @@ namespace View.Game
         {
             // Start with the initially defined start level
             Init(StartLevel);
+        }
+
+        private void Update()
+        {
+            ElapsedTime += Time.deltaTime;
         }
 
         /// <summary>

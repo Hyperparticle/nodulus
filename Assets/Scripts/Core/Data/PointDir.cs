@@ -6,15 +6,15 @@ namespace Core.Data
     /// </summary>
     public struct PointDir
     {
-        public readonly Point Point;
-        public readonly Direction Direction;
+        public Point Point { get; }
+        public Direction Direction { get; }
 
-        public PointDir Opposite { get { return new PointDir(Point, Direction.Opposite()); } }
+        public PointDir Opposite => new PointDir(Point, Direction.Opposite());
 
         public PointDir(Point point, Direction direction)
         {
-            this.Point = point;
-            this.Direction = direction;
+            Point = point;
+            Direction = direction;
         }
 
         public override bool Equals(object obj)
@@ -38,7 +38,7 @@ namespace Core.Data
         
         public override string ToString()
         {
-            return string.Format("{{{0}, {1}}}", Point, Direction);
+            return $"{{{Point}, {Direction}}}";
         }
     }
 }

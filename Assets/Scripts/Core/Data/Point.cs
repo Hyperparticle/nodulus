@@ -17,18 +17,19 @@ namespace Core.Data
 
         public Point(int x, int y)
         {
-            this.X = x;
-            this.Y = y;
+            X = x;
+            Y = y;
             //this.z = z;
         }
 
         public Point(Point point)
         {
-            this.X = point.X;
-            this.Y = point.Y;
+            X = point.X;
+            Y = point.Y;
         }
 
-        public Point Sign { get { return new Point(Math.Sign(X), Math.Sign(Y));} }
+        public Point Sign => new Point(Math.Sign(X), Math.Sign(Y));
+
         public Point Next(int length, Direction direction)
         {
             return this + direction.ToPoint() * length;
@@ -52,16 +53,16 @@ namespace Core.Data
 
         public override string ToString()
         {
-            return string.Format("({0},{1})", X, Y);
+            return $"({X},{Y})";
         }
 
-        public static Point Zero { get { return new Point(0, 0); } }
-        public static Point One { get { return new Point(1, 1); } }
+        public static Point Zero => new Point(0, 0);
+        public static Point One => new Point(1, 1);
 
-        public static Point Up { get { return new Point(0, 1); } }
-        public static Point Down { get { return new Point(0, -1); } }
-        public static Point Left { get { return new Point(-1, 0); } }
-        public static Point Right { get { return new Point(1, 0); } }
+        public static Point Up => new Point(0, 1);
+        public static Point Down => new Point(0, -1);
+        public static Point Left => new Point(-1, 0);
+        public static Point Right => new Point(1, 0);
     }
 
     #region Extensions
@@ -77,14 +78,14 @@ namespace Core.Data
                 { Zero, Direction.None }
         };
 
-        public bool IsDirection { get { return X == 0 || Y == 0; } }
+        public bool IsDirection => X == 0 || Y == 0;
 
         public Direction ToDirection
         {
             get
             {
                 Direction direction;
-                return Directions.TryGetValue(this.Sign, out direction) ? direction : Direction.None;
+                return Directions.TryGetValue(Sign, out direction) ? direction : Direction.None;
             }
         }
 

@@ -4,8 +4,8 @@ namespace View.Control
 {
     public class CameraScript : MonoBehaviour
     {
-        public static float Width { get { return Camera.main.orthographicSize * 2.0f * Screen.width / Screen.height; } }
-        public static float Height { get { return Camera.main.orthographicSize * 2.0f; } }
+        public static float Width => Camera.main.orthographicSize * 2.0f * Screen.width / Screen.height;
+        public static float Height => Camera.main.orthographicSize * 2.0f;
 
         public static float Fit(Vector2 dimensions, float padding = 0)
         {

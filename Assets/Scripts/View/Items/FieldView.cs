@@ -10,7 +10,7 @@ namespace View.Items
     /// </summary>
     public class FieldView : MonoBehaviour
     {
-        public Color FieldColor { get { return GameDef.Get.FieldColor; } }
+        public Color FieldColor => GameDef.Get.FieldColor;
 
         private ScaleScript _fieldScale;
         private Colorizer _colorizer;
@@ -20,10 +20,7 @@ namespace View.Items
         public NodeView ParentNode { get; private set; }
         public NodeView ConnectedNode { get; private set; }
 
-        public Vector2 HitRect
-        {
-            get { return new Vector3(transform.localScale.x, 1) + transform.localPosition; }
-        }
+        public Vector2 HitRect => new Vector3(transform.localScale.x, 1) + transform.localPosition;
 
         private void Awake()
         {

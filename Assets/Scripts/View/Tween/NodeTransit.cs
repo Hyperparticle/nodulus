@@ -14,23 +14,23 @@ namespace View.Tween
         private AudioSource _audioSource;
         private GameObject _rotor;
 
-        public float NodeRotateTime { get { return GameDef.Get.NodeRotateTime; } }
+        public float NodeRotateTime => GameDef.Get.NodeRotateTime;
 
-        public float WaveInTravel { get { return GameDef.Get.WaveInTravel; } }
-        public float WaveInAudioDelay { get { return GameDef.Get.WaveInAudioDelay; } }
-        public float WaveInMoveDelayStart { get { return GameDef.Get.WaveInMoveDelayStart; } }
-        public float WaveInMoveDelayOffsetScale { get { return GameDef.Get.WaveInMoveDelayOffsetScale; } }
-        public float WaveInTime { get { return GameDef.Get.WaveInTime; } }
-        public LeanTweenType WaveInMoveEase { get { return GameDef.Get.WaveInMoveEase; } }
-        public LeanTweenType WaveInColorEase { get { return GameDef.Get.WaveInColorEase; } }
+        public float WaveInTravel => GameDef.Get.WaveInTravel;
+        public float WaveInAudioDelay => GameDef.Get.WaveInAudioDelay;
+        public float WaveInMoveDelayStart => GameDef.Get.WaveInMoveDelayStart;
+        public float WaveInMoveDelayOffsetScale => GameDef.Get.WaveInMoveDelayOffsetScale;
+        public float WaveInTime => GameDef.Get.WaveInTime;
+        public LeanTweenType WaveInMoveEase => GameDef.Get.WaveInMoveEase;
+        public LeanTweenType WaveInColorEase => GameDef.Get.WaveInColorEase;
 
-        public float WaveOutTravel { get { return GameDef.Get.WaveOutTravel; } }
-        public float WaveOutAudioDelay { get { return GameDef.Get.WaveOutAudioDelay; } }
-        public float WaveOutMoveDelayStart { get { return GameDef.Get.WaveOutMoveDelayStart; } }
-        public float WaveOutMoveDelayOffsetScale { get { return GameDef.Get.WaveOutMoveDelayOffsetScale; } }
-        public float WaveOutTime { get { return GameDef.Get.WaveOutTime; } }
-        public LeanTweenType WaveOutMoveEase { get { return GameDef.Get.WaveOutMoveEase; } }
-        public LeanTweenType WaveOutColorEase { get { return GameDef.Get.WaveOutColorEase; } }
+        public float WaveOutTravel => GameDef.Get.WaveOutTravel;
+        public float WaveOutAudioDelay => GameDef.Get.WaveOutAudioDelay;
+        public float WaveOutMoveDelayStart => GameDef.Get.WaveOutMoveDelayStart;
+        public float WaveOutMoveDelayOffsetScale => GameDef.Get.WaveOutMoveDelayOffsetScale;
+        public float WaveOutTime => GameDef.Get.WaveOutTime;
+        public LeanTweenType WaveOutMoveEase => GameDef.Get.WaveOutMoveEase;
+        public LeanTweenType WaveOutColorEase => GameDef.Get.WaveOutColorEase;
 
         private void Awake()
         {
@@ -40,8 +40,9 @@ namespace View.Tween
             _rotor = GetComponentInChildren<Colorizer>().gameObject;
         }
 
-        public void WaveIn(int delay)
+        public void WaveIn(int delay, Action onComplete = null)
         {
+            onComplete = onComplete ?? (() => {});
             var pos = transform.localPosition;
 
             // Set node far away and transparent
@@ -57,9 +58,10 @@ namespace View.Tween
 
             // Start a nice animation effect
             LeanTween.moveLocal(gameObject, pos, WaveInTime)
-                .setOnStart(() => _audioSource.PlayDelayed(WaveInAudioDelay)) 
+                .setOnStart(() => _audioSource.PlayDelayed(WaveInAudioDelay))
                 .setDelay(moveDelay)
-                .setEase(WaveInMoveEase);
+                .setEase(WaveInMoveEase)
+                .setOnComplete(onComplete);
 
             foreach (var colorizer in colorizers) {
                 colorizer.Previous(WaveInTime, moveDelay, WaveInColorEase);
@@ -116,7 +118,8 @@ namespace View.Tween
 
         private void SlightPush(Direction dir)
         {
-            var pushAmount = 0.05f;
+            // TODO: make configurable
+            const float pushAmount = 0.05f;
 
             LeanTween.moveLocal(_rotor, dir.Vector() * pushAmount, NodeRotateTime / 2f)
                 .setEase(LeanTweenType.easeSpring)

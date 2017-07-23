@@ -13,35 +13,17 @@ namespace Core.Game
     {
         private readonly Grid _grid;
 
-        private readonly HashSet<Arc> _arcs = new HashSet<Arc>();
-        private readonly IslandSet _islandSet = new IslandSet();
+        public HashSet<Node> Nodes => _grid.Nodes;
 
-        public HashSet<Node> Nodes
-        {
-            get { return _grid.Nodes; }
-        }
+        public HashSet<Arc> Arcs { get; } = new HashSet<Arc>();
 
-        public HashSet<Arc> Arcs
-        {
-            get { return _arcs; }
-        }
-
-        public HashSet<Field> Fields
-        {
-            get { return _grid.Fields; }
-        }
+        public HashSet<Field> Fields => _grid.Fields;
 
         public Node StartNode { get; set; }
 
-        public Island StartIsland
-        {
-            get { return _islandSet.Get(StartNode); }
-        }
+        public Island StartIsland => IslandSet.Get(StartNode);
 
-        public IslandSet IslandSet
-        {
-            get { return _islandSet; }
-        }
+        public IslandSet IslandSet { get; } = new IslandSet();
 
         public Point Size { get; private set; }
 
@@ -55,7 +37,7 @@ namespace Core.Game
         {
             var added = _grid.AddNode(node);
             Size = _grid.Size;
-            _islandSet.Add(node);
+            IslandSet.Add(node);
             return added;
         }
 
@@ -97,10 +79,10 @@ namespace Core.Game
 
             // Push the arc onto the field
             arc.Push(field);
-            _arcs.Add(arc);
+            Arcs.Add(arc);
 
             // Notify the island set of connected nodes
-            _islandSet.Connect(field);
+            IslandSet.Connect(field);
 
             return true;
         }
@@ -117,10 +99,10 @@ namespace Core.Game
             // Pull the arc from the field
             var field = arc.Field;
             arc.Pull();
-            _arcs.Remove(arc);
+            Arcs.Remove(arc);
 
             // Notify the island set of disconnected nodes
-            _islandSet.Disconnect(field);
+            IslandSet.Disconnect(field);
 
             return true;
         }
@@ -130,7 +112,7 @@ namespace Core.Game
         /// </summary>
         public bool IsConnected(Node start, Node end)
         {
-            return _islandSet.IsConnected(start, end);
+            return IslandSet.IsConnected(start, end);
         }
 
         /// <summary>

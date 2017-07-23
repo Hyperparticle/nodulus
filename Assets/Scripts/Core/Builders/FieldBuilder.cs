@@ -14,14 +14,12 @@ namespace Core.Builders
     /// connected to it is removed.
     /// </summary>
     public class FieldBuilder {
-
-        private readonly HashSet<Field> _fields = new HashSet<Field>();
         private readonly IDictionary<PointDir, Field> _fieldMap = new Dictionary<PointDir, Field>();
 
         // Maps points to occupying fields
         private IDictionary<Point, Field> _occupiedFields = new Dictionary<Point, Field>();
 
-        public HashSet<Field> Fields { get { return _fields; } }
+        public HashSet<Field> Fields { get; } = new HashSet<Field>();
 
         public void BuildFields(Node node, IDictionary<Point, Node> nodeMap)
         {
@@ -56,7 +54,7 @@ namespace Core.Builders
 
             _fieldMap.Add(field.PointDir, field);
             _fieldMap.Add(field.ConnectedPointDir, field);
-            _fields.Add(field);
+            Fields.Add(field);
 
             AddOccupied(field);
         }
@@ -85,7 +83,7 @@ namespace Core.Builders
 
             _fieldMap.Remove(field.PointDir);
             _fieldMap.Remove(field.ConnectedPointDir);
-            _fields.Remove(field);
+            Fields.Remove(field);
 
             RemoveOccupied(field);
             RemoveOverlap(field);

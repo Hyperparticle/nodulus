@@ -20,9 +20,7 @@ namespace View.Control
         public Vector3 BoardRotation = new Vector3(24f, 12f, 0f);
 
         // Board Input
-        public float MinSwipeDistanceCm = 1.5f;
-        public float MedSwipeDistanceCm = 3f;
-        public float MaxSwipeDistanceCm = 4.5f;
+        public float MinSwipeDistanceCm = 0.5f;
 
         // Item Colors
         // TODO: add color themes

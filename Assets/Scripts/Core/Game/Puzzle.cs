@@ -15,15 +15,15 @@ namespace Core.Game
         private readonly Player _player;
         private readonly List<IMove> _moveHistory = new List<IMove>();
 
-        public Node StartNode { get { return _gameBoard.StartNode; } }
-        public bool Win { get { return _player.Win; } }
-        public Point BoardSize { get { return _gameBoard.Size; } }
-        public int NumMoves { get { return _player.NumMoves; } }
+        public Node StartNode => _gameBoard.StartNode;
+        public bool Win => _player.Win;
+        public Point BoardSize => _gameBoard.Size;
+        public int NumMoves => _player.NumMoves;
 
-        public PlayerState PlayerState { get { return _player.PlayerState; } }
+        public PlayerState PlayerState => _player.PlayerState;
 
         public Arc PulledArc { get; private set; }
-        public bool IsPulled { get { return PulledArc != null; } }
+        public bool IsPulled => PulledArc != null;
 
         public Puzzle(GameBoard gameBoard)
         {

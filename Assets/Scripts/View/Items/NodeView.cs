@@ -15,8 +15,8 @@ namespace View.Items
     {
         public Transform Rotor;
 
-        public Color NodeColor { get { return GameDef.Get.NodeColor; } }
-        public Color NodeFinalColor { get { return GameDef.Get.NodeFinalColor; } }
+        public Color NodeColor => GameDef.Get.NodeColor;
+        public Color NodeFinalColor => GameDef.Get.NodeFinalColor;
 
         private ScaleScript _nodeScale;
         private Colorizer _colorizer;
@@ -24,10 +24,7 @@ namespace View.Items
 
         public Node Node { get; private set; }
 
-        public Point Position
-        {
-            get { return Node.Position; }
-        }
+        public Point Position => Node.Position;
 
         public Field GetField(Direction dir)
         {
@@ -60,9 +57,9 @@ namespace View.Items
             }
         }
 
-        public void WaveIn(int delay)
+        public void WaveIn(int delay, Action onComplete = null)
         {
-            _nodeTransit.WaveIn(delay);
+            _nodeTransit.WaveIn(delay, onComplete);
         }
 
         public void WaveOut(int delay)

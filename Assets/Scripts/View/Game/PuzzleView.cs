@@ -119,8 +119,9 @@ namespace View.Game
 
             var dirVector = dir.Vector();
 
-            var shakeAmount = 0.025f;
-            var shakePeriodTime = 0.1f;
+            // TODO: make configurable
+            const float shakeAmount = 0.025f;
+            const float shakePeriodTime = 0.1f;
             
             var initPos = transform.localPosition;
 
@@ -134,9 +135,7 @@ namespace View.Game
 
         private void OnViewUpdated()
         {
-            if (ViewUpdated != null) {
-                ViewUpdated();
-            }
+            ViewUpdated?.Invoke();
         }
 
         public void ConnectArcs(NodeView nodeView) {

@@ -9,10 +9,7 @@ namespace View.Data
         private readonly IDictionary<PointDir, ArcView> _arcMap = new Dictionary<PointDir, ArcView>();
         private readonly IDictionary<Point, IDictionary<Direction, ArcView>> _arcSet = new Dictionary<Point, IDictionary<Direction, ArcView>>(); 
 
-        public IEnumerable<ArcView> Arcs
-        {
-            get { return _arcMap.Values; }
-        }
+        public IEnumerable<ArcView> Arcs => _arcMap.Values;
 
         public void Reset(ArcViewMap arcViewMap)
         {
@@ -80,9 +77,6 @@ namespace View.Data
             _arcSet.Clear();
         }
 
-        public ArcView this[PointDir pointDir]
-        {
-            get { return _arcMap[pointDir]; }
-        }
+        public ArcView this[PointDir pointDir] => _arcMap[pointDir];
     }
 }

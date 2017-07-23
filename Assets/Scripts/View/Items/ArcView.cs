@@ -12,9 +12,9 @@ namespace View.Items
     /// </summary>
     public class ArcView : MonoBehaviour
     {
-        public Color ArcColor { get { return GameDef.Get.ArcColor; } }
-        public float ArcMoveTime { get { return GameDef.Get.ArcMoveTime; } }
-        public LeanTweenType ArcMoveEase { get { return GameDef.Get.ArcMoveEase; } }
+        public Color ArcColor => GameDef.Get.ArcColor;
+        public float ArcMoveTime => GameDef.Get.ArcMoveTime;
+        public LeanTweenType ArcMoveEase => GameDef.Get.ArcMoveEase;
 
         private ScaleScript _arcScale;
         private Colorizer _colorizer;

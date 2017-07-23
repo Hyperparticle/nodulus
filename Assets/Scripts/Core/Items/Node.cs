@@ -10,20 +10,18 @@ namespace Core.Items
     /// </summary>
     public class Node : IBoardItem
     {
-        public Point Position { get; private set; }
-        public bool IsEnabled { get { return true; } }
-        public int Length { get { return 0; } }
-        public Direction Direction { get { return Direction.None; } }
+        public Point Position { get; }
+        public bool IsEnabled => true;
+        public int Length => 0;
+        public Direction Direction => Direction.None;
 
-        private readonly Dictionary<Direction, Field> _fields =
-            new Dictionary<Direction, Field>();
-        public Dictionary<Direction, Field> Fields { get { return _fields; } }
+        public Dictionary<Direction, Field> Fields { get; } = new Dictionary<Direction, Field>();
 
         public IEnumerable<Field> Connections
         {
             get
             {
-                return _fields.Values
+                return Fields.Values
                     .Where(field => field.HasArc && !field.Arc.IsPulled);
             }
         }
@@ -39,7 +37,7 @@ namespace Core.Items
         public bool HasConnection(Direction dir)
         {
             Field field;
-            if (!_fields.TryGetValue(dir, out field)) return false;
+            if (!Fields.TryGetValue(dir, out field)) return false;
             return !field.HasArc;
         }
 

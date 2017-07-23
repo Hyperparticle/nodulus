@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Utility
 {
-    [System.Serializable]
+    [Serializable]
     public struct HsbColor
     {
         public float H;
@@ -15,18 +15,18 @@ namespace Utility
 
         public HsbColor(float h, float s, float b, float a)
         {
-            this.H = h;
-            this.S = s;
-            this.B = b;
-            this.A = a;
+            H = h;
+            S = s;
+            B = b;
+            A = a;
         }
 
         public HsbColor(float h, float s, float b)
         {
-            this.H = h;
-            this.S = s;
-            this.B = b;
-            this.A = 1f;
+            H = h;
+            S = s;
+            B = b;
+            A = 1f;
         }
 
         public HsbColor(Color col)

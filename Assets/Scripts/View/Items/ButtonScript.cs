@@ -10,8 +10,8 @@ namespace View.Items
 
         public event Action<ButtonState> ButtonPressed;
 
-        public float ButtonTransitionTime { get { return GameDef.Get.ButtonTransitionTime; } }
-        public LeanTweenType ButtonEase { get { return GameDef.Get.ButtonEase; } }
+        public float ButtonTransitionTime => GameDef.Get.ButtonTransitionTime;
+        public LeanTweenType ButtonEase => GameDef.Get.ButtonEase;
         private const float ButtonDistance = 0.5f;
 
         private void OnMouseDown()
@@ -20,9 +20,7 @@ namespace View.Items
                 return;
             }
 
-            if (ButtonPressed != null) {
-                ButtonPressed(ButtonState);
-            }
+            ButtonPressed?.Invoke(ButtonState);
 
             Move();
         }

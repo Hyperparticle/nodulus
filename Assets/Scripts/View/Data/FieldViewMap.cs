@@ -7,7 +7,7 @@ namespace View.Data
     public class FieldViewMap
     {
         private readonly IDictionary<PointDir, FieldView> _fieldMap = new Dictionary<PointDir, FieldView>();
-        public IEnumerable<FieldView> Fields { get { return _fieldMap.Values; } }
+        public IEnumerable<FieldView> Fields => _fieldMap.Values;
 
         public void Reset(FieldViewMap fieldViewMap)
         {
@@ -32,9 +32,6 @@ namespace View.Data
             _fieldMap.Clear();
         }
 
-        public FieldView this[PointDir pointDir]
-        {
-            get { return _fieldMap[pointDir]; }
-        }
+        public FieldView this[PointDir pointDir] => _fieldMap[pointDir];
     }
 }

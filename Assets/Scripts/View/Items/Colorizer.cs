@@ -7,9 +7,10 @@ namespace View.Items
     public class Colorizer : MonoBehaviour
     {
         // Defaults
-        public float DarkBrightnessScale { get { return GameDef.Get.DarkBrightnessScale; } }
-        public float TransitionTime { get { return GameDef.Get.ColorTransitionTime; } }
-        public LeanTweenType Ease { get { return GameDef.Get.ColorEase; } }
+        public float DarkBrightnessScale => GameDef.Get.DarkBrightnessScale;
+
+        public float TransitionTime => GameDef.Get.ColorTransitionTime;
+        public LeanTweenType Ease => GameDef.Get.ColorEase;
 
         public Color Primary;
 

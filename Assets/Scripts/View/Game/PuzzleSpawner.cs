@@ -1,9 +1,7 @@
 using System.Collections.Generic;
-using System.Linq;
 using Core.Data;
 using Core.Game;
 using UnityEngine;
-using View.Control;
 using View.Data;
 using View.Items;
 
@@ -15,37 +13,20 @@ namespace View.Game
         public ArcView ArcScript;
         public FieldView FieldScript;
 
-        private readonly IDictionary<Point, NodeView> _nodeMap = new Dictionary<Point, NodeView>();
-        private readonly FieldViewMap _fieldMap = new FieldViewMap();
-        private readonly ArcViewMap _arcMap = new ArcViewMap();
-
         private GameBoard _gameBoard;
 
         private LatticeView _lattice;
         private PuzzleScale _puzzleScale;
 
-        public IDictionary<Point, NodeView> NodeMap
-        {
-            get { return _nodeMap; }
-        }
+        public IDictionary<Point, NodeView> NodeMap { get; } = new Dictionary<Point, NodeView>();
 
-        public FieldViewMap FieldMap
-        {
-            get { return _fieldMap; }
-        }
+        public FieldViewMap FieldMap { get; } = new FieldViewMap();
 
-        public ArcViewMap ArcMap
-        {
-            get { return _arcMap; }
-        }
+        public ArcViewMap ArcMap { get; } = new ArcViewMap();
 
-        // TODO: find a way to indicate that the animations are fully complete
-        public bool FinishedSpawn
-        {
-            get { return true; }
-        }
-        
-        public int LevelCount { get { return Levels.LevelCount; } }
+        public bool FinishedSpawn { get; private set; }
+
+        public int LevelCount => Levels.LevelCount;
 
         private void Awake()
         {
@@ -61,10 +42,11 @@ namespace View.Game
             if (newGameBoard != null) {
                 _gameBoard = newGameBoard;
             } else {
-                Debug.LogError(string.Format("The game board for level {0} is in an invalid format", level));
+                Debug.LogError($"The game board for level {level} is in an invalid format");
             }
 
             // Instantiate all the necessary components to view the board
+            FinishedSpawn = false;
             InstantiateNodes();
             InstantiateFields();
             InstantiateArcs();
@@ -81,7 +63,7 @@ namespace View.Game
 
             // Destroy all objects in the game board
             var i = 0;
-            foreach (var node in _nodeMap.Values) {
+            foreach (var node in NodeMap.Values) {
                 node.WaveOut(i++);
             }
 
@@ -93,9 +75,9 @@ namespace View.Game
                 }
             }
 
-            _nodeMap.Clear();
-            _arcMap.Clear();
-            _fieldMap.Clear();
+            NodeMap.Clear();
+            ArcMap.Clear();
+            FieldMap.Clear();
 
             _gameBoard = null;
         }
@@ -110,7 +92,7 @@ namespace View.Game
                 nodeView.transform.SetParent(transform);
                 nodeView.Init(node, _gameBoard.StartIsland.Contains(node), i);
                 nodeView.name = "Node " + i++;
-                _nodeMap.Add(node.Position, nodeView);
+                NodeMap.Add(node.Position, nodeView);
             }
         }
 
@@ -121,14 +103,14 @@ namespace View.Game
                 var fieldView = Instantiate(FieldScript);
 
                 // Find the node at the field's position and set it as a parent of this field
-                fieldView.transform.SetParent(_nodeMap[field.Position].transform);
-                fieldView.Init(field, _nodeMap[field.Position], _nodeMap[field.ConnectedPosition]);
+                fieldView.transform.SetParent(NodeMap[field.Position].transform);
+                fieldView.Init(field, NodeMap[field.Position], NodeMap[field.ConnectedPosition]);
                 fieldView.name = "Field " + i++;
 
                 // Keep track of the field in grid space
                 // Since fields are undirected, we should add the opposite direction as well
-                _fieldMap.Add(field.Position, field.Direction, fieldView);
-                _fieldMap.Add(field.ConnectedPosition, field.Direction.Opposite(), fieldView);
+                FieldMap.Add(field.Position, field.Direction, fieldView);
+                FieldMap.Add(field.ConnectedPosition, field.Direction.Opposite(), fieldView);
             }
         }
 
@@ -139,25 +121,32 @@ namespace View.Game
                 var arcView = Instantiate(ArcScript);
 
                 // Find the node at the arc's position and set it as a perent of this arc
-                var parent = _nodeMap[arc.Position].transform;
+                var parent = NodeMap[arc.Position].transform;
                 arcView.transform.SetParent(parent);
                 arcView.Init(arc, parent, _gameBoard.StartIsland.Contains(arc.ParentNode));
                 arcView.name = "Arc " + i++;
 
                 // Keep track of the arc in grid space
                 // Since arcs are undirected, we should add the opposite direction as well
-                _arcMap.Add(arc.Position, arc.Direction, arcView);
-                _arcMap.Add(arc.ConnectedPosition, arc.Direction.Opposite(), arcView);
+                ArcMap.Add(arc.Position, arc.Direction, arcView);
+                ArcMap.Add(arc.ConnectedPosition, arc.Direction.Opposite(), arcView);
             }
         }
 
         private void StartAnimations()
         {
             _lattice.Init(_gameBoard.Size.Y + 1, _gameBoard.Size.X + 1, _puzzleScale.Scaling);
-
+            
             var i = 0;
-            foreach (var nodeView in _nodeMap.Values) {
-                nodeView.WaveIn(i++);
+            foreach (var nodeView in NodeMap.Values) {
+                if (i < NodeMap.Values.Count - 1) {
+                    nodeView.WaveIn(i++);
+                } else {
+                    // On completion of the last node, the puzzle has finished spawning
+                    nodeView.WaveIn(i++, () => {
+                        FinishedSpawn = true;
+                    });
+                }
             }
         }
     }

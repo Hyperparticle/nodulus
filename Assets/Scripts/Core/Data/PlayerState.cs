@@ -23,15 +23,15 @@ namespace Core.Data
         private readonly HashSet<Field> _nonPushFields = new HashSet<Field>();
         private readonly HashSet<Arc> _nonPlayerArcs = new HashSet<Arc>();
 
-        public IEnumerable<Node> PlayerNodes { get { return _playerNodes; } }
-        public IEnumerable<Field> PushFields { get { return _pushFields; } }
-        public IEnumerable<Arc> PlayerArcs { get { return _playerArcs; } }
+        public IEnumerable<Node> PlayerNodes => _playerNodes;
+        public IEnumerable<Field> PushFields => _pushFields;
+        public IEnumerable<Arc> PlayerArcs => _playerArcs;
 
-        public IEnumerable<Node> NonPlayerNodes { get { return _nonPlayerNodes; } }
-        public IEnumerable<Field> NonPushFields { get { return _nonPushFields; } }
-        public IEnumerable<Arc> NonPlayerArcs { get { return _nonPlayerArcs; } }
+        public IEnumerable<Node> NonPlayerNodes => _nonPlayerNodes;
+        public IEnumerable<Field> NonPushFields => _nonPushFields;
+        public IEnumerable<Arc> NonPlayerArcs => _nonPlayerArcs;
 
-        public bool IsFinal { get { return _playerIsland.IsFinal; } }
+        public bool IsFinal => _playerIsland.IsFinal;
         public Point PullPosition { get; private set; }
 
 

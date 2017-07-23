@@ -13,7 +13,7 @@ namespace View.Game
     /// </summary>
     public class BoardAction : MonoBehaviour
     {
-        public float LevelDelay { get { return GameDef.Get.LevelDelay; } }
+        public float LevelDelay => GameDef.Get.LevelDelay;
 
         private PuzzleView _puzzleView;
         private PuzzleState _puzzleState;
@@ -28,7 +28,7 @@ namespace View.Game
         // A lock to prevent multiple moves to be played at the same time
         private bool _viewUpdating;
 
-        private readonly int _maxMovesInQueue = 2;
+        private const int MaxMovesInQueue = 2;
 
         private void Awake()
         {
@@ -45,9 +45,9 @@ namespace View.Game
         /// </summary>
         public void Play(NodeView nodeView, Direction dir)
         {
-            if (_viewUpdating || LeanTween.isTweening(nodeView.gameObject) || !_puzzleSpawner.FinishedSpawn) {
+            if (_viewUpdating || LeanTween.isTweening(nodeView.gameObject)) {
                 // If the animations are running, queue up the move
-                if (_moveQueue.Count < _maxMovesInQueue) {
+                if (_moveQueue.Count < MaxMovesInQueue) {
                     _moveQueue.Enqueue(new Utility.Tuple<NodeView, Direction>(nodeView, dir));
                 }
                 

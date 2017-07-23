@@ -15,12 +15,12 @@ namespace Core.Game
     {
         // Map the positions of nodes
         private readonly IDictionary<Point, Node> _nodeMap = new Dictionary<Point, Node>();
-        private readonly HashSet<Node> _nodes = new HashSet<Node>();
 
         private readonly FieldBuilder _fieldBuilder;
 
-        public HashSet<Node> Nodes { get { return _nodes; } }
-        public HashSet<Field> Fields { get { return _fieldBuilder.Fields; } }
+        public HashSet<Node> Nodes { get; } = new HashSet<Node>();
+
+        public HashSet<Field> Fields => _fieldBuilder.Fields;
 
         public Grid()
         {
@@ -31,13 +31,7 @@ namespace Core.Game
         /// The Size is defined as the smallest rectangular bounds to contain
         /// all nodes in the Grid.
         /// </summary>
-        public Point Size
-        {
-            get
-            {
-                return Point.Boundary(_nodeMap.Keys);
-            }
-        }
+        public Point Size => Point.Boundary(_nodeMap.Keys);
 
         /// <summary>
         /// Finds the node at the specified position, null otherwise
@@ -67,7 +61,7 @@ namespace Core.Game
             
             // Add the node based on its position
             _nodeMap.Add(node.Position, node);
-            _nodes.Add(node);
+            Nodes.Add(node);
 
             // Build fields
             _fieldBuilder.BuildFields(node, _nodeMap);
@@ -89,7 +83,7 @@ namespace Core.Game
 
             // Remove the node itself
             _nodeMap.Remove(node.Position);
-            _nodes.Remove(node);
+            Nodes.Remove(node);
 
             // Destroy fields
             _fieldBuilder.DestroyFields(node);
@@ -111,7 +105,7 @@ namespace Core.Game
         public Arc GetArcAt(Point arcPos, Direction arcDir)
         {
             var field = GetFieldAt(arcPos, arcDir);
-            return field == null ? null : field.Arc;
+            return field?.Arc;
         }
     }
 }

@@ -12,7 +12,7 @@ namespace Core.Data
 
         private readonly HashSet<Field> _connectedFields;
 
-        public HashSet<Node> ConnectedNodes { get; private set; }
+        public HashSet<Node> ConnectedNodes { get; }
         /// <summary>
         /// True if this island contains a final node
         /// </summary>
@@ -99,7 +99,7 @@ namespace Core.Data
         /// <summary>
         /// Recursively collects nodes that are connected to the specified node.
         /// </summary>
-        private static void FindConnected(Node start, HashSet<Node> nodes, HashSet<Field> fields) 
+        private static void FindConnected(Node start, ISet<Node> nodes, ISet<Field> fields) 
         {
             nodes.Add(start);
             fields.UnionWith(start.Fields.Values);
@@ -144,22 +144,21 @@ namespace Core.Data
             }
 
             // Find all connected node connections
-            if (start.Connections
+            if (!start.Connections
                 .Where(connection => !nodes.Contains(connection.ConnectedNode))
                 .Select(connection => FindPath(connection.ConnectedNode, end, nodes, path))
-                .Any(found => found))
-            {
-                path.Add(start);
-                return true;
-            }
-
-            return false;
+                .Any(found => found)
+            ) { return false; }
+            
+            path.Add(start);
+            
+            return true;
         }
 
         public override string ToString()
         {
             var join = string.Join(",", ConnectedNodes.Select(node => node.ToString()).ToArray());
-            return string.Format("[{0}]", join);
+            return $"[{join}]";
         }
     }
 }

@@ -12,10 +12,7 @@ namespace Core.Game
     public class Levels
     {
         private static LevelPack _levelPack;
-        private static LevelPack LevelPack
-        {
-            get { return _levelPack ?? (_levelPack = LevelParser.DeserializeLevel()); }
-        }
+        private static LevelPack LevelPack => _levelPack ?? (_levelPack = LevelParser.DeserializeLevel());
 
         public static GameBoard BuildLevel(int levelNum)
         {
@@ -27,7 +24,7 @@ namespace Core.Game
             return GameBoardBuilder.BuildBoard(level);
         }
 
-        public static int LevelCount { get { return LevelPack.Levels.Count; } }
+        public static int LevelCount => LevelPack.Levels.Count;
     }
 
     public class LevelParser

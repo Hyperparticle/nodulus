@@ -164,7 +164,7 @@ namespace Core.Data
                 Direction.Right
             };
 
-        public static List<Direction> All { get { return new List<Direction>(DirectionList);} }
+        public static List<Direction> All => new List<Direction>(DirectionList);
 
         public static IEnumerable<Direction> Orthagonal(Direction direction)
         {

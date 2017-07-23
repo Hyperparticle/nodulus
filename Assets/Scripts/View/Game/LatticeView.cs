@@ -1,8 +1,6 @@
 ﻿using System.Collections.Generic;
-using Core.Data;
 using UnityEngine;
 using Vectrosity;
-using View.Items;
 using View.Tween;
 
 namespace View.Game
@@ -33,7 +31,7 @@ namespace View.Game
 
         private float _gridAlpha;
 
-        private List<GameObject> _gridObjects = new List<GameObject>();
+        private readonly List<GameObject> _gridObjects = new List<GameObject>();
 
         private float _nodeWidth;
 
