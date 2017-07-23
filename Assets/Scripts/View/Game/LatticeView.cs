@@ -60,8 +60,11 @@ namespace View.Game
 //                    CreateNewDotGrid(horizontalLinesCount, verticalLinesCount, distanceBetweenLines);
 //                });
 
+            var k = 0;
             foreach (var gridLine in _gridObjects) {
-                Destroy(gridLine);
+                gridLine.GetComponent<GridTransit>().WaveOut(k++, Vector3.left);
+                
+                Destroy(gridLine, 1.5f);
             }
             
             _gridObjects.Clear();
