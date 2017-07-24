@@ -5,21 +5,21 @@ namespace View.Tween
 {
 	public class GridTransit : MonoBehaviour
 	{
-		public float WaveInTravel => GameDef.Get.WaveInTravel / 2f;
-		public float WaveInMoveDelayStart => 0f;
+		public float WaveInTravel => GameDef.Get.WaveInTravel / 1.5f;
+		public float WaveInMoveDelayStart => 0.4f;
 		public float WaveInMoveDelayOffsetScale => GameDef.Get.WaveInMoveDelayOffsetScale;
-		public float WaveInTime => GameDef.Get.WaveInTime / 2f;
+		public float WaveInTime => GameDef.Get.WaveInTime;
 		public LeanTweenType WaveInMoveEase => GameDef.Get.WaveInMoveEase;
 		public LeanTweenType WaveInColorEase => GameDef.Get.WaveInColorEase;
 
-		public float WaveOutTravel => GameDef.Get.WaveOutTravel;
-		public float WaveOutMoveDelayStart => GameDef.Get.WaveOutMoveDelayStart;
+		public float WaveOutTravel => GameDef.Get.WaveOutTravel / 1.5f;
+		public float WaveOutMoveDelayStart => 0f;
 		public float WaveOutMoveDelayOffsetScale => GameDef.Get.WaveOutMoveDelayOffsetScale;
 		public float WaveOutTime => GameDef.Get.WaveOutTime;
 		public LeanTweenType WaveOutMoveEase => GameDef.Get.WaveOutMoveEase;
 		public LeanTweenType WaveOutColorEase => GameDef.Get.WaveOutColorEase;
 
-		public void WaveIn(float delay, Vector3 dir)
+		public void WaveIn(float delay, Vector3 dir, LeanTweenType ease)
 		{
 			var pos = transform.localPosition;
 
@@ -32,10 +32,10 @@ namespace View.Tween
 			// Start a nice animation effect
 			LeanTween.moveLocal(gameObject, pos, WaveInTime)
 				.setDelay(moveDelay)
-				.setEase(WaveInMoveEase);
+				.setEase(ease);
 		}
 
-		public void WaveOut(float delay, Vector3 dir)
+		public void WaveOut(float delay, Vector3 dir, LeanTweenType ease)
 		{
 			// TODO: use smooth function over linear delay
 			var pos = transform.localPosition + WaveOutTravel * dir;
@@ -44,7 +44,7 @@ namespace View.Tween
 			// Start a nice animation effect
 			LeanTween.moveLocal(gameObject, pos, WaveOutTime)
 				.setDelay(moveDelay)
-				.setEase(WaveOutMoveEase);
+				.setEase(ease);
 		}
 	}
 }

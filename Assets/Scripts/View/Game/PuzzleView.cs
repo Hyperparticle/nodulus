@@ -21,6 +21,8 @@ namespace View.Game
         {
             _puzzleScale = GetComponent<PuzzleScale>();
             _puzzleState = GetComponent<PuzzleState>();
+            
+            LeanTween.init(2000);
         }
 
         public void Init(Point startNode, Point boardSize)

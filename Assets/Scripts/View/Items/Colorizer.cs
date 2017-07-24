@@ -13,8 +13,6 @@ namespace View.Items
         public float TransitionTime => GameDef.Get.ColorTransitionTime;
         public LeanTweenType Ease => GameDef.Get.ColorEase;
 
-        public Color Primary;
-
         public Color PrimaryColor
         {
             get { return _primaryColor; }
@@ -181,12 +179,12 @@ namespace View.Items
                 .setEase(ease);
         }
 
-        private static Color Alpha(Color color, float a)
+        public static Color Alpha(Color color, float a)
         {
             return new Color(color.r, color.g, color.b, a);
         }
 
-        private static Color Brightness(Color color, float b)
+        public static Color Brightness(Color color, float b)
         {
             return new HsbColor(color) {B = b}.ToColor();
         }
