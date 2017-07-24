@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Core.Data;
 using UnityEngine;
+using View.Control;
 using View.Items;
 
 namespace View.Game
@@ -14,6 +15,7 @@ namespace View.Game
     {
         private PuzzleScale _puzzleScale;
         private PuzzleState _puzzleState;
+        private GameAudio _gameAudio;
 
         public event Action ViewUpdated;
 
@@ -21,6 +23,7 @@ namespace View.Game
         {
             _puzzleScale = GetComponent<PuzzleScale>();
             _puzzleState = GetComponent<PuzzleState>();
+            _gameAudio = GameObject.FindGameObjectWithTag("GameAudio").GetComponent<GameAudio>();
             
             LeanTween.init(2000);
         }
@@ -89,7 +92,10 @@ namespace View.Game
 
         public void MoveRotate(List<NodeView> nodeViews, ArcView arcView, Direction dir)
         {
-            arcView.MoveTo(nodeViews, () => Rotate(nodeViews[nodeViews.Count-1], arcView, dir, false));
+            arcView.MoveTo(nodeViews, () => {
+                _gameAudio.Play(GameClip.MovePush);
+                Rotate(nodeViews[nodeViews.Count - 1], arcView, dir, false);
+            });
         }
 
         public void Highlight(IEnumerable<NodeView> nodes, bool enable)
@@ -114,6 +120,9 @@ namespace View.Game
             }
         }
 
+        /// <summary>
+        /// Shakes the entire game board
+        /// </summary>
         public void Shake(Direction dir)
         {
             LeanTween.cancel(gameObject);

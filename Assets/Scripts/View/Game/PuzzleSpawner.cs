@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using Core.Data;
 using Core.Game;
 using UnityEngine;
+using View.Control;
 using View.Data;
 using View.Items;
 
@@ -17,6 +18,7 @@ namespace View.Game
 
         private LatticeView _lattice;
         private PuzzleScale _puzzleScale;
+        private GameAudio _gameAudio;
 
         public IDictionary<Point, NodeView> NodeMap { get; } = new Dictionary<Point, NodeView>();
 
@@ -32,6 +34,7 @@ namespace View.Game
         {
             _lattice = GetComponentInChildren<LatticeView>();
             _puzzleScale = GetComponent<PuzzleScale>();
+            _gameAudio = GameObject.FindGameObjectWithTag("GameAudio").GetComponent<GameAudio>();
         }
 
         public Puzzle SpawnBoard(int level)
@@ -135,6 +138,10 @@ namespace View.Game
 
         private void StartAnimations()
         {
+            // TODO: make configurable
+            const float delay = 1.1f;
+            _gameAudio.Play(GameClip.GameStart, delay, 0.3f);
+            
             _lattice.Init(_gameBoard.Size.Y + 1, _gameBoard.Size.X + 1, _puzzleScale.Scaling);
             
             var i = 0;

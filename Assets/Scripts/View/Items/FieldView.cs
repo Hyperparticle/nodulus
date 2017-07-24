@@ -16,6 +16,7 @@ namespace View.Items
         private Colorizer _colorizer;
 
         private Vector3 _initScale;
+        private int _pulseId;
 
         public Field Field { get; private set; }
 
@@ -62,12 +63,17 @@ namespace View.Items
         
         private void PulseScale(float time)
         {
+            if (LeanTween.isTweening(_pulseId)) {
+                return;
+            }
+            
             // TODO: make configurable
             const float scale = 0.33f;
             
-            LeanTween.scale(gameObject, transform.localScale + Vector3.one * scale, time)
+            _pulseId = LeanTween.scale(gameObject, _initScale + Vector3.one * scale, time)
                 .setEase(LeanTweenType.easeInOutSine)
-                .setLoopPingPong(-1);
+                .setLoopPingPong(-1)
+                .id;
         }
     }
 }

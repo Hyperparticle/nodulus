@@ -12,17 +12,24 @@ namespace View.Control
             _audioSource = GetComponent<AudioSource>();
         }
 
-        public void Play(Clip clip, float delay = 0f)
+        public void Play(GameClip clip, float delay = 0f, float volume = 1f)
         {
-            _audioSource.clip = AudioClips[(uint) clip];
-            _audioSource.PlayDelayed(delay);
+            LeanTween.delayedCall(gameObject, delay, () => {
+                _audioSource.PlayOneShot(AudioClips[(uint) clip], volume);
+            });
         }
     }
 
-    public enum Clip
+    public enum GameClip
     {
         MovePull,
         MovePush,
-        WinBoard
+        WinBoard,
+        GameStart,
+        NodeEnter,
+        NodeLeave,
+        NodeRotate90,
+        InvalidRotate,
+        ArcMove
     }
 }

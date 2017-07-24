@@ -11,7 +11,7 @@ namespace View.Tween
     /// </summary>
     public class NodeTransit : MonoBehaviour
     {
-        private AudioSource _audioSource;
+        private GameAudio _gameAudio;
         private GameObject _rotor;
 
         public float NodeRotateTime => GameDef.Get.NodeRotateTime;
@@ -34,9 +34,7 @@ namespace View.Tween
 
         private void Awake()
         {
-            _audioSource = GetComponent<AudioSource>();
-            _audioSource.time = 0.5f;
-
+            _gameAudio = GameObject.FindGameObjectWithTag("GameAudio").GetComponent<GameAudio>();
             _rotor = GetComponentInChildren<Colorizer>().gameObject;
         }
 
@@ -58,7 +56,7 @@ namespace View.Tween
 
             // Start a nice animation effect
             LeanTween.moveLocal(gameObject, pos, WaveInTime)
-                .setOnStart(() => _audioSource.PlayDelayed(WaveInAudioDelay))
+                .setOnStart(() => _gameAudio.Play(GameClip.NodeEnter, WaveInAudioDelay))
                 .setDelay(moveDelay)
                 .setEase(WaveInMoveEase)
                 .setOnComplete(onComplete);
@@ -76,6 +74,7 @@ namespace View.Tween
 
             // Start a nice animation effect
             LeanTween.moveLocal(gameObject, pos, WaveOutTime)
+                .setOnStart(() => _gameAudio.Play(GameClip.NodeLeave, WaveOutAudioDelay))
                 .setDelay(moveDelay)
                 .setEase(WaveOutMoveEase);
 

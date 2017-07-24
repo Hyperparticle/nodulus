@@ -27,7 +27,13 @@ namespace View.Items
         private Color CurrentColor
         {
             get { return _material.color; }
-            set { _material.color = value; }
+            set {
+                _material.color = value;
+
+                foreach (var material in _childMaterials) {
+                    material.color = value;
+                }
+            }
         }
 
         private HsbColor CurrentHsb
@@ -44,9 +50,12 @@ namespace View.Items
 
         private Material _material;
 
+        private Material[] _childMaterials;
+
         private void Awake()
         {
             _material = GetComponent<Renderer>().material;
+            _childMaterials = GetComponentInChildren<Renderer>().materials;
         }
 
         public void Highlight()

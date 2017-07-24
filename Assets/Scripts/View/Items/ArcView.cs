@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Core.Data;
 using Core.Items;
 using UnityEngine;
 using View.Control;
@@ -18,6 +19,9 @@ namespace View.Items
 
         private ScaleScript _arcScale;
         private Colorizer _colorizer;
+        private GameAudio _gameAudio;
+
+        public GameObject MarkerPrefab;
 
         public Transform Parent { private get; set; }
 
@@ -27,6 +31,7 @@ namespace View.Items
         {
             _arcScale = GetComponent<ScaleScript>();
             _colorizer = GetComponent<Colorizer>();
+            _gameAudio = GameObject.FindGameObjectWithTag("GameAudio").GetComponent<GameAudio>();
         }
 
         public void Init(Arc arc, Transform parent, bool inStartIsland)
@@ -37,6 +42,8 @@ namespace View.Items
             _arcScale.SetArc(arc);
 
             _colorizer.PrimaryColor = ArcColor;
+            
+//            CreateMarkers();
 
             if (!inStartIsland) {
                 _colorizer.Darken(0f);
@@ -67,6 +74,8 @@ namespace View.Items
 
             transform.parent = nodeView.transform;
 
+            _gameAudio.Play(GameClip.ArcMove);
+            
             LeanTween.move(gameObject, nodeView.transform, ArcMoveTime)
                 .setEase(ArcMoveEase)
                 .setOnComplete(onComplete);
@@ -101,6 +110,23 @@ namespace View.Items
             }
 
             MoveTo(head, () => MoveNext(tail, onComplete));
+        }
+
+        private void CreateMarkers()
+        {
+            for (var i = 1; i < Arc.Length; i++) {
+                var marker = Instantiate(MarkerPrefab);
+                marker.name = "Marker " + i;
+
+                marker.transform.parent = transform.parent;
+                marker.transform.localRotation = Arc.Direction.Rotation();
+                
+                marker.transform.parent = transform;
+
+                var fractionPos = ((float) i / Arc.Length * 2f - 1f) / 10f;
+                marker.transform.localPosition = Vector3.right * fractionPos;
+            }
+            
         }
     }
 }

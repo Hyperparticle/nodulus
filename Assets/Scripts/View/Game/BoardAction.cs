@@ -18,11 +18,11 @@ namespace View.Game
         private PuzzleView _puzzleView;
         private PuzzleState _puzzleState;
         private Text _moveText;
+        private GameAudio _gameAudio;
         
         private readonly Queue<Utility.Tuple<NodeView, Direction>> _moveQueue 
             = new Queue<Utility.Tuple<NodeView, Direction>>(); 
             
-        public GameAudio GameAudio;
 
         // A lock to prevent multiple moves to be played at the same time
         private bool _viewUpdating;
@@ -34,6 +34,7 @@ namespace View.Game
             _puzzleView = GetComponent<PuzzleView>();
             _puzzleState = GetComponent<PuzzleState>();
             _moveText = GameObject.FindGameObjectWithTag("MoveText").GetComponent<Text>();
+            _gameAudio = GameObject.FindGameObjectWithTag("GameAudio").GetComponent<GameAudio>();
 
             _puzzleView.ViewUpdated += OnViewUpdated;
         }
@@ -69,24 +70,33 @@ namespace View.Game
                 if (pushMove) {
                     // In the case of an invalid push move, shake the node
                     _puzzleView.Shake(nodeView, dir);
+                    _gameAudio.Play(GameClip.InvalidRotate);
                 } else if (canRotate) {
                     _puzzleView.Rotate(nodeView, dir, true);
+                    _gameAudio.Play(GameClip.NodeRotate90);
                 } else {
                     _puzzleView.Shake(nodeView, dir);
+                    _gameAudio.Play(GameClip.InvalidRotate);
                 }
             } else if (_puzzleState.IsPulled) {
                 _puzzleView.Rotate(nodeView, _puzzleState.PulledArcView, dir, true);
-                GameAudio.Play(Clip.MovePull);
+                _gameAudio.Play(GameClip.MovePull);
                 _puzzleView.Shake(dir);
+                HighlightAll();
             } else if (!_puzzleState.IsPulled) {
                 // If a push move has been played, move the arc to the node, then rotate it
                 _puzzleView.MoveRotate(_puzzleState.PushNodePath, _puzzleState.PulledArcView, dir);
-                GameAudio.Play(Clip.MovePush);
+//                _gameAudio.Play(GameClip.MovePush);
                 _puzzleView.Shake(dir);
+                HighlightAll();
             } else {
                 _viewUpdating = false;
+                HighlightAll();
             }
+        }
 
+        private void HighlightAll()
+        {
             // Update node highlighting
             _puzzleView.Highlight(_puzzleState.NonPlayerNodes, false);
             _puzzleView.Highlight(_puzzleState.PlayerNodes, true);
@@ -98,6 +108,7 @@ namespace View.Game
             // Update field highlighting
             _puzzleView.Highlight(_puzzleState.NonPushFields, false);
             _puzzleView.Highlight(_puzzleState.PushFields, true);
+            
         }
 
         private void OnViewUpdated()
@@ -108,7 +119,7 @@ namespace View.Game
             _moveText.text = _puzzleState.NumMoves.ToString();
 
             if (_puzzleState.Win) {
-                GameAudio.Play(Clip.WinBoard);
+                _gameAudio.Play(GameClip.WinBoard);
                 LeanTween.cancel(gameObject);
 
                 foreach (var node in _puzzleState.PlayerNodes.Where(nodeView => nodeView.Node.Final)) {
