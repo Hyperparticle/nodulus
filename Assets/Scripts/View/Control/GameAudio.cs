@@ -26,6 +26,7 @@ namespace View.Control
             var audioClip = MusicClips[(uint) clip];
             
             var audioSource = LeanAudio.play(audioClip, 0f, delay);
+            audioSource.loop = true;
 
             LeanTween.value(0f, volume, fadeTime)
                 .setDelay(delay)
