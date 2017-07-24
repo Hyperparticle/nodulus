@@ -4,36 +4,57 @@ namespace View.Control
 {
     public class GameAudio : MonoBehaviour
     {
-        public AudioClip[] AudioClips;
-        private AudioSource _audioSource;
+        public AudioClip[] MusicClips;
+        public AudioClip[] SfxClips;
 
-        private void Awake()
+        private void Start()
         {
-            _audioSource = GetComponent<AudioSource>();
+            // TODO: make configurable
+            const float fadeTime = 3f;
+            const float volume = 0.6f;
+            Play(MusicClip.Ambient01, fadeTime: fadeTime, volume: volume);
         }
 
         public void Play(GameClip clip, float delay = 0f, float volume = 1f)
         {
-            LeanTween.delayedCall(gameObject, delay, () => {
-                _audioSource.PlayOneShot(AudioClips[(uint) clip], volume);
-            });
+            var audioClip = SfxClips[(uint) clip];
+            LeanAudio.play(audioClip, volume, delay);
+        }
+        
+        public void Play(MusicClip clip, float fadeTime = 0f, float delay = 0f, float volume = 1f)
+        {
+            var audioClip = MusicClips[(uint) clip];
+            
+            var audioSource = LeanAudio.play(audioClip, 0f, delay);
+
+            LeanTween.value(0f, volume, fadeTime)
+                .setDelay(delay)
+                .setEase(LeanTweenType.easeInOutSine)
+                .setOnUpdate(v => {
+                    audioSource.volume = v;
+                });
         }
     }
 
     public enum GameClip
     {
-        MovePullMid,
-        MovePushMid,
-        WinBoard,
         GameStart,
+        WinBoard,
         NodeEnter,
         NodeLeave,
-        NodeRotate90,
-        InvalidRotate,
-        ArcMove,
-        MovePullHigh,
         MovePushHigh,
+        MovePullHigh,
+        MovePullMid,
+        MovePushMid,
         MovePullLow,
-        MovePushLow
+        MovePushLow,
+        ArcMove,
+        NodeRotate90,
+        InvalidRotate
+    }
+
+    public enum MusicClip
+    {
+        Ambient01
     }
 }

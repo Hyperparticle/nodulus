@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Core.Data;
@@ -20,8 +21,8 @@ namespace View.Game
         private Text _moveText;
         private GameAudio _gameAudio;
         
-        private readonly Queue<Utility.Tuple<NodeView, Direction>> _moveQueue 
-            = new Queue<Utility.Tuple<NodeView, Direction>>(); 
+        private readonly Queue<Tuple<NodeView, Direction>> _moveQueue 
+            = new Queue<Tuple<NodeView, Direction>>(); 
             
 
         // A lock to prevent multiple moves to be played at the same time
@@ -47,7 +48,7 @@ namespace View.Game
             if (_viewUpdating || LeanTween.isTweening(nodeView.gameObject)) {
                 // If the animations are running, queue up the move
                 if (_moveQueue.Count < MaxMovesInQueue) {
-                    _moveQueue.Enqueue(new Utility.Tuple<NodeView, Direction>(nodeView, dir));
+                    _moveQueue.Enqueue(new Tuple<NodeView, Direction>(nodeView, dir));
                 }
                 
                 return;
