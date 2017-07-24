@@ -21,7 +21,6 @@ namespace View.Items
         private ScaleScript _nodeScale;
         private Colorizer _colorizer;
         private NodeTransit _nodeTransit;
-        private GameAudio _gameAudio;
 
         public Node Node { get; private set; }
 
@@ -37,7 +36,6 @@ namespace View.Items
             _nodeScale = GetComponent<ScaleScript>();
             _colorizer = GetComponentInChildren<Colorizer>();
             _nodeTransit = GetComponent<NodeTransit>();
-            _gameAudio = GetComponent<GameAudio>();
         }
 
         public void Init(Node node, bool inStartIsland, int delay)
