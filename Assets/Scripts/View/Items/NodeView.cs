@@ -102,7 +102,11 @@ namespace View.Items
 
         private void PulseScale()
         {
-            LeanTween.scale(Rotor.gameObject, Rotor.transform.localScale + Vector3.one, 1f)
+            // TODO: make configurable
+            const float time = 1f;
+            const float scale = 1f;
+            
+            LeanTween.scale(Rotor.gameObject, Rotor.transform.localScale + Vector3.one * scale, time)
                 .setEase(LeanTweenType.easeInOutSine)
                 .setLoopPingPong(-1);
         }

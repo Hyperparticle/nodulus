@@ -17,7 +17,6 @@ namespace View.Game
 
         private PuzzleView _puzzleView;
         private PuzzleState _puzzleState;
-        private PuzzleSpawner _puzzleSpawner;
         private Text _moveText;
         
         private readonly Queue<Utility.Tuple<NodeView, Direction>> _moveQueue 
@@ -34,7 +33,6 @@ namespace View.Game
         {
             _puzzleView = GetComponent<PuzzleView>();
             _puzzleState = GetComponent<PuzzleState>();
-            _puzzleSpawner = GetComponent<PuzzleSpawner>();
             _moveText = GameObject.FindGameObjectWithTag("MoveText").GetComponent<Text>();
 
             _puzzleView.ViewUpdated += OnViewUpdated;

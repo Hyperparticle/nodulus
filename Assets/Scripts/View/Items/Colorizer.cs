@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using Utility;
 using View.Control;
@@ -124,28 +125,43 @@ namespace View.Items
                 .setEase(ease);
         }
 
-        public void Fade()
+        public void Fade(Action onComplete = null)
         {
-            Fade(TransitionTime, 0f, Ease);
+            Fade(TransitionTime, 0f, Ease, onComplete);
         }
 
-        public void Fade(float time)
+        public void Fade(float time, Action onComplete = null)
         {
-            Fade(time, 0f, Ease);
+            Fade(time, 0f, Ease, onComplete);
         }
 
-        public void Fade(float time, float delay, LeanTweenType ease)
+        public void Fade(float time, float delay, LeanTweenType ease, Action onComplete = null)
         {
+            onComplete = onComplete ?? (() => {});
             _previousColor = CurrentColor;
 
             if (time < float.Epsilon) {
                 CurrentColor = Alpha(CurrentColor, 0f);
                 return;
             }
-
+            
             LeanTween.alpha(gameObject, 0f, time)
                 .setDelay(delay)
-                .setEase(ease);
+                .setEase(ease)
+                .setOnComplete(onComplete);
+        }
+
+        public void PulseAppear(float time)
+        {
+            _previousColor = CurrentColor;
+
+            LeanTween.alpha(gameObject, _primaryColor.a + 0.1f, time)
+                .setEase(LeanTweenType.easeInOutSine)
+                .setOnComplete(() => {
+                    LeanTween.alpha(gameObject, _primaryColor.a, time)
+                        .setEase(LeanTweenType.easeInOutSine)
+                        .setLoopPingPong(-1);
+                });
         }
 
         public void Previous()
