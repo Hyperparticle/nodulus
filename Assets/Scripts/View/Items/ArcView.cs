@@ -26,6 +26,9 @@ namespace View.Items
         public Transform Parent { private get; set; }
 
         public Arc Arc { get; private set; }
+        
+        // TODO: make configurable
+        private static float MoveVolume => 0.3f;
 
         private void Awake()
         {
@@ -64,6 +67,36 @@ namespace View.Items
             }
         }
 
+        public void PushSound()
+        {
+            switch (Arc.Length) {
+                case 1:
+                    _gameAudio.Play(GameClip.MovePushHigh, volume: MoveVolume);
+                    break;
+                case 2:
+                    _gameAudio.Play(GameClip.MovePushMid, volume: MoveVolume);
+                    break;
+                default:
+                    _gameAudio.Play(GameClip.MovePushLow, volume: MoveVolume);
+                    break;
+            }
+        }
+
+        public void PullSound()
+        {
+            switch (Arc.Length) {
+                case 1:
+                    _gameAudio.Play(GameClip.MovePullHigh, volume: MoveVolume);
+                    break;
+                case 2:
+                    _gameAudio.Play(GameClip.MovePullMid, volume: MoveVolume);
+                    break;
+                default:
+                    _gameAudio.Play(GameClip.MovePullLow, volume: MoveVolume);
+                    break;
+            }
+        }
+        
         public void MoveTo(NodeView nodeView, Action onComplete)
         {
             // Move to the same node

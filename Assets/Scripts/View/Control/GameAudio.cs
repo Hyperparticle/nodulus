@@ -22,14 +22,18 @@ namespace View.Control
 
     public enum GameClip
     {
-        MovePull,
-        MovePush,
+        MovePullMid,
+        MovePushMid,
         WinBoard,
         GameStart,
         NodeEnter,
         NodeLeave,
         NodeRotate90,
         InvalidRotate,
-        ArcMove
+        ArcMove,
+        MovePullHigh,
+        MovePushHigh,
+        MovePullLow,
+        MovePushLow
     }
 }

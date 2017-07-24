@@ -79,18 +79,16 @@ namespace View.Game
                     _gameAudio.Play(GameClip.InvalidRotate);
                 }
             } else if (_puzzleState.IsPulled) {
+                // Pull move
                 _puzzleView.Rotate(nodeView, _puzzleState.PulledArcView, dir, true);
-                _gameAudio.Play(GameClip.MovePull);
-                _puzzleView.Shake(dir);
-                HighlightAll();
-            } else if (!_puzzleState.IsPulled) {
-                // If a push move has been played, move the arc to the node, then rotate it
-                _puzzleView.MoveRotate(_puzzleState.PushNodePath, _puzzleState.PulledArcView, dir);
-//                _gameAudio.Play(GameClip.MovePush);
+                _puzzleState.PulledArcView.PullSound();
                 _puzzleView.Shake(dir);
                 HighlightAll();
             } else {
-                _viewUpdating = false;
+                // Push move
+                // If a push move has been played, move the arc to the node, then rotate it
+                _puzzleView.MoveRotate(_puzzleState.PushNodePath, _puzzleState.PulledArcView, dir);
+                _puzzleView.Shake(dir);
                 HighlightAll();
             }
         }

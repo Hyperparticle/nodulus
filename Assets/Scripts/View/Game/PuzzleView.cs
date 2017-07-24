@@ -93,7 +93,7 @@ namespace View.Game
         public void MoveRotate(List<NodeView> nodeViews, ArcView arcView, Direction dir)
         {
             arcView.MoveTo(nodeViews, () => {
-                _gameAudio.Play(GameClip.MovePush);
+                arcView.PushSound();
                 Rotate(nodeViews[nodeViews.Count - 1], arcView, dir, false);
             });
         }
