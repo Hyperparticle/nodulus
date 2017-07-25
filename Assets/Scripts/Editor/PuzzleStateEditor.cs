@@ -14,6 +14,10 @@ namespace Editor
 		{
 			DrawDefaultInspector();
 
+			if (!Application.isPlaying) {
+				return;
+			}
+
 			var puzzleState = (PuzzleState) target;
 
 			GUILayout.BeginHorizontal();

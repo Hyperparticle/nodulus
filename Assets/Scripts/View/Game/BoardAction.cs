@@ -122,8 +122,9 @@ namespace View.Game
                 LeanTween.cancel(gameObject);
 
                 foreach (var node in _puzzleState.PlayerNodes.Where(nodeView => nodeView.Node.Final)) {
-                    _puzzleView.ConnectArcs(node);
-                    node.WinAnimation();
+                    var lastArc = _puzzleView.ConnectArcs(node);
+                    var spinDir = lastArc?.Arc?.Direction ?? Direction.Right;
+                    node.WinAnimation(spinDir);
                 }
 
                 _puzzleState.NextLevel(LevelDelay);

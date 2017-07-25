@@ -137,12 +137,12 @@ namespace View.Tween
                 .setLoopPingPong(1);
         }
 
-        public void RotateFast()
+        public void RotateFast(Direction dir)
         {
             LeanTween.cancel(_rotor);
 
             //LeanTween.rotateAroundLocal(_rotor, Direction.Right.Axis() + Direction.Down.Axis(), 360f, NodeRotateTime * 2)
-            LeanTween.rotateAroundLocal(_rotor, Direction.Right.Axis() + Direction.Down.Axis(), 720f, NodeRotateTime * 3)
+            LeanTween.rotateAroundLocal(_rotor, dir.Rotated(1).Axis(), 720f, NodeRotateTime * 3)
                 .setEase(LeanTweenType.easeInOutSine);
             //LeanTween.scale(_rotor, _rotor.transform.localScale * 2, NodeRotateTime * 2);
         }

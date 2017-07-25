@@ -149,15 +149,19 @@ namespace View.Game
             ViewUpdated?.Invoke();
         }
 
-        public void ConnectArcs(NodeView nodeView) {
+        public ArcView ConnectArcs(NodeView nodeView) {
             var connectedArcs = nodeView.Node.Connections
                 .Where(field => field.HasArc)
                 .Select(field => field.Arc)
                 .Select(arc => _puzzleState.GetArcs(arc.Position)[arc.Direction]);
 
+            ArcView lastArc = null;
             foreach (var arc in connectedArcs) {
                 arc.transform.parent = nodeView.Rotor.transform;
+                lastArc = arc;
             }
+
+            return lastArc;
         }
     }
 }

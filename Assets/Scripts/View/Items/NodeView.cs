@@ -82,9 +82,9 @@ namespace View.Items
             _nodeTransit.SlightRotate(dir, arcLength);
         }
 
-        public void WinAnimation()
+        public void WinAnimation(Direction spinDir)
         {
-            _nodeTransit.RotateFast();
+            _nodeTransit.RotateFast(spinDir);
         }
         
         public void Highlight(bool enable)
