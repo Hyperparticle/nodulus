@@ -263,8 +263,8 @@ public class LeanAudio : object {
 		return audioClip;
 	}
 
-	public static AudioSource play( AudioClip audio, float volume, float delay = 0f ){
-		AudioSource audioSource = playClipAt(audio, Vector3.zero, delay);
+	public static AudioSource play( AudioClip audio, float volume, float delay = 0f, bool loop = false ){
+		AudioSource audioSource = playClipAt(audio, Vector3.zero, delay, loop);
 		audioSource.volume = volume;
 		return audioSource; 
 	}
@@ -287,14 +287,17 @@ public class LeanAudio : object {
 		return audioSource;
 	}
 
-	public static AudioSource playClipAt( AudioClip clip, Vector3 pos, float delay = 0f ) {
+	public static AudioSource playClipAt( AudioClip clip, Vector3 pos, float delay = 0f, bool loop = false ) {
 		GameObject tempGO = new GameObject(); // create the temp object
 		tempGO.name = "AudioSource";
 		tempGO.transform.position = pos; // set its position
 		AudioSource aSource = tempGO.AddComponent<AudioSource>(); // add an audio source
 		aSource.clip = clip; // define the clip
+		aSource.loop = loop;
 		aSource.PlayDelayed(delay); // start the sound
-		GameObject.Destroy(tempGO, clip.length + delay); // destroy object after clip duration
+		if (!loop) {
+			GameObject.Destroy(tempGO, clip.length + delay); // destroy object after clip duration
+		}
 		return aSource; // return the AudioSource reference
 	}
 
