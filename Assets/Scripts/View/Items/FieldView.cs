@@ -48,7 +48,7 @@ namespace View.Items
         public void Highlight(bool enable)
         {
             // TODO: make configurable
-            const float time = 0.5f;
+            const float time = 0.6f;
             
             if (enable) {
                 _colorizer.PulseAppear(time);
@@ -68,7 +68,7 @@ namespace View.Items
             }
             
             // TODO: make configurable
-            const float scale = 0.33f;
+            const float scale = 0.05f;
             
             _pulseId = LeanTween.scale(gameObject, _initScale + Vector3.one * scale, time)
                 .setEase(LeanTweenType.easeInOutSine)

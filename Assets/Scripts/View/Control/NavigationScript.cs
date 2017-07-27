@@ -11,10 +11,12 @@ namespace View.Control
     {
         private PuzzleState _puzzleState;
 
-        private readonly IDictionary<ButtonState, Action<PuzzleState>> _buttonActions = new Dictionary<ButtonState, Action<PuzzleState>> {
-            { ButtonState.Left, puzzleState => puzzleState.PrevLevel() },
-            { ButtonState.Right, puzzleState => puzzleState.NextLevel() },
-            { ButtonState.Select, puzzleState => SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex) }
+        private readonly IDictionary<ButtonType, Action<PuzzleState>> _buttonActions = 
+                new Dictionary<ButtonType, Action<PuzzleState>> {
+//            { ButtonType.Left, puzzleState => puzzleState.PrevLevel() },
+//            { ButtonType.Right, puzzleState => puzzleState.NextLevel() },
+//            { ButtonState.LevelSelect, puzzleState => SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex) }
+            { ButtonType.LevelSelect, puzzleState => Debug.Log("Select") }
         };
 
         private void Awake()

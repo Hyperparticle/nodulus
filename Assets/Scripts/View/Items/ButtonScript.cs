@@ -6,13 +6,13 @@ namespace View.Items
 {
     public class ButtonScript : MonoBehaviour
     {
-        public ButtonState ButtonState;
+        public ButtonType ButtonType;
+        public float ButtonDistance = 0.5f;
 
-        public event Action<ButtonState> ButtonPressed;
+        public event Action<ButtonType> ButtonPressed;
 
         public float ButtonTransitionTime => GameDef.Get.ButtonTransitionTime;
         public LeanTweenType ButtonEase => GameDef.Get.ButtonEase;
-        private const float ButtonDistance = 0.5f;
 
         private void OnMouseDown()
         {
@@ -20,8 +20,10 @@ namespace View.Items
                 return;
             }
 
-            ButtonPressed?.Invoke(ButtonState);
+            // Invoke the event
+            ButtonPressed?.Invoke(ButtonType);
 
+            // Play the button animation
             Move();
         }
 
@@ -41,10 +43,10 @@ namespace View.Items
         }
     }
 
-    public enum ButtonState
+    public enum ButtonType
     {
-        Left,
-        Select,
-        Right
+//        Left,
+//        Right,
+        LevelSelect
     }
 }

@@ -21,6 +21,8 @@ namespace View.Game
 
         private float _nodeWidth;
 
+        private const float GridScale = 0.15f;
+        
         private void Awake()
         {
             _nodeWidth = RotorPrefab.transform.localScale.x;
@@ -48,7 +50,7 @@ namespace View.Game
                 );
 
                 var scale = transform.localScale;
-                scale.Scale(new Vector3(distanceBetweenLines * (verticalLinesCount - 1) * _nodeWidth, 1, 1));
+                scale.Scale(new Vector3(distanceBetweenLines * (verticalLinesCount - 1) * _nodeWidth, GridScale, GridScale));
                 gridLine.transform.localScale = scale;
 
                 Appear(gridLine);
@@ -71,7 +73,7 @@ namespace View.Game
                 );
 
                 var scale = transform.localScale;
-                scale.Scale(new Vector3(1, distanceBetweenLines * (horizontalLinesCount - 1) * _nodeWidth, 1));
+                scale.Scale(new Vector3(GridScale, distanceBetweenLines * (horizontalLinesCount - 1) * _nodeWidth, GridScale));
                 gridLine.transform.localScale = scale;
                 
                 Appear(gridLine);

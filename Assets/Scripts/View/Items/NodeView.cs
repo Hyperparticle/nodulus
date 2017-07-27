@@ -104,7 +104,7 @@ namespace View.Items
         {
             // TODO: make configurable
             const float time = 1f;
-            const float scale = 1f;
+            const float scale = 0.15f;
             
             LeanTween.scale(Rotor.gameObject, Rotor.transform.localScale + Vector3.one * scale, time)
                 .setEase(LeanTweenType.easeInOutSine)
