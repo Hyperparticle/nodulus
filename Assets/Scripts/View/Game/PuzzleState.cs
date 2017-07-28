@@ -18,6 +18,7 @@ namespace View.Game
         private PuzzleSpawner _puzzleSpawner;
         private PuzzleView _puzzleView;
         private BoardInput _boardInput;
+        private BoardAction _boardAction;
 
         private Puzzle _puzzle;
         private PlayerState _playerState;
@@ -113,6 +114,7 @@ namespace View.Game
             _puzzleSpawner = GetComponent<PuzzleSpawner>();
             _puzzleView = GetComponent<PuzzleView>();
             _boardInput = GetComponent<BoardInput>();
+            _boardAction = GetComponent<BoardAction>();
         }
 
         private void Start()
@@ -150,6 +152,7 @@ namespace View.Game
             _nodeMap = _puzzleSpawner.NodeMap;
 
             // Init all scripts that require additional information on startup
+            _boardAction.Init();
             _puzzleView.Init(_puzzle.StartNode.Position, _puzzle.BoardSize);
             _boardInput.Init(_puzzleSpawner.NodeMap);
         }

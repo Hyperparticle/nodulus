@@ -15,7 +15,6 @@ namespace View.Game
     {
         private PuzzleScale _puzzleScale;
         private PuzzleState _puzzleState;
-        private GameAudio _gameAudio;
 
         public event Action ViewUpdated;
 
@@ -23,9 +22,9 @@ namespace View.Game
         {
             _puzzleScale = GetComponent<PuzzleScale>();
             _puzzleState = GetComponent<PuzzleState>();
-            _gameAudio = GameObject.FindGameObjectWithTag("GameAudio").GetComponent<GameAudio>();
             
-            LeanTween.init(2000);
+            // Set the maximum number of simultaneous tweens
+            LeanTween.init(30000);
         }
 
         public void Init(Point startNode, Point boardSize)

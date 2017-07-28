@@ -9,25 +9,21 @@ namespace View.Control
 {
     public class NavigationScript : MonoBehaviour
     {
-        private PuzzleState _puzzleState;
+        private ScrollView _scrollView;
 
-        private readonly IDictionary<ButtonType, Action<PuzzleState>> _buttonActions = 
-                new Dictionary<ButtonType, Action<PuzzleState>> {
-//            { ButtonType.Left, puzzleState => puzzleState.PrevLevel() },
-//            { ButtonType.Right, puzzleState => puzzleState.NextLevel() },
-//            { ButtonState.LevelSelect, puzzleState => SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex) }
-            { ButtonType.LevelSelect, puzzleState => Debug.Log("Select") }
+        private readonly IDictionary<ButtonType, Action<ScrollView>> _buttonActions = 
+                new Dictionary<ButtonType, Action<ScrollView>> {
+            { ButtonType.LevelSelect, scrollView => scrollView.Enable() }
         };
 
         private void Awake()
         {
-            _puzzleState = GameObject.FindGameObjectWithTag("PuzzleGame")
-                .GetComponent<PuzzleState>();
+            _scrollView = GameObject.FindGameObjectWithTag("MainView").GetComponent<ScrollView>();
 
             var buttons = GetComponentsInChildren<ButtonScript>();
 
             foreach (var button in buttons) {
-                button.ButtonPressed += buttonState => _buttonActions[buttonState](_puzzleState);
+                button.ButtonPressed += buttonState => _buttonActions[buttonState](_scrollView);
             }
         }
 

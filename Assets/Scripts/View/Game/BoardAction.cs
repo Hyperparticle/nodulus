@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using Core.Data;
 using UnityEngine;
 using UnityEngine.UI;
@@ -18,15 +19,15 @@ namespace View.Game
 
         private PuzzleView _puzzleView;
         private PuzzleState _puzzleState;
-        private Text _moveText;
+        private MoveDisplay _moveDisplay;
         private GameAudio _gameAudio;
         
         private readonly Queue<Tuple<NodeView, Direction>> _moveQueue 
             = new Queue<Tuple<NodeView, Direction>>(); 
-            
 
         // A lock to prevent multiple moves to be played at the same time
         private bool _viewUpdating;
+        private int _numActions;
 
         private const int MaxMovesInQueue = 2;
 
@@ -34,15 +35,22 @@ namespace View.Game
         {
             _puzzleView = GetComponent<PuzzleView>();
             _puzzleState = GetComponent<PuzzleState>();
-            _moveText = GameObject.FindGameObjectWithTag("MoveText").GetComponent<Text>();
+            _moveDisplay = GameObject.FindGameObjectWithTag("MoveDisplay").GetComponent<MoveDisplay>();
             _gameAudio = GameObject.FindGameObjectWithTag("GameAudio").GetComponent<GameAudio>();
 
             _puzzleView.ViewUpdated += OnViewUpdated;
         }
 
+        public void Init()
+        {
+            _numActions = 0;
+        } 
+
         /// <summary>
-        /// Handle a move action on a node in the given direction
+        /// Handle a move action on a node in the given direction. Syncronized to prevent multiple moves being played 
+        /// simultaneously.
         /// </summary>
+        [MethodImpl(MethodImplOptions.Synchronized)]
         public void Play(NodeView nodeView, Direction dir)
         {
             if (_viewUpdating || LeanTween.isTweening(nodeView.gameObject)) {
@@ -92,6 +100,8 @@ namespace View.Game
                 _puzzleView.Shake(dir);
                 HighlightAll();
             }
+
+            _numActions++;
         }
 
         private void HighlightAll()
@@ -107,15 +117,15 @@ namespace View.Game
             // Update field highlighting
             _puzzleView.Highlight(_puzzleState.NonPushFields, false);
             _puzzleView.Highlight(_puzzleState.PushFields, true);
-            
         }
 
         private void OnViewUpdated()
         {
             _viewUpdating = false;
 
-            // Update MoveText
-            _moveText.text = _puzzleState.NumMoves.ToString();
+            // Update the Move Display
+            var moveText = _puzzleState.NumMoves.ToString();
+            _moveDisplay.UpdateText(moveText, _numActions == 0);
 
             if (_puzzleState.Win) {
                 _gameAudio.Play(GameClip.WinBoard);
