@@ -11,18 +11,19 @@ Properties {
     
     [Space]
     _SecondaryColorAngle("Secondary color angle", Range(0, 5)) = 1.0
-    _SecondaryColorImpact("Secondary color impact", Range(0, 2)) = 1.0
+    _SecondaryColorImpact("Secondary color impact", Range(0, 3)) = 1.0
     
     [Space]
     _Alpha("Opacity", Range(0, 1)) = 0.8
     
-    [Space]
-    _Intensity("Intensity", Range(0, 15)) = 1
-    _Speed("Speed", Range(0, 15)) = 1
-    _WaveLength("Wave length", Range(0.1, 5)) = 1
-    _Direction("Direction", Range(0, 6.282 /*2PI*/)) = 0
-    [Toggle] _SquareWaves("Square waves", Float) = 0
+//    [Space]
+//    _Intensity("Intensity", Range(0, 15)) = 1
+//    _Speed("Speed", Range(0, 15)) = 1
+//    _WaveLength("Wave length", Range(0.1, 5)) = 1
+//    _Direction("Direction", Range(0, 6.282 /*2PI*/)) = 0
+//    [Toggle] _SquareWaves("Square waves", Float) = 0
     
+    [Space]
     _WaveLength2("Wave length", Float) = 0.5
     _WaveHeight("Wave height", Float) = 0.5
     _WaveSpeed("Wave speed", Float) = 1.0
@@ -77,7 +78,6 @@ Category {
             half _WaveLength;
             half _SquareWaves;
             
-            ///
             float _WaveLength2;
 			float _WaveHeight;
 			float _WaveSpeed;
@@ -93,15 +93,13 @@ Category {
 			{
 				return frac(sin(dot(co.xyz ,float3(19.9128,75.2,34.5122))) * 12765.5213);
 			}
-            ///
             
 			v2f vert(appdata vertex) {
 			    v2f output;
 
-                // vertex.position.y += sin((_Time.y * _Speed + vertex.position.x * sin(_Direction) + vertex.position.z * cos(_Direction)) / _WaveLength) * 
-                //         _Intensity * 0.05 * sin(1.57 + _SquareWaves * (vertex.position.x * sin(_Direction + 1.57) + vertex.position.z * cos(_Direction + 1.57) / _WaveLength));
+//                vertex.position.y += sin((_Time.y * _Speed + vertex.position.x * sin(_Direction) + vertex.position.z * cos(_Direction)) / _WaveLength) * 
+//                         _Intensity * 0.05 * sin(1.57 + _SquareWaves * (vertex.position.x * sin(_Direction + 1.57) + vertex.position.z * cos(_Direction + 1.57) / _WaveLength));
                 
-                ///
                 float3 v0 = mul(unity_ObjectToWorld, vertex.position).xyz;
 
 				float phase0 = (_WaveHeight)* sin((_Time[1] * _WaveSpeed) + (v0.x * _WaveLength2) + (v0.z * _WaveLength2) + rand2(v0.xzz));
@@ -110,7 +108,6 @@ Category {
 				v0.y += phase0 + phase0_1;
                 
                 vertex.position.xyz = mul((float3x3)unity_WorldToObject, v0);
-                ///
                 
 			    half3 worldPosition = mul(unity_ObjectToWorld, vertex.position).xyz;
 			    half3 cameraVector = normalize(worldPosition.xyz - _WorldSpaceCameraPos);

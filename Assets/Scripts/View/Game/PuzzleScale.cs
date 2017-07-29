@@ -14,6 +14,8 @@ namespace View.Game
         public float BoardScaling => GameDef.Get.BoardScaling;
         public float BoardPadding => GameDef.Get.BoardPadding;
         public Vector3 BoardRotation => GameDef.Get.BoardRotation;
+        
+        public Vector2 Margin => NodeScaling * new Vector2(2f, 3f); // TODO: magic numbers
 
         public Vector2 Dimensions { get; private set; }
 
@@ -30,7 +32,7 @@ namespace View.Game
         
         public void Init(Point startNode, Point boardSize, Vector3 initialPosition)
         {
-            Dimensions = new Vector2(boardSize.X, boardSize.Y)*Scaling;
+            Dimensions = new Vector2(boardSize.X, boardSize.Y) * Scaling;
 
             transform.localEulerAngles = BoardRotation;
 

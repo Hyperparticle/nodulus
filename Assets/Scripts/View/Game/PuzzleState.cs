@@ -115,10 +115,6 @@ namespace View.Game
             _boardAction = GetComponent<BoardAction>();
         }
 
-        private void Start()
-        {
-        }
-
         private void Update()
         {
             ElapsedTime += Time.deltaTime;
