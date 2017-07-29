@@ -29,8 +29,8 @@ namespace View.Items
             var arcPos = arc.Direction.Vector() * arc.Length / 2;
 
             var puzzleLocalScale = _puzzleScale.transform.localScale;
-            var lengthScale = new Vector3(arc.Length * _puzzleScale.Scaling, puzzleLocalScale.y, puzzleLocalScale.z)
-                - Vector3.right * _puzzleScale.NodeScaling;
+            var width = arc.Length * _puzzleScale.Scaling - _puzzleScale.NodeScaling;
+            var lengthScale = Vector3.Scale(new Vector3(width, 1f, 1f), puzzleLocalScale);
 
             transform.localPosition = arcPos * _puzzleScale.Scaling;
             transform.localScale = Vector3.Scale(transform.localScale, lengthScale);
@@ -46,8 +46,8 @@ namespace View.Items
             var fieldPos = field.Direction.Vector() * field.Length / 2;
             
             var puzzleLocalScale = _puzzleScale.transform.localScale;
-            var lengthScale = new Vector3(field.Length * _puzzleScale.Scaling, puzzleLocalScale.y, puzzleLocalScale.z)
-                - Vector3.right * _puzzleScale.NodeScaling;
+            var width = field.Length * _puzzleScale.Scaling - _puzzleScale.NodeScaling;
+            var lengthScale = Vector3.Scale(new Vector3(width, 1f, 1f), puzzleLocalScale);
 
             transform.localPosition = fieldPos * _puzzleScale.Scaling;
             transform.localScale = Vector3.Scale(transform.localScale, lengthScale);

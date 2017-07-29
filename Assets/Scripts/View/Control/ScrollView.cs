@@ -6,36 +6,76 @@ namespace View.Control
 	public class ScrollView : MonoBehaviour
 	{
 		public GameObject PuzzleGamePrefab;
+
+		private PuzzleView _selectedPuzzleView;
+		private PuzzleScale _selectedPuzzleScale;
+		private PuzzleState _selectedPuzzleState;
+
+		private bool _scrollEnabled;
 		
-		private PuzzleView _puzzleView;
-		private PuzzleScale _puzzleScale;
+        public int StartLevel;
 
 		private void Awake()
 		{
-			_puzzleView = GetComponentInChildren<PuzzleView>();
-			_puzzleScale = _puzzleView.GetComponent<PuzzleScale>();
+			_selectedPuzzleView = GetComponentInChildren<PuzzleView>();
+			_selectedPuzzleScale = _selectedPuzzleView.GetComponent<PuzzleScale>();
+			_selectedPuzzleState = _selectedPuzzleView.GetComponent<PuzzleState>();
+			
+			_selectedPuzzleScale.PuzzleInit += OnPuzzleInit;
+		}
+
+		private void Start()
+		{
+            // Start with the initially defined start level
+            _selectedPuzzleState.Init(StartLevel);
 		}
 
 		public void EnableScroll()
 		{
+			if (_scrollEnabled) {
+				_scrollEnabled = false;
+				DisableScroll();
+			}
+			
+			_scrollEnabled = true;
+			
+			// TODO: make configurable
 			const float time = 0.3f;
 			const float scaleFactor = 0.5f;
 			
-			var scale = _puzzleView.transform.localScale * scaleFactor;
-			var pos = (Vector3) _puzzleScale.Offset * scaleFactor;
-
+			var scale = _selectedPuzzleView.transform.localScale * scaleFactor;
+			var pos = (Vector3) _selectedPuzzleScale.Offset * scaleFactor;
 			
-			LeanTween.moveLocal(_puzzleView.gameObject, pos, time)
+			LeanTween.moveLocal(_selectedPuzzleView.gameObject, pos, time)
 				.setEase(LeanTweenType.easeInSine);
 
-			LeanTween.scale(_puzzleView.gameObject, scale, time)
+			LeanTween.scale(_selectedPuzzleView.gameObject, scale, time)
 				.setEase(LeanTweenType.easeInSine)
 				.setOnComplete(() => {
 					var puzzleGame = Instantiate(PuzzleGamePrefab);
 					puzzleGame.transform.SetParent(transform);
 					puzzleGame.transform.localScale = scale;
-					puzzleGame.transform.localPosition = pos + Vector3.up * _puzzleScale.Dimensions.y;
+					
+					var level = _selectedPuzzleState.CurrentLevel - 1;
+					var p = puzzleGame.transform.localPosition + Vector3.up * _selectedPuzzleScale.Dimensions.y;
+					
+					puzzleGame.GetComponent<PuzzleState>().Init(level, p);
 				});
 		}
+
+		public void DisableScroll()
+		{
+			CameraScript.FitToDimensions(_selectedPuzzleScale.NodeScaling, _selectedPuzzleScale.Dimensions);
+		}
+
+		private void OnPuzzleInit()
+		{
+			if (_scrollEnabled) {
+				return;
+			}
+			
+			CameraScript.FitToDimensions(_selectedPuzzleScale.NodeScaling, _selectedPuzzleScale.Dimensions);
+		}
+		
 	}
 }

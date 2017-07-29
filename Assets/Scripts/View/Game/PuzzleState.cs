@@ -22,11 +22,8 @@ namespace View.Game
 
         private Puzzle _puzzle;
         private PlayerState _playerState;
-        private int _currentLevel;
 
         private NodeView _lastNodePulled;
-
-        public int StartLevel = 0;
 
         public ArcView PulledArcView { get; private set; }
         public bool IsPulled => _puzzle.IsPulled;
@@ -34,6 +31,7 @@ namespace View.Game
         public int NumMoves => _puzzle.NumMoves;
         public float ElapsedTime { get; private set; }
 
+        public int CurrentLevel { get; private set; }
         public List<NodeView> PushNodePath { get; private set; }
 
         public IEnumerable<NodeView> PlayerNodes
@@ -119,8 +117,6 @@ namespace View.Game
 
         private void Start()
         {
-            // Start with the initially defined start level
-            Init(StartLevel);
         }
 
         private void Update()
@@ -128,13 +124,18 @@ namespace View.Game
             ElapsedTime += Time.deltaTime;
         }
 
+        public void Init(int level)
+        {
+            Init(level, Vector3.zero);
+        }
+
         /// <summary>
         /// Entry point to create a new level
         /// </summary>
-        public void Init(int level)
+        public void Init(int level, Vector3 initialPosition)
         {
             if (level < 0 || level > _puzzleSpawner.LevelCount) {
-                Debug.LogWarning("Requested level is outside of bounds, ignoring");
+                Debug.LogWarning("Requested level is outside of bounds, ignoring request");
                 return;
             }
             
@@ -144,7 +145,7 @@ namespace View.Game
             // Spawn the new level
             _puzzle = _puzzleSpawner.SpawnBoard(level);
             _playerState = _puzzle.PlayerState;
-            _currentLevel = level;
+            CurrentLevel = level;
 
             // Reset the puzzle view state
             _arcMap.Reset(_puzzleSpawner.ArcMap);
@@ -153,18 +154,18 @@ namespace View.Game
 
             // Init all scripts that require additional information on startup
             _boardAction.Init();
-            _puzzleView.Init(_puzzle.StartNode.Position, _puzzle.BoardSize);
+            _puzzleView.Init(_puzzle.StartNode.Position, _puzzle.BoardSize, initialPosition);
             _boardInput.Init(_puzzleSpawner.NodeMap);
         }
 
         public void NextLevel(float delay = 0f)
         {
-            Init(_currentLevel == Levels.LevelCount - 1 ? _currentLevel : _currentLevel + 1);
+            Init(CurrentLevel == Levels.LevelCount - 1 ? CurrentLevel : CurrentLevel + 1);
         }
 
         public void PrevLevel(float delay = 0f)
         {
-            Init(_currentLevel == 0 ? 0 : _currentLevel - 1);
+            Init(CurrentLevel == 0 ? 0 : CurrentLevel - 1);
         }
 
         public bool Play(NodeView nodeView, Direction dir)

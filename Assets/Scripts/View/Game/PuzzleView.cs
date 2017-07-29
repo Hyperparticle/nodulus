@@ -27,9 +27,9 @@ namespace View.Game
             LeanTween.init(30000);
         }
 
-        public void Init(Point startNode, Point boardSize)
+        public void Init(Point startNode, Point boardSize, Vector3 initialPosition)
         {
-            _puzzleScale.Init(startNode, boardSize);
+            _puzzleScale.Init(startNode, boardSize, initialPosition);
             OnViewUpdated();
         }
 
