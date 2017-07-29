@@ -5,6 +5,8 @@ namespace View.Control
 {
 	public class ScrollView : MonoBehaviour
 	{
+		public GameObject PuzzleGamePrefab;
+		
 		private PuzzleView _puzzleView;
 		private PuzzleScale _puzzleScale;
 
@@ -20,13 +22,20 @@ namespace View.Control
 			const float scaleFactor = 0.5f;
 			
 			var scale = _puzzleView.transform.localScale * scaleFactor;
-			var pos = _puzzleScale.Offset * scaleFactor;
+			var pos = (Vector3) _puzzleScale.Offset * scaleFactor;
 
-			LeanTween.scale(_puzzleView.gameObject, scale, time)
-				.setEase(LeanTweenType.easeInSine);
 			
 			LeanTween.moveLocal(_puzzleView.gameObject, pos, time)
 				.setEase(LeanTweenType.easeInSine);
+
+			LeanTween.scale(_puzzleView.gameObject, scale, time)
+				.setEase(LeanTweenType.easeInSine)
+				.setOnComplete(() => {
+					var puzzleGame = Instantiate(PuzzleGamePrefab);
+					puzzleGame.transform.SetParent(transform);
+					puzzleGame.transform.localScale = scale;
+					puzzleGame.transform.localPosition = pos + Vector3.up * _puzzleScale.Dimensions.y;
+				});
 		}
 	}
 }

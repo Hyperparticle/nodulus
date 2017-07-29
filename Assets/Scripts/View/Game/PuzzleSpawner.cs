@@ -74,7 +74,7 @@ namespace View.Game
                 // Only destroy board pieces
                 if (child.gameObject.GetComponent<NodeView>() ??
                     child.gameObject.GetComponent<ArcView>() != null) {
-                        Destroy(child.gameObject, 1.5f);
+                        Destroy(child.gameObject, 3f);
                 }
             }
 

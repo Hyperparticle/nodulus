@@ -11,8 +11,9 @@ namespace Core.Game
 {
     public class Levels
     {
-        private static LevelPack _levelPack;
-        private static LevelPack LevelPack => _levelPack ?? (_levelPack = LevelParser.DeserializeLevel());
+        private const string BeginnerLevels = "Levels/BeginnerLevels";
+        
+        private static readonly LevelPack LevelPack = LevelParser.DeserializeLevel(BeginnerLevels);
 
         public static GameBoard BuildLevel(int levelNum)
         {
@@ -29,23 +30,21 @@ namespace Core.Game
 
     public class LevelParser
     {
-        private const string BeginnerLevels = "Levels/BeginnerLevels";
         
-        public static LevelPack DeserializeLevel()
+        public static LevelPack DeserializeLevel(string filePath)
         {
             var builder = new DeserializerBuilder();
             builder.WithNamingConvention(new CamelCaseNamingConvention());
             
             var deserializer = builder.Build();
             
-            var file = Resources.Load<TextAsset>(BeginnerLevels);
-            var reader = new StringReader(file.text);
+            var file = Resources.Load<TextAsset>(filePath);
 
-            //using (var reader = File.OpenText(BeginnerLevels))
-            //{
+            using (var reader = new StringReader(file.text))
+            {
                 var levelPackSer = deserializer.Deserialize<LevelPackSer>(reader);
                 return new LevelPack(levelPackSer);
-            //}
+            }
         }
 
         public class LevelPackSer
