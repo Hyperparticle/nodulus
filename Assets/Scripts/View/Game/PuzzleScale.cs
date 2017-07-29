@@ -23,16 +23,14 @@ namespace View.Game
         public Vector2 MaxClamp { get; private set; }
 
         public Vector2 CameraDimensions { get; private set; }
+        
+        public Vector3 InitialPosition { get; private set; }
 
         private void Awake()
         {
-            Get = this;
-
-            transform.localScale = Vector3.one;
-            transform.localPosition = Vector3.zero;
-            transform.localRotation = Quaternion.identity;
+            InitialPosition = transform.localPosition;
         }
-
+        
         public void Init(Point startNode, Point boardSize)
         {
             CameraDimensions = GetCameraDimensions();
@@ -43,7 +41,8 @@ namespace View.Game
 
             // Move the board to the center of the screen
             Offset = -Dimensions / 2f;
-            LeanTween.moveLocal(gameObject, Offset, 1f)
+            var movePos = InitialPosition + (Vector3) Offset;
+            LeanTween.moveLocal(gameObject, movePos, 1f)
                 .setEase(LeanTweenType.easeInOutSine);
 
             // Calculate dimensions of the game board + a small margin to prevent cutoff around the edges,
@@ -104,7 +103,5 @@ namespace View.Game
                 Mathf.Clamp(pos.y, MinClamp.y, MaxClamp.y)
             );
         }
-
-        public static PuzzleScale Get { get; private set; }
     }
 }

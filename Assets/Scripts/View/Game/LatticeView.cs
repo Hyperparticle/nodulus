@@ -21,7 +21,8 @@ namespace View.Game
 
         private float _nodeWidth;
 
-        private const float GridScale = 0.15f;
+        private const float GridLineScale = 0.15f;
+        private const float GridPointScale = 0.2f;
         
         private void Awake()
         {
@@ -33,7 +34,7 @@ namespace View.Game
             DestroyGridObjects(_gridLinesHorizontal, Vector3.left);
             DestroyGridObjects(_gridLinesVertical, Vector3.down);
             DestroyGridObjects(_gridPoints, Vector3.up);
-
+            
             // Horizontal lines down Y axis
             for (var i = 0; i < horizontalLinesCount; i++) {
                 var gridLine = Instantiate(GridLinePrefab);
@@ -50,7 +51,7 @@ namespace View.Game
                 );
 
                 var scale = transform.localScale;
-                scale.Scale(new Vector3(distanceBetweenLines * (verticalLinesCount - 1) * _nodeWidth, GridScale, GridScale));
+                scale.Scale(new Vector3(distanceBetweenLines * (verticalLinesCount - 1) * _nodeWidth, GridLineScale, GridLineScale));
                 gridLine.transform.localScale = scale;
 
                 Appear(gridLine);
@@ -73,7 +74,7 @@ namespace View.Game
                 );
 
                 var scale = transform.localScale;
-                scale.Scale(new Vector3(GridScale, distanceBetweenLines * (horizontalLinesCount - 1) * _nodeWidth, GridScale));
+                scale.Scale(new Vector3(GridLineScale, distanceBetweenLines * (horizontalLinesCount - 1) * _nodeWidth, GridLineScale));
                 gridLine.transform.localScale = scale;
                 
                 Appear(gridLine);
@@ -96,6 +97,8 @@ namespace View.Game
                         i * distanceBetweenLines,
                         ZOffset
                     );
+                    
+                    gridPoint.transform.localScale = Vector3.one * GridPointScale;
                     
                     Appear(gridPoint);
                     gridPoint.GetComponent<GridTransit>().WaveIn(i + j, Vector3.down, LeanTweenType.easeOutBack);

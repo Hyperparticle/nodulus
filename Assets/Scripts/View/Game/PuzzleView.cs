@@ -125,7 +125,6 @@ namespace View.Game
         public void Shake(Direction dir)
         {
             LeanTween.cancel(gameObject);
-            transform.position = _puzzleScale.Offset;
 
             var dirVector = dir.Vector();
 

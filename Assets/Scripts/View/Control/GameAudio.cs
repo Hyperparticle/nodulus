@@ -17,12 +17,20 @@ namespace View.Control
 
         public void Play(GameClip clip, float delay = 0f, float volume = 1f)
         {
+            if (!enabled) {
+                return;
+            }
+            
             var audioClip = SfxClips[(uint) clip];
             LeanAudio.play(audioClip, volume, delay);
         }
         
         public void Play(MusicClip clip, float fadeTime = 0f, float delay = 0f, float volume = 1f)
         {
+            if (!enabled) {
+                return;
+            }
+            
             var audioClip = MusicClips[(uint) clip];
             
             var audioSource = LeanAudio.play(audioClip, 0f, delay, true);
