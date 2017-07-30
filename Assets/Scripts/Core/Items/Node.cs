@@ -55,7 +55,7 @@ namespace Core.Items
         public int GetDistance(Node end)
         {
             var diff = end.Position - Position;
-            return diff.X != 0 ? diff.X : diff.Y;
+            return diff.x != 0 ? diff.x : diff.y;
         }
 
         public override string ToString()

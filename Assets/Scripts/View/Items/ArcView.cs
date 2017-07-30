@@ -52,7 +52,7 @@ namespace View.Items
                 _colorizer.Darken(0f);
             }
         }
-
+        
         public void ResetParent()
         {
             transform.parent = Parent;

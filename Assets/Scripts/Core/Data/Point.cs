@@ -11,24 +11,24 @@ namespace Core.Data
     /// </summary>
     public partial struct Point
     {
-        public readonly int X;
-        public readonly int Y;
+        public readonly int x;
+        public readonly int y;
         //public readonly int z;
 
         public Point(int x, int y)
         {
-            X = x;
-            Y = y;
+            this.x = x;
+            this.y = y;
             //this.z = z;
         }
 
         public Point(Point point)
         {
-            X = point.X;
-            Y = point.Y;
+            x = point.x;
+            y = point.y;
         }
 
-        public Point Sign => new Point(Math.Sign(X), Math.Sign(Y));
+        public Point Sign => new Point(Math.Sign(x), Math.Sign(y));
 
         public Point Next(int length, Direction direction)
         {
@@ -43,17 +43,17 @@ namespace Core.Data
 
         public bool Equals(Point other)
         {
-            return X == other.X && Y == other.Y;
+            return x == other.x && y == other.y;
         }
 
         public override int GetHashCode()
         {
-            unchecked { return (X * 397) ^ Y; }
+            unchecked { return (x * 397) ^ y; }
         }
 
         public override string ToString()
         {
-            return $"({X},{Y})";
+            return $"({x},{y})";
         }
 
         public static Point Zero => new Point(0, 0);
@@ -78,7 +78,7 @@ namespace Core.Data
                 { Zero, Direction.None }
         };
 
-        public bool IsDirection => X == 0 || Y == 0;
+        public bool IsDirection => x == 0 || y == 0;
 
         public Direction ToDirection
         {
@@ -94,10 +94,10 @@ namespace Core.Data
             if (!points.Any()) return Zero;
 
             // Take the min and max of all (x,y) coordinates
-            var xMax = points.Max(point => point.X);
-            var yMax = points.Max(point => point.Y);
-            var xMin = points.Min(point => point.X);
-            var yMin = points.Min(point => point.Y);
+            var xMax = points.Max(point => point.x);
+            var yMax = points.Max(point => point.y);
+            var xMin = points.Min(point => point.x);
+            var yMin = points.Min(point => point.y);
 
             return new Point(xMax - xMin, yMax - yMin);
         }
@@ -109,7 +109,7 @@ namespace Core.Data
 
         public static Point Abs(Point point)
         {
-            return new Point(Math.Abs(point.X), Math.Abs(point.Y));
+            return new Point(Math.Abs(point.x), Math.Abs(point.y));
         }
 
         public static Point Round(Vector2 pos)
@@ -119,32 +119,32 @@ namespace Core.Data
 
         public static implicit operator Vector3(Point v)
         {
-            return new Vector3(v.X, v.Y);
+            return new Vector3(v.x, v.y);
         }
 
         public static implicit operator Vector2(Point v)
         {
-            return new Vector2(v.X, v.Y);
+            return new Vector2(v.x, v.y);
         }
 
         public static Point operator +(Point p1, Point p2)
         {
-            return new Point(p1.X + p2.X, p1.Y + p2.Y);
+            return new Point(p1.x + p2.x, p1.y + p2.y);
         }
 
         public static Point operator -(Point p1, Point p2)
         {
-            return new Point(p1.X - p2.X, p1.Y - p2.Y);
+            return new Point(p1.x - p2.x, p1.y - p2.y);
         }
 
         public static Point operator *(Point p1, int f1)
         {
-            return new Point(p1.X * f1, p1.Y * f1);
+            return new Point(p1.x * f1, p1.y * f1);
         }
 
         public static Point operator *(int f1, Point p1)
         {
-            return new Point(p1.X * f1, p1.Y * f1);
+            return new Point(p1.x * f1, p1.y * f1);
         }
     }
 

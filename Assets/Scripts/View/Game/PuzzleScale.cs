@@ -32,7 +32,7 @@ namespace View.Game
         
         public void Init(Point startNode, Point boardSize, Vector3 initialPosition)
         {
-            Dimensions = new Vector2(boardSize.X, boardSize.Y) * Scaling;
+            Dimensions = new Vector2(boardSize.x, boardSize.y) * Scaling;
 
             transform.localEulerAngles = BoardRotation;
 

@@ -4,9 +4,6 @@ namespace View.Control
 {
     public class CameraScript : MonoBehaviour
     {
-        public static float Width => Camera.main.orthographicSize * 2.0f * Screen.width / Screen.height;
-        public static float Height => Camera.main.orthographicSize * 2.0f;
-
         public static Vector2 CameraDimensions {
             get
             {
@@ -22,8 +19,7 @@ namespace View.Control
             }
         }
 
-        public static void FitToDimensions(Vector2 dimensions, Vector2 margin, 
-            LeanTweenType tweenType = LeanTweenType.easeInOutSine)
+        public static float CameraZoomToFit(Vector2 dimensions, Vector2 margin, Vector2 scaleRatio)
         {
             var cameraDimensions = CameraDimensions;
 			
@@ -32,14 +28,27 @@ namespace View.Control
             // so that the board never gets cut off by the camera
             var scaledDimensions = dimensions + margin;
             var cameraZoomScale = new Vector2(
-                scaledDimensions.x / cameraDimensions.x,
-                scaledDimensions.y / cameraDimensions.y
+                scaledDimensions.x / scaleRatio.x / cameraDimensions.x,
+                scaledDimensions.y / scaleRatio.y / cameraDimensions.y
             );
             
             var cameraZoom = Camera.main.orthographicSize * cameraZoomScale;
             var maxZoom = Mathf.Max(cameraZoom.x, cameraZoom.y);
 
-            ZoomCamera(maxZoom, GameDef.Get.WaveInMoveDelayStart, tweenType);
+            return maxZoom;
+        }
+
+        public static void FitToDimensions(Vector2 dimensions, Vector2 margin,
+            LeanTweenType tweenType = LeanTweenType.easeInOutSine)
+        {
+            FitToDimensions(dimensions, margin, GameDef.Get.WaveInMoveDelayStart, tweenType);
+        }
+        
+        public static void FitToDimensions(Vector2 dimensions, Vector2 margin, float time,
+            LeanTweenType tweenType = LeanTweenType.easeInOutSine)
+        {
+            var zoom = CameraZoomToFit(dimensions, margin, Vector2.one);
+            ZoomCamera(zoom, time, tweenType);
         }
 
         public static void ZoomCamera(float zoom, float time, LeanTweenType tweenType = LeanTweenType.easeInOutSine)
@@ -48,26 +57,6 @@ namespace View.Control
                 .setEase(tweenType)
                 .setDelay(GameDef.Get.LevelDelay)
                 .setOnUpdate(scaled => Camera.main.orthographicSize = scaled);
-        }
-
-        public static float CameraFitScale(Vector2 dimensions, Vector2 scaleRatio)
-        {
-            return CameraFitScale(dimensions, scaleRatio, Camera.main.orthographicSize);
-        }
-        
-        public static float CameraFitScale(Vector2 dimensions, Vector2 scaleRatio, float orthographicSize)
-        {
-            var cameraDimensions = CameraDimensions * orthographicSize / Camera.main.orthographicSize;
-			
-            var scaledDimensions = dimensions;
-            var zoomScale = new Vector2(
-                cameraDimensions.x * scaleRatio.x / scaledDimensions.x,
-                cameraDimensions.y * scaleRatio.y / scaledDimensions.y
-            );
-            
-            var minZoom = Mathf.Min(zoomScale.x, zoomScale.y);
-
-            return minZoom;
         }
     }
 }

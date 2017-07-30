@@ -1,4 +1,5 @@
-﻿using Core.Game;
+﻿using System.Collections.Generic;
+using Core.Game;
 using UnityEngine;
 using View.Game;
 
@@ -8,13 +9,15 @@ namespace View.Control
 	{
 		public GameObject PuzzleGamePrefab;
 
+        public int StartLevel;
+		
 		private PuzzleView _selectedPuzzleView;
 		private PuzzleScale _selectedPuzzleScale;
 		private PuzzleState _selectedPuzzleState;
 
 		private bool _scrollEnabled;
-		
-        public int StartLevel;
+
+		private readonly List<GameObject> _levels = new List<GameObject>();
 
 		private void Awake()
 		{
@@ -36,74 +39,78 @@ namespace View.Control
 			if (_scrollEnabled) {
 				_scrollEnabled = false;
 				DisableScroll();
+				return;
 			}
 			
 			_scrollEnabled = true;
 			
 			// TODO: make configurable
-			const float time = 0.4f;
-			const float zoom = 10f;
-			var cameraFitRatio = new Vector2(1f, 0.3f);
+			const float time = 0.3f;
 			
-			var scaleFactor = CameraScript.CameraFitScale(
-				_selectedPuzzleScale.Dimensions,
-				cameraFitRatio,
-				zoom
-			);
+			_selectedPuzzleView.GetComponent<BoardInput>().enabled = false;
 			
-			var scale = _selectedPuzzleView.transform.localScale * scaleFactor;
-			var pos = (Vector3) _selectedPuzzleScale.Offset * scaleFactor;
-			
-			LeanTween.moveLocal(_selectedPuzzleView.gameObject, pos, time)
-				.setEase(LeanTweenType.easeInSine);
+			GenerateLevelsList();
 
-			LeanTween.scale(_selectedPuzzleView.gameObject, scale, time)
-				.setEase(LeanTweenType.easeInSine)
-				.setOnComplete(() => GenerateLevelsList(scale));
-			
-			// TODO: magic numbers
+			var scaleRatio = new Vector3(0.9f, 0.5f);
+			var zoom = CameraScript.CameraZoomToFit(
+				_selectedPuzzleScale.Dimensions,
+				_selectedPuzzleScale.Margin,
+				scaleRatio
+			);
 			CameraScript.ZoomCamera(zoom, time, LeanTweenType.easeInSine);
 		}
 
 		public void DisableScroll()
 		{
+			foreach (var level in _levels) {
+				level.GetComponent<PuzzleSpawner>().DestroyBoard();
+				Destroy(level, 5f); // TODO: magic number
+			}
+			_levels.Clear();
+			
+			_selectedPuzzleView.GetComponent<BoardInput>().enabled = true;
+			
 			CameraScript.FitToDimensions(_selectedPuzzleScale.Dimensions, _selectedPuzzleScale.Margin);
 		}
 
-		private void GenerateLevelsList(Vector3 scale)
+		private void GenerateLevelsList()
 		{
 			// Keep track of the last board's position as the offset for the next board
-			const float margin = 0f; // TODO: magic number
-			var prevOffset = Vector3.zero;
-			var nextOffset = Vector3.up * (_selectedPuzzleScale.Dimensions.y + margin);
+			// TODO: make configurable
+			const float margin = 3f; 
+			var prevOffset = _selectedPuzzleScale.Dimensions.y / 2f + margin;
 			
 			for (var level = _selectedPuzzleState.CurrentLevel - 1; level >= 0; level--) {
-                var puzzleGame = Instantiate(PuzzleGamePrefab);
-                puzzleGame.name = $"PuzzleGame ({level})";
-                puzzleGame.transform.SetParent(transform);
-
-				var cameraFitRatio = new Vector2(1f, 0.3f);
-			
-				var scaleFactor = CameraScript.CameraFitScale(
-					_selectedPuzzleScale.Dimensions,
-					cameraFitRatio
-				);
-				
-                puzzleGame.transform.localScale *= scaleFactor;
-
-//				puzzleGame.transform.position += Vector3.up * scaleFactor;
-				
-                puzzleGame.GetComponent<PuzzleState>().Init(level, nextOffset);
-				
-				
-				
-				// TODO: get board dimensions from puzzle scale before it is fully initialized
-				var puzzleScale = puzzleGame.GetComponent<PuzzleScale>();
-				var boardHeight = Levels.BuildLevel(level).Size.Y * puzzleScale.Scaling;
-
-				var offset = Vector3.up * (boardHeight + margin);
-				nextOffset += offset;
+				GenerateLevel(level, margin, ref prevOffset, Vector2.up);
 			}
+			
+			prevOffset = _selectedPuzzleScale.Dimensions.y / 2f + margin;
+			
+			for (var level = _selectedPuzzleState.CurrentLevel + 1; level < Levels.LevelCount; level++) {
+				GenerateLevel(level, margin, ref prevOffset, Vector2.down);
+			}
+		}
+
+		private void GenerateLevel(int level, float margin, ref float prevOffset, Vector2 direction)
+		{
+			var puzzleGame = Instantiate(PuzzleGamePrefab);
+			puzzleGame.name = $"PuzzleGame ({level})";
+			puzzleGame.transform.SetParent(transform);
+				
+			_levels.Add(puzzleGame);
+
+			puzzleGame.GetComponent<BoardInput>().enabled = false;
+
+			// TODO: get board dimensions from puzzle scale before it is fully initialized
+			var puzzleScale = puzzleGame.GetComponent<PuzzleScale>();
+			var boardHeight = Levels.BuildLevel(level).Size.y * puzzleScale.Scaling / 2f;
+				
+			prevOffset += boardHeight;
+				
+			puzzleGame.GetComponent<PuzzleState>().Init(level, direction * prevOffset);
+				
+			// Add half the board height as the starting point for the next board to spawn
+			prevOffset += boardHeight + margin;
 		}
 
 		private void OnPuzzleInit()

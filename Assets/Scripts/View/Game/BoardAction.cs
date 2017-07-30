@@ -53,6 +53,10 @@ namespace View.Game
         [MethodImpl(MethodImplOptions.Synchronized)]
         public void Play(NodeView nodeView, Direction dir)
         {
+            if (!enabled) {
+                return;
+            }
+            
             if (_viewUpdating || LeanTween.isTweening(nodeView.gameObject)) {
                 // If the animations are running, queue up the move
                 if (_moveQueue.Count < MaxMovesInQueue) {
@@ -121,6 +125,10 @@ namespace View.Game
 
         private void OnViewUpdated()
         {
+            if (!enabled) {
+                return;
+            }
+            
             _viewUpdating = false;
 
             // Update the Move Display

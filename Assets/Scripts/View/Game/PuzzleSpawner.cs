@@ -63,6 +63,9 @@ namespace View.Game
         public void DestroyBoard()
         {
             if (_gameBoard == null) return;
+            
+            // Destroy the lattice grid
+            _lattice.DestroyGrid();
 
             // Destroy all objects in the game board
             var i = 0;
@@ -142,7 +145,7 @@ namespace View.Game
             const float delay = 1.1f;
             _gameAudio.Play(GameClip.GameStart, delay, 0.3f);
             
-            _lattice.Init(_gameBoard.Size.Y + 1, _gameBoard.Size.X + 1, _puzzleScale.Scaling);
+            _lattice.Init(_gameBoard.Size.y + 1, _gameBoard.Size.x + 1, _puzzleScale.Scaling);
             
             var i = 0;
             foreach (var nodeView in NodeMap.Values) {

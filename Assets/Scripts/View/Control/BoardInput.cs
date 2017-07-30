@@ -61,6 +61,10 @@ namespace View.Control
         /// </summary>
         private void OnTap(TKTapRecognizer recognizer)
         {
+            if (!enabled) {
+                return;
+            }
+            
 //            // Find the nearest node to the tap
 //            var field = GetNearestField(recognizer);
 //
@@ -76,6 +80,10 @@ namespace View.Control
         /// </summary>
         private void OnSwipe(TKSwipeRecognizer recognizer)
         {
+            if (!enabled) {
+                return;
+            }
+            
             // Find the nearest node to the swipe (within 1 grid unit), and the swipe direction
             var swipeDirection = recognizer.completedSwipeDirection.ToDirection();
             var node = GetNearestNode(recognizer.startPoint) ?? GetNearestNode(recognizer.endPoint);

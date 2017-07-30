@@ -29,12 +29,15 @@ namespace View.Game
             _nodeWidth = RotorPrefab.transform.localScale.x;
         }
 
-        public void Init(int horizontalLinesCount, int verticalLinesCount, float distanceBetweenLines)
+        public void DestroyGrid()
         {
             DestroyGridObjects(_gridLinesHorizontal, Vector3.left);
             DestroyGridObjects(_gridLinesVertical, Vector3.down);
             DestroyGridObjects(_gridPoints, Vector3.up);
-            
+        }
+
+        public void Init(int horizontalLinesCount, int verticalLinesCount, float distanceBetweenLines)
+        {
             // Horizontal lines down Y axis
             for (var i = 0; i < horizontalLinesCount; i++) {
                 var gridLine = Instantiate(GridLinePrefab);
