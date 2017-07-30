@@ -14,9 +14,15 @@ namespace View.Items
 
         private ScaleScript _fieldScale;
         private Colorizer _colorizer;
+        private Renderer _renderer;
+        private Light _light;
 
         private Vector3 _initScale;
-        private int _pulseId;
+        private Color _initEmissionColor;
+        
+        private int _scalePulseId;
+        private int _emissionPulseId;
+        private int _lightPulseId;
 
         public Field Field { get; private set; }
 
@@ -29,6 +35,8 @@ namespace View.Items
         {
             _fieldScale = GetComponent<ScaleScript>();
             _colorizer = GetComponent<Colorizer>();
+            _renderer = GetComponent<Renderer>();
+            _light = GetComponent<Light>();
         }
 
         public void Init(Field field, NodeView parent, NodeView connected)
@@ -43,6 +51,7 @@ namespace View.Items
             _colorizer.Fade(0f);
             
             _initScale = transform.localScale;
+            _initEmissionColor = _renderer.material.color;
         }
 
         public void Highlight(bool enable)
@@ -55,6 +64,13 @@ namespace View.Items
                 PulseScale(time);
             } else {
                 LeanTween.cancel(gameObject);
+                LeanTween.cancel(_emissionPulseId);
+                LeanTween.cancel(_lightPulseId);
+
+                LeanTween.value(_light.intensity, 0f, time)
+                    .setEase(LeanTweenType.easeInOutSine)
+                    .setOnUpdate(value => _light.intensity = value);
+                
                 _colorizer.Fade(() => {
                     transform.localScale = _initScale;
                 });
@@ -63,17 +79,38 @@ namespace View.Items
         
         private void PulseScale(float time)
         {
-            if (LeanTween.isTweening(_pulseId)) {
+            if (LeanTween.isTweening(_scalePulseId)) {
                 return;
             }
             
             // TODO: make configurable
             const float scale = 0.05f;
             
-            _pulseId = LeanTween.scale(gameObject, _initScale + Vector3.one * scale, time)
+            _scalePulseId = LeanTween.scale(gameObject, _initScale + Vector3.one * scale, time)
                 .setEase(LeanTweenType.easeInOutSine)
                 .setLoopPingPong(-1)
                 .id;
+
+            // TODO: magic numbers
+            var color = _initEmissionColor;
+            _emissionPulseId = LeanTween.value(0.7f, 1.1f, time)
+                .setOnUpdate((float value) => {
+                    _renderer.material.SetColor("_EmissionColor", color * value);
+                })
+                .setEase(LeanTweenType.easeInOutSine)
+                .setLoopPingPong(-1)
+                .id;
+
+            _lightPulseId = LeanTween.value(0f, 2f, time) // TODO: magic numbers
+                .setOnUpdate(value => _light.intensity = value)
+                .setEase(LeanTweenType.easeInOutSine)
+                .setLoopPingPong(-1)
+                .id;
+        }
+
+        private void PulseIntensity(float time)
+        {
+            
         }
     }
 }
