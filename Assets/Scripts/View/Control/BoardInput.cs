@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using Core.Data;
 using UnityEngine;
 using View.Game;
@@ -17,6 +18,9 @@ namespace View.Control
 
         private IDictionary<Point, NodeView> _nodeMap;
 
+        private TKSwipeRecognizer _swipeRecognizer;
+        private TKTapRecognizer _tapRecognizer;
+        
         public float MinSwipeDistanceCm => GameDef.Get.MinSwipeDistanceCm;
 
         private void Awake()
@@ -28,27 +32,29 @@ namespace View.Control
         private void Start()
         {
             // Add event handlers for swiping the screen
-            var swipeRecognizers = new[] {
-                new TKSwipeRecognizer(MinSwipeDistanceCm) {
-                    minimumNumberOfTouches = 1,
-                    maximumNumberOfTouches = 10,
-                    timeToSwipe = 1f
-                }
+            _swipeRecognizer = new TKSwipeRecognizer(MinSwipeDistanceCm) {
+                minimumNumberOfTouches = 1,
+                maximumNumberOfTouches = 10,
+                timeToSwipe = 1f
             };
 
-            foreach (var swipe in swipeRecognizers) {
-                swipe.gestureRecognizedEvent += OnSwipe;
-                TouchKit.addGestureRecognizer(swipe);
-            }
+            _swipeRecognizer.gestureRecognizedEvent += OnSwipe;
+            TouchKit.addGestureRecognizer(_swipeRecognizer);
 
             // Add an event handler for tapping the screen
-            var tapRecognizer = new TKTapRecognizer();
-            tapRecognizer.gestureRecognizedEvent += OnTap;
-            TouchKit.addGestureRecognizer(tapRecognizer);
+            _tapRecognizer = new TKTapRecognizer();
+            _tapRecognizer.gestureRecognizedEvent += OnTap;
+            TouchKit.addGestureRecognizer(_tapRecognizer);
+        }
 
-            var touch = new TKAnyTouchRecognizer(new TKRect());
-            TouchKit.addGestureRecognizer(touch);
-            touch.onEnteredEvent += r => { Debug.Log("Touch begin"); };
+        private void OnDestroy()
+        {
+            if (_swipeRecognizer == null || _tapRecognizer == null) {
+                return;
+            }
+            
+            TouchKit.removeGestureRecognizer(_swipeRecognizer);
+            TouchKit.removeGestureRecognizer(_tapRecognizer);
         }
 
         public void Init(IDictionary<Point, NodeView> nodeMap)

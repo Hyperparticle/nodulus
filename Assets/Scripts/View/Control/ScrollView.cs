@@ -66,17 +66,16 @@ namespace View.Control
 				return;
 			}
 			
-			
-			// TODO: make configurable
-			const float time = 0.3f;
-			
-			_selectedLevel.GetComponent<BoardInput>().enabled = false;
+			_selectedLevel.GetComponent<PuzzleState>().BoardEnabled = false;
 			
 			_levelBounds = new Tuple<float, float>[Levels.LevelCount];
 			_levels = new GameObject[Levels.LevelCount];
 			
 			GenerateLevelsList();
 
+			// TODO: make configurable
+			const float time = 0.3f;
+			
 			var puzzleScale = _selectedLevel.GetComponent<PuzzleScale>();
 			var scaleRatio = new Vector3(0.9f, 0.5f);
 			var zoom = CameraScript.CameraZoomToFit(puzzleScale.Dimensions, puzzleScale.Margin, scaleRatio);
@@ -101,7 +100,8 @@ namespace View.Control
 			_listBottom = 0f;
 			_listTop = 0f;
 			
-			_selectedLevel.GetComponent<BoardInput>().enabled = true;
+			_selectedLevel.GetComponent<PuzzleScale>().PuzzleInit += OnPuzzleInit;
+			_selectedLevel.GetComponent<PuzzleState>().BoardEnabled = true;
 			
 			var puzzleScale = _selectedLevel.GetComponent<PuzzleScale>();
 			CameraScript.FitToDimensions(puzzleScale.Dimensions, puzzleScale.Margin);
@@ -153,6 +153,8 @@ namespace View.Control
 				
 			_levels[level] = puzzleGame;
 
+			puzzleGame.GetComponent<PuzzleState>().BoardEnabled = false;
+			
 			puzzleGame.GetComponent<BoardInput>().enabled = false;
 
 			// TODO: get board dimensions from puzzle scale before it is fully initialized
@@ -162,8 +164,12 @@ namespace View.Control
 			var sign = Mathf.Sign(direction.y);
 			var boardStartBounds = sign * prevOffset;
 			prevOffset += boardHeight + margin;
+
+			// TODO: make configurable
+			const float animationSpeed = 0.6f;
+			const float delayScale = 0f;
 				
-			puzzleGame.GetComponent<PuzzleState>().Init(level, direction * prevOffset);
+			puzzleGame.GetComponent<PuzzleState>().Init(level, direction * prevOffset, animationSpeed, delayScale);
 			
 			// Add half the board height as the starting point for the next board to spawn
 			prevOffset += boardHeight + margin;

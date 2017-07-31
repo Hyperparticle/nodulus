@@ -34,6 +34,7 @@ namespace View.Game
         {
             Dimensions = new Vector2(boardSize.x, boardSize.y) * Scaling;
 
+            transform.localPosition += initialPosition;
             transform.localEulerAngles = BoardRotation;
 
             // Move the board to the center of the screen

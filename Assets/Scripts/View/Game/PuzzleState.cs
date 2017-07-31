@@ -19,6 +19,7 @@ namespace View.Game
         private PuzzleView _puzzleView;
         private BoardInput _boardInput;
         private BoardAction _boardAction;
+        private GameAudio _gameAudio;
 
         private Puzzle _puzzle;
         private PlayerState _playerState;
@@ -98,6 +99,19 @@ namespace View.Game
 
         public bool Win => _puzzle.Win;
 
+        private bool _boardEnabled;
+        public bool BoardEnabled
+        {
+            get { return _boardEnabled;  }
+            set {
+                _boardInput.enabled = value;
+                _boardAction.enabled = value;
+                _gameAudio.enabled = value;
+                
+                _boardEnabled = value;
+            }
+        }
+
         public bool HasArcAt(Point pos, Direction dir) { return _arcMap.ContainsArc(pos, dir); }
         public bool NodeOccupies(Point pos) { return _nodeMap.ContainsKey(pos); }
         public bool ArcOccupies(Point pos) { return false; }
@@ -113,6 +127,7 @@ namespace View.Game
             _puzzleView = GetComponent<PuzzleView>();
             _boardInput = GetComponent<BoardInput>();
             _boardAction = GetComponent<BoardAction>();
+            _gameAudio = GameObject.FindGameObjectWithTag("GameAudio").GetComponent<GameAudio>();
         }
 
         private void Update()
@@ -128,7 +143,7 @@ namespace View.Game
         /// <summary>
         /// Entry point to create a new level
         /// </summary>
-        public void Init(int level, Vector3 initialPosition)
+        public void Init(int level, Vector3 initialPosition, float animationSpeed = 1f, float delayScale = 1f)
         {
             if (level < 0 || level > _puzzleSpawner.LevelCount) {
                 Debug.LogWarning("Requested level is outside of bounds, ignoring request");
@@ -139,7 +154,7 @@ namespace View.Game
             _puzzleSpawner.DestroyBoard();
 
             // Spawn the new level
-            _puzzle = _puzzleSpawner.SpawnBoard(level);
+            _puzzle = _puzzleSpawner.SpawnBoard(level, animationSpeed, delayScale);
             _playerState = _puzzle.PlayerState;
             CurrentLevel = level;
 

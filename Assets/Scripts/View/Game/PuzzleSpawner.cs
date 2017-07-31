@@ -37,7 +37,7 @@ namespace View.Game
             _gameAudio = GameObject.FindGameObjectWithTag("GameAudio").GetComponent<GameAudio>();
         }
 
-        public Puzzle SpawnBoard(int level)
+        public Puzzle SpawnBoard(int level, float animationSpeed = 1f, float delayScale = 1f)
         {
             // Create the game board model
             var newGameBoard = Levels.BuildLevel(level);
@@ -54,7 +54,7 @@ namespace View.Game
             InstantiateFields();
             InstantiateArcs();
 
-            StartAnimations();
+            StartAnimations(animationSpeed, delayScale);
 
             // Wrap a puzzle around the gameboard and return it
             return new Puzzle(_gameBoard);
@@ -139,23 +139,28 @@ namespace View.Game
             }
         }
 
-        private void StartAnimations()
+        private void StartAnimations(float animationSpeed = 1f, float delayScale = 1f)
         {
             // TODO: make configurable
             const float delay = 1.1f;
-            _gameAudio.Play(GameClip.GameStart, delay, 0.3f);
+            const float volume = 0.3f;
+            _gameAudio.Play(GameClip.GameStart, delay * delayScale, volume);
             
-            _lattice.Init(_gameBoard.Size.y + 1, _gameBoard.Size.x + 1, _puzzleScale.Scaling);
+            _lattice.Init(
+                _gameBoard.Size.y + 1,
+                _gameBoard.Size.x + 1,
+                _puzzleScale.Scaling,
+                animationSpeed,
+                delayScale
+            );
             
             var i = 0;
             foreach (var nodeView in NodeMap.Values) {
                 if (i < NodeMap.Values.Count - 1) {
-                    nodeView.WaveIn(i++);
+                    nodeView.WaveIn(i++, animationSpeed: animationSpeed, delayScale: delayScale);
                 } else {
                     // On completion of the last node, the puzzle has finished spawning
-                    nodeView.WaveIn(i++, () => {
-                        FinishedSpawn = true;
-                    });
+                    nodeView.WaveIn(i++, () => FinishedSpawn = true, animationSpeed, delayScale);
                 }
             }
         }

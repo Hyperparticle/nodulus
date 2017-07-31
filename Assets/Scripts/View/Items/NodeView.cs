@@ -57,14 +57,14 @@ namespace View.Items
             }
         }
 
-        public void WaveIn(int delay, Action onComplete = null)
+        public void WaveIn(int delay, Action onComplete = null, float animationSpeed = 1f, float delayScale = 1f)
         {
-            _nodeTransit.WaveIn(delay, onComplete);
+            _nodeTransit.WaveIn(delay, onComplete, animationSpeed, delayScale);
         }
 
-        public void WaveOut(int delay)
+        public void WaveOut(int delay, float animationSpeed = 1f, float delayScale = 1f)
         {
-            _nodeTransit.WaveOut(delay);
+            _nodeTransit.WaveOut(delay, animationSpeed, delayScale);
         }
 
         public void Rotate(Direction dir, Action onComplete)

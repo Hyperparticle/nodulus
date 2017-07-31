@@ -36,7 +36,8 @@ namespace View.Game
             DestroyGridObjects(_gridPoints, Vector3.up);
         }
 
-        public void Init(int horizontalLinesCount, int verticalLinesCount, float distanceBetweenLines)
+        public void Init(int horizontalLinesCount, int verticalLinesCount, float distanceBetweenLines, 
+            float animationSpeed = 1f, float delayScale = 1f)
         {
             // Horizontal lines down Y axis
             for (var i = 0; i < horizontalLinesCount; i++) {
@@ -57,7 +58,7 @@ namespace View.Game
                 scale.Scale(new Vector3(distanceBetweenLines * (verticalLinesCount - 1) * _nodeWidth, GridLineScale, GridLineScale));
                 gridLine.transform.localScale = scale;
 
-                Appear(gridLine);
+                Appear(gridLine, animationSpeed);
                 gridLine.GetComponent<GridTransit>().WaveIn(i, Vector3.right, LeanTweenType.easeOutSine);
             }
 
@@ -80,7 +81,7 @@ namespace View.Game
                 scale.Scale(new Vector3(GridLineScale, distanceBetweenLines * (horizontalLinesCount - 1) * _nodeWidth, GridLineScale));
                 gridLine.transform.localScale = scale;
                 
-                Appear(gridLine);
+                Appear(gridLine, animationSpeed);
                 gridLine.GetComponent<GridTransit>().WaveIn(i, Vector3.up, LeanTweenType.easeOutSine);
             }
 
@@ -103,13 +104,13 @@ namespace View.Game
                     
                     gridPoint.transform.localScale = Vector3.one * GridPointScale;
                     
-                    Appear(gridPoint);
-                    gridPoint.GetComponent<GridTransit>().WaveIn(i + j, Vector3.down, LeanTweenType.easeOutBack);
+                    Appear(gridPoint, animationSpeed);
+                    gridPoint.GetComponent<GridTransit>().WaveIn(i + j, Vector3.down, LeanTweenType.easeOutBack, animationSpeed);
                 }
             }
         }
 
-        private void Appear(GameObject gameObj)
+        private void Appear(GameObject gameObj, float animationSpeed = 1f)
         {
             var colorizer = gameObj.GetComponent<Colorizer>();
             colorizer.PrimaryColor = gameObj.GetComponent<Renderer>().material.color;
