@@ -67,7 +67,7 @@ namespace View.Items
                 LeanTween.cancel(_emissionPulseId);
                 LeanTween.cancel(_lightPulseId);
 
-                LeanTween.value(_light.intensity, 0f, time)
+                LeanTween.value(_light.intensity, 0f, time / 2f)
                     .setEase(LeanTweenType.easeInOutSine)
                     .setOnUpdate(value => _light.intensity = value);
                 
