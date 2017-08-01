@@ -227,7 +227,7 @@ levels:
       - parent: [3, 1]
         direction: Up
 
-  - name: tbd
+  - name: Deep End
     description: tbd
     nodes:
       - [0, 3]
@@ -254,7 +254,226 @@ levels:
         direction: Right
       - parent: [4, 0]
         direction: Up
+
+  - name: Staircase
+    description: tbd
+    nodes:
+      - [0, 2]
+      - [1, 0]
+      - [1, 1]
+      - [1, 3]
+      - [1, 4]
+      - [2, 2]
+      - [2, 4]
+      - [3, 1]
+      - [3, 2]
+      - [3, 3]
+      - [4, 0]
+      - [4, 1]
+      - [4, 4]
+      - [5, 0]
+      - [5, 3]
+      - [6, 2]
+    arcs:
+      - parent: [0, 2]
+        direction: Right
+      - parent: [1, 4]
+        direction: Right
+      - parent: [5, 0]
+        direction: Up
   
+  - name: Six Squared
+    description: tbd
+    nodes:
+      - [0, 3]
+      - [1, 0]
+      - [1, 1]
+      - [1, 2]
+      - [1, 4]
+      - [2, 1]
+      - [2, 3]
+      - [3, 1]
+      - [3, 4]
+      - [3, 5]
+      - [4, 0]
+      - [4, 2]
+      - [4, 3]
+      - [4, 4]
+      - [5, 1]
+      - [5, 2]
+      - [5, 4]
+      - [6, 0]
+      - [6, 3]
+      - [6, 5]
+      - [7, 0]
+    arcs:
+      - parent: [0, 3]
+        direction: Right
+      - parent: [3, 4]
+        direction: Right
+      - parent: [3, 5]
+        direction: Right
+
+  - name: Expressway
+    description: tbd
+    nodes:
+      - [0, 4]
+      - [1, 0]
+      - [1, 1]
+      - [1, 2]
+      - [1, 5]
+      - [1, 6]
+      - [2, 0]
+      - [2, 2]
+      - [2, 4]
+      - [2, 5]
+      - [3, 1]
+      - [3, 2]
+      - [3, 3]
+      - [3, 5]
+      - [3, 6]
+      - [4, 0]
+      - [4, 2]
+      - [5, 0]
+      - [5, 1]
+      - [5, 3]
+      - [5, 4]
+      - [6, 1]
+      - [6, 3]
+      - [6, 6]
+      - [7, 0]
+      - [7, 2]
+      - [7, 3]
+      - [7, 6]
+      - [8, 4]
+    arcs:
+      - parent: [0, 4]
+        direction: Right
+      - parent: [3, 2]
+        direction: Right 
+      - parent: [4, 2]
+        direction: Right 
+  
+  - name: Box Step 
+    description: tbd
+    nodes:
+      - [0, 5]
+      - [1, 0]
+      - [1, 3]
+      - [1, 6]
+      - [2, 0]
+      - [2, 1]
+      - [2, 4]
+      - [3, 2]
+      - [3, 3]
+      - [3, 4]
+      - [3, 5]
+      - [3, 6]
+      - [4, 2]
+      - [4, 4]
+      - [4, 6]
+      - [5, 0]
+      - [5, 2]
+      - [5, 3]
+      - [5, 4]
+      - [5, 5]
+      - [6, 4]
+      - [7, 3]
+      - [7, 5]
+      - [7, 6]
+      - [8, 2]
+    arcs:
+      - parent: [0, 5]
+        direction: Right
+      - parent: [3, 2]
+        direction: Up
+      - parent: [3, 5]
+        direction: Right 
+
+  - name: Brute 66
+    description: tbd
+    nodes:
+      - [0, 5]
+      - [1, 1]
+      - [1, 4]
+      - [1, 6]
+      - [1, 7]
+      - [2, 0]
+      - [2, 3]
+      - [2, 5]
+      - [2, 6]
+      - [2, 7]
+      - [3, 1]
+      - [3, 2]
+      - [3, 4]
+      - [3, 7]
+      - [4, 0]
+      - [4, 3]
+      - [4, 4]
+      - [4, 6]
+      - [5, 2]
+      - [5, 4]
+      - [5, 5]
+      - [6, 1]
+      - [6, 2]
+      - [6, 3]
+      - [6, 6]
+      - [6, 7]
+      - [7, 0]
+      - [7, 2]
+      - [7, 4]
+      - [7, 6]
+      - [7, 7]
+      - [8, 1]
+    arcs:
+      - parent: [0, 5]
+        direction: Right
+      - parent: [1, 6]
+        direction: Up
+      - parent: [6, 3]
+        direction: Up
+
+  - name: Junior
+    description: tbd
+    nodes:
+      - [0, 7]
+      - [1, 1]
+      - [1, 4]
+      - [1, 6]
+      - [1, 7]
+      - [3, 0]
+      - [3, 2]
+      - [3, 7]
+      - [4, 2]
+      - [4, 5]
+      - [4, 7]
+      - [5, 0]
+      - [5, 4]
+      - [5, 6]
+      - [6, 0]
+      - [6, 2]
+      - [6, 3]
+      - [6, 6]
+      - [6, 7]
+      - [7, 0]
+      - [7, 5]
+      - [7, 7]
+      - [8, 0]
+      - [8, 4]
+      - [8, 7]
+      - [9, 2]
+    arcs:
+      - parent: [0, 7]
+        direction: Right
+      - parent: [1, 1]
+        direction: Up
+      - parent: [1, 4]
+        direction: Up 
+      - parent: [5, 0]
+        direction: Up 
+      - parent: [7, 0]
+        direction: Up 
+        
   - name: test
     description: test
     nodes:
@@ -265,5 +484,5 @@ levels:
       - [0, 4]
       - [0, 5]
     arcs:
-      - parent: [0, 1]
+      - parent: [0, 0]
         direction: Up
