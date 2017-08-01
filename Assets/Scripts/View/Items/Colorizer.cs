@@ -118,7 +118,7 @@ namespace View.Items
             Appear(time, 0f, Ease);
         }
 
-        public void Appear(float time, float delay, LeanTweenType ease)
+        public void Appear(float time, float delay, LeanTweenType ease, float animationSpeed = 1f, float delayScale = 1f)
         {
             _previousColor = CurrentColor;
 
@@ -127,8 +127,8 @@ namespace View.Items
                 return;
             }
 
-            LeanTween.alpha(gameObject, _primaryColor.a, time)
-                .setDelay(delay)
+            LeanTween.alpha(gameObject, _primaryColor.a, time * animationSpeed)
+                .setDelay(delay * delayScale)
                 .setEase(ease);
         }
 

@@ -4,6 +4,8 @@ namespace View.Control
 {
     public class CameraScript : MonoBehaviour
     {
+        private static int _zoomId;
+        
         public static Vector2 CameraDimensions {
             get
             {
@@ -51,12 +53,19 @@ namespace View.Control
             ZoomCamera(zoom, time, tweenType);
         }
 
-        public static void ZoomCamera(float zoom, float time, LeanTweenType tweenType = LeanTweenType.easeInOutSine)
+        public static int ZoomCamera(float zoom, float time, LeanTweenType tweenType = LeanTweenType.easeInOutSine)
         {
-            LeanTween.value(Camera.main.orthographicSize, zoom, time)
+            if (LeanTween.isTweening(_zoomId)) {
+                LeanTween.cancel(_zoomId);
+            }
+            
+            _zoomId = LeanTween.value(Camera.main.orthographicSize, zoom, time)
                 .setEase(tweenType)
                 .setDelay(GameDef.Get.LevelDelay)
-                .setOnUpdate(scaled => Camera.main.orthographicSize = scaled);
+                .setOnUpdate(scaled => Camera.main.orthographicSize = scaled)
+                .id;
+
+            return _zoomId;
         }
     }
 }

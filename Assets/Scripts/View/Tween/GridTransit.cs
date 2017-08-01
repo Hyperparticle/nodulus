@@ -19,7 +19,7 @@ namespace View.Tween
 		public LeanTweenType WaveOutMoveEase => GameDef.Get.WaveOutMoveEase;
 		public LeanTweenType WaveOutColorEase => GameDef.Get.WaveOutColorEase;
 
-		public void WaveIn(float delay, Vector3 dir, LeanTweenType ease, float animationSpeed = 1f)
+		public void WaveIn(float delay, Vector3 dir, LeanTweenType ease, float animationSpeed = 1f, float delayScale = 1f)
 		{
 			var pos = transform.localPosition;
 
@@ -27,23 +27,23 @@ namespace View.Tween
 			transform.Translate(WaveInTravel / 2f * dir);
 
 			// TODO: use smooth function over linear delay
-			var moveDelay = WaveInMoveDelayStart + WaveInMoveDelayOffsetScale * delay;
+			var moveDelay = WaveInMoveDelayStart * delayScale + WaveInMoveDelayOffsetScale * delay;
 
 			// Start a nice animation effect
 			LeanTween.moveLocal(gameObject, pos, WaveInTime * animationSpeed)
-				.setDelay(moveDelay * animationSpeed)
+				.setDelay(moveDelay)
 				.setEase(ease);
 		}
 
-		public void WaveOut(float delay, Vector3 dir, LeanTweenType ease, float animationSpeed = 1f)
+		public void WaveOut(float delay, Vector3 dir, LeanTweenType ease, float animationSpeed = 1f, float delayScale = 1f)
 		{
 			// TODO: use smooth function over linear delay
 			var pos = transform.localPosition + WaveOutTravel * dir;
-			var moveDelay = WaveOutMoveDelayStart + WaveOutMoveDelayOffsetScale * delay;
+			var moveDelay = WaveOutMoveDelayStart * delayScale + WaveOutMoveDelayOffsetScale * delay;
 
 			// Start a nice animation effect
 			LeanTween.moveLocal(gameObject, pos, WaveOutTime * animationSpeed)
-				.setDelay(moveDelay * animationSpeed)
+				.setDelay(moveDelay)
 				.setEase(ease);
 		}
 	}

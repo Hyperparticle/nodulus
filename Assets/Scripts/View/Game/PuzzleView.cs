@@ -33,6 +33,11 @@ namespace View.Game
             OnViewUpdated();
         }
 
+        public void ResumeView()
+        {
+            OnViewUpdated();
+        }
+
         public void Rotate(NodeView nodeView, ArcView arcView, Direction dir, bool pull)
         {
             arcView.transform.parent = nodeView.Rotor;
