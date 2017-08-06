@@ -149,6 +149,8 @@ namespace View.Game
                 Debug.LogWarning("Requested level is outside of bounds, ignoring request");
                 return;
             }
+
+            _saveState.Started = true;
             
             // Destroy the previous level
             _puzzleSpawner.DestroyBoard();
@@ -178,7 +180,7 @@ namespace View.Game
         {
             Init(CurrentLevel == 0 ? 0 : CurrentLevel - 1);
         }
-
+        
         public bool Play(NodeView nodeView, Direction dir)
         {
             // Push move
@@ -250,6 +252,38 @@ namespace View.Game
             _arcMap.Remove(arcConnPos, arcConnDir);
 
             return true;
+        }
+        
+        // TODO: clean this up
+        private struct SaveState
+        {
+            public bool Started;
+            public int Level;
+            public Vector3 InitialPosition;
+            public float AnimationSpeed;
+            public float DelayScale;
+        }
+
+        private SaveState _saveState;
+        
+        public void Save(int level, Vector3 initialPosition, float animationSpeed = 1f, float delayScale = 1f)
+        {
+            _saveState = new SaveState {
+                Started = false,
+                Level = level,
+                InitialPosition = initialPosition,
+                AnimationSpeed = animationSpeed,
+                DelayScale = delayScale
+            };
+        }
+
+        public void InitSaved()
+        {
+            if (_saveState.Started) {
+                return;
+            }
+
+            Init(_saveState.Level, _saveState.InitialPosition, _saveState.AnimationSpeed, _saveState.DelayScale);
         }
     }
 }

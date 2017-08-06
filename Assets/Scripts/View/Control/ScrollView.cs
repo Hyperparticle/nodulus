@@ -23,11 +23,14 @@ namespace View.Control
 
 		private float _listBottom;
 		private float _listTop;
-		private Vector3 _velocity;
+		private bool _isPanning;
+		private Vector3 _panVelocity;
+		private Vector3 _magnetVelocity;
 
 		// TODO: make configurable
 		private const float CameraZoomTime = 1f;
 		private readonly Vector3 _scaleRatio = new Vector3(0.9f, 0.5f);
+		private const float VelocityScalingFactor = 50f;
 
 		private int _cameraZoomId;
 
@@ -57,8 +60,8 @@ namespace View.Control
 			// TODO: make configurable
 			const float damping = 0.98f;
 			
-			transform.Translate(_velocity);
-			_velocity *= damping;
+			transform.Translate(_panVelocity + _magnetVelocity);
+			_panVelocity *= damping;
 
 			var clampedPos = Mathf.Clamp(transform.position.y, _listBottom, _listTop);
 			transform.position = new Vector2(transform.position.x, clampedPos);
@@ -70,33 +73,36 @@ namespace View.Control
 				return;
 			}
 
-			InterpolateCameraZoom();
-			
 			// Find the nearest level and select it
 			var closestLevel = FindLevel(-transform.position.y);
+			var currentLevel = _selectedLevel.GetComponent<PuzzleState>().CurrentLevel;
 			
-			if (closestLevel == _selectedLevel.GetComponent<PuzzleState>().CurrentLevel) {
+			InterpolateCameraZoom(currentLevel);
+			Magnetize(currentLevel);
+			
+			if (closestLevel == currentLevel) {
 				return;
 			}
 			
 			_selectedLevel = _levels[closestLevel];
+			
+			RevealLevels(closestLevel);
 		}
 
-		private void InterpolateCameraZoom()
+		private void InterpolateCameraZoom(int currentLevel)
 		{
 			if (LeanTween.isTweening(_cameraZoomId)) {
 				return;
 			}
 			
-			var level = _selectedLevel.GetComponent<PuzzleState>().CurrentLevel;
-			var bounds = _levelBounds[level];
+			var bounds = _levelBounds[currentLevel];
 			var mid = (bounds.Item1 + bounds.Item2) / 2f;
 			
 			// Interpolate camera zoom between levels
 			var delta = mid + transform.position.y;
 			var closestNextLevel = delta < 0
-				? (level <= 0 ? 0 : level - 1)
-				: (level > Levels.LevelCount - 1 ? Levels.LevelCount - 1 : level + 1);
+				? (currentLevel <= 0 ? 0 : currentLevel - 1)
+				: (currentLevel >= _levelBounds.Length - 1 ? _levelBounds.Length - 1 : currentLevel + 1);
 			var nextBounds = _levelBounds[closestNextLevel];
 			var nextMid = (nextBounds.Item1 + nextBounds.Item2) / 2f;
 			var deltaRatio = Mathf.Abs(delta) > Mathf.Abs(nextMid - mid) ? 1f : Mathf.Abs(delta) / Mathf.Abs(nextMid - mid);
@@ -110,6 +116,34 @@ namespace View.Control
 			Camera.main.orthographicSize = LeanTween.easeInOutSine(selectedLevelZoom, nextLevelZoom, deltaRatio);
 		}
 
+		private void Magnetize(int currentLevel)
+		{
+			// TODO: make configurable
+			const float velocityThreshold = 0.3f;
+			const float magnetScale = 0.05f;
+			
+			if (_isPanning || _panVelocity.magnitude > velocityThreshold) {
+				return;
+			}
+			
+			var bounds = _levelBounds[currentLevel];
+			var mid = (bounds.Item1 + bounds.Item2) / 2f;
+			
+			var delta = mid + transform.position.y;
+
+			_magnetVelocity = Vector3.down * delta * magnetScale;
+		}
+
+		private void RevealLevels(int currentLevel)
+		{
+			// Instantiate adjacent levels
+			var prevLevel = currentLevel <= 0 ? 0 : currentLevel - 1;
+			var nextLevel = currentLevel >= _levels.Length - 1 ? _levels.Length - 1 : currentLevel + 1;
+			
+			_levels[prevLevel].GetComponent<PuzzleState>().InitSaved();
+			_levels[nextLevel].GetComponent<PuzzleState>().InitSaved();
+		}
+
 		public void EnableScroll()
 		{
 			if (_scrollEnabled) {
@@ -118,17 +152,22 @@ namespace View.Control
 				return;
 			}
 			
-			_selectedLevel.GetComponent<PuzzleState>().BoardEnabled = false;
+			var puzzleState = _selectedLevel.GetComponent<PuzzleState>();
+			
+			puzzleState.BoardEnabled = false;
 			
 			_levelBounds = new Tuple<float, float>[Levels.LevelCount];
 			_levels = new GameObject[Levels.LevelCount];
 			
 			GenerateLevelsList();
 			
+			RevealLevels(puzzleState.CurrentLevel);
+			
 			var puzzleScale = _selectedLevel.GetComponent<PuzzleScale>();
 			var zoom = CameraScript.CameraZoomToFit(puzzleScale.Dimensions, puzzleScale.Margin, _scaleRatio);
 			_cameraZoomId = CameraScript.ZoomCamera(zoom, CameraZoomTime, LeanTweenType.easeInSine);
-			
+
+			_panVelocity = Vector3.up / VelocityScalingFactor;
 			_scrollEnabled = true;
 		}
 
@@ -177,7 +216,7 @@ namespace View.Control
 			// TODO: make configurable
 			const float margin = 1.5f;
 			
-			var prevOffset = _listTop = 0f;
+			var prevOffset = _listTop = -margin;
 			
 			for (var level = Levels.LevelCount - 1; level >= puzzleState.CurrentLevel + 1; level--) {
 				GenerateLevel(level, margin, ref prevOffset);
@@ -200,7 +239,7 @@ namespace View.Control
 				GenerateLevel(level, margin, ref prevOffset);
 			}
 
-			_listBottom = -prevOffset;
+			_listBottom = -prevOffset + margin;
 		}
 
 		private void GenerateLevel(int level, float margin, ref float prevOffset)
@@ -226,10 +265,10 @@ namespace View.Control
 			prevOffset += boardHeight + margin;
 
 			// TODO: make configurable
-			const float animationSpeed = 0.6f;
+			const float animationSpeed = 0.4f;
 			const float delayScale = 0f;
 				
-			puzzleGame.GetComponent<PuzzleState>().Init(level, Vector2.up * prevOffset, animationSpeed, delayScale);
+			puzzleGame.GetComponent<PuzzleState>().Save(level, Vector2.up * prevOffset, animationSpeed, delayScale);
 			
 			// Add half the board height as the starting point for the next board to spawn
 			prevOffset += boardHeight + margin;
@@ -254,7 +293,10 @@ namespace View.Control
 				return;
 			}
 
-			_velocity = Vector2.zero;
+			_isPanning = true;
+
+			_panVelocity = Vector2.zero;
+			_magnetVelocity = Vector2.zero;
 			
 			// TODO: make configurable
 			const float scalingFactor = 50f;
@@ -266,13 +308,14 @@ namespace View.Control
 			if (!_scrollEnabled) {
 				return;
 			}
+
+			_isPanning = false;
 			
 			// TODO: make configurable
 			var delta = recognizer.deltaTranslation.y;
-			var velocityMagnitude = Mathf.Abs(delta) < 5f ? 0f : Mathf.Clamp(delta, -100f, 100f);
-			const float scalingFactor = 50f;
+			var velocityMagnitude = Mathf.Abs(delta) < 5f ? 0f : Mathf.Clamp(delta, -50f, 50f);
 			
-			_velocity = Vector3.up * velocityMagnitude / scalingFactor;
+			_panVelocity = Vector3.up * velocityMagnitude / VelocityScalingFactor;
 		}
 
 		private int FindLevel(float yPos)
