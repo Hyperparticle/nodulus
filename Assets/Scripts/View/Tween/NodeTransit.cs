@@ -147,5 +147,20 @@ namespace View.Tween
             LeanTween.rotateAroundLocal(_rotor, axis, 720f, NodeRotateTime * 3)
                 .setEase(LeanTweenType.easeInOutSine);
         }
+
+        public void PushDown()
+        {
+            // TODO: make configurable
+            const float pushAmount = 0.1f;
+            const float time = 0.08f;
+            var delay = NodeRotateTime - 0.18f;
+
+            var pos = _rotor.transform.localPosition + Vector3.forward * pushAmount;
+
+            LeanTween.moveLocal(_rotor, pos, time)
+                .setDelay(delay)
+                .setEase(LeanTweenType.easeInOutSine)
+                .setLoopPingPong(1);
+        }
     }
 }

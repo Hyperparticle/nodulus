@@ -51,13 +51,15 @@ namespace View.Game
             // so that all arcs will rotate accordingly
             var arcViews = _puzzleState.GetArcs(nodeView.Position);
 
+            // A node/arc that is parallel to the rotation (may not exist)
             NodeView stayNodeView = null;
             ArcView stayArcView = null;
-            
+
             var stay = pull ? dir : dir.Opposite();
             foreach (var pair in arcViews) {
                 if (pair.Key == stay) {
                     // This arc should not rotate with the node, do something else with it
+                    // TODO: method to find node in a given direction
                     var stayNode = pair.Value.Arc.ParentNode.Equals(nodeView.Node) ? 
                         pair.Value.Arc.ConnectedNode : pair.Value.Arc.ParentNode;
                     stayNodeView = _puzzleState.PlayerNodes
@@ -68,13 +70,20 @@ namespace View.Game
                 }
             }
 
-            // TODO: cool field rotations
-            //var fieldViews = _puzzleState.GetFields(nodeView.Position);
-            
-            // Do a small rotate to the node that stays put
+            // Do a small rotate to the parallel node that stays put
             if (stayNodeView != null && !LeanTween.isTweening(stayNodeView.gameObject)) {
                 stayArcView.transform.parent = stayNodeView.Rotor;
                 stayNodeView.SlightRotate(dir.Opposite(), stayArcView.Arc.Length);
+            }
+
+            // Push the newly connected node down
+            if (!pull) {
+                var moveArc = arcViews[dir].Arc;
+                var moveNode = moveArc.ParentNode.Equals(nodeView.Node) ?
+                        moveArc.ConnectedNode : moveArc.ParentNode;
+                var moveNodeView = _puzzleState.PlayerNodes
+                    .FirstOrDefault(node => node.Node.Equals(moveNode));
+                moveNodeView?.PushDown();
             }
 
             // Finally, rotate the node!

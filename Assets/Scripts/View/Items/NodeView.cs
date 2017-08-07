@@ -82,6 +82,11 @@ namespace View.Items
             _nodeTransit.SlightRotate(dir, arcLength);
         }
 
+        public void PushDown()
+        {
+            _nodeTransit.PushDown();
+        }
+
         public void WinAnimation(Direction spinDir)
         {
             _nodeTransit.RotateFast(spinDir);
