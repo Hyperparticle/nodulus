@@ -287,9 +287,9 @@ namespace View.Game
             Init(_saveState.Level, _saveState.InitialPosition, _saveState.AnimationSpeed, _saveState.DelayScale);
         }
 
-        public void DestroyBoard()
+        public void DestroyBoard(bool playSound = true)
         {
-            _puzzleSpawner.DestroyBoard();
+            _puzzleSpawner.DestroyBoard(playSound);
             _saveState.Started = false;
         }
     }

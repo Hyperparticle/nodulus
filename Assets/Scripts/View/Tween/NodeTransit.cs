@@ -66,7 +66,8 @@ namespace View.Tween
             }
         }
 
-        public void WaveOut(int delay, float animationSpeed = 1f, float delayScale = 1f, Action onComplete = null)
+        public void WaveOut(int delay, float animationSpeed = 1f, float delayScale = 1f, Action onComplete = null,
+            bool playSound = true)
         {
             onComplete = onComplete ?? (() => {});
             
@@ -76,7 +77,13 @@ namespace View.Tween
 
             // Start a nice animation effect
             LeanTween.moveLocal(gameObject, pos, WaveOutTime * animationSpeed)
-                .setOnStart(() => _gameAudio.Play(GameClip.NodeLeave, WaveOutAudioDelay))
+                .setOnStart(() => {
+                    if (!playSound) {
+                        return;
+                    }
+                    
+                    _gameAudio.Play(GameClip.NodeLeave, WaveOutAudioDelay);
+                })
                 .setDelay(moveDelay)
                 .setEase(WaveOutMoveEase)
                 .setOnComplete(onComplete);

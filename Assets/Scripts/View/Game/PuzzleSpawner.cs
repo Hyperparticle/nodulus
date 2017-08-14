@@ -58,7 +58,7 @@ namespace View.Game
             return new Puzzle(_gameBoard);
         }
 
-        public void DestroyBoard()
+        public void DestroyBoard(bool playSound = true)
         {
             if (_gameBoard == null) return;
             
@@ -68,7 +68,7 @@ namespace View.Game
             // Destroy all objects in the game board
             var i = 0;
             foreach (var node in NodeMap.Values) {
-                node.WaveOut(i++);
+                node.WaveOut(i++, playSound: playSound);
             }
 
             foreach (Transform child in transform) {

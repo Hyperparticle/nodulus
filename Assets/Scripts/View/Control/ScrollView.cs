@@ -195,8 +195,8 @@ namespace View.Control
 			var prevLevel = _selectedLevel <= 0 ? 0 : _selectedLevel - 1;
 			var nextLevel = _selectedLevel >= _levels.Length - 1 ? _levels.Length - 1 : _selectedLevel + 1;
 			
-			_levels[prevLevel].GetComponent<PuzzleState>().DestroyBoard();
-			_levels[nextLevel].GetComponent<PuzzleState>().DestroyBoard();
+			_levels[prevLevel].GetComponent<PuzzleState>().DestroyBoard(false);
+			_levels[nextLevel].GetComponent<PuzzleState>().DestroyBoard(false);
 			
 			_levels[_selectedLevel].GetComponent<PuzzleScale>().PuzzleInit += OnPuzzleInit;
 			_levels[_selectedLevel].GetComponent<PuzzleState>().BoardEnabled = true;
