@@ -66,8 +66,10 @@ namespace View.Tween
             }
         }
 
-        public void WaveOut(int delay, float animationSpeed = 1f, float delayScale = 1f)
+        public void WaveOut(int delay, float animationSpeed = 1f, float delayScale = 1f, Action onComplete = null)
         {
+            onComplete = onComplete ?? (() => {});
+            
             // TODO: use smooth function over linear delay
             var pos = transform.localPosition + WaveOutTravel * Vector3.forward;
             var moveDelay = WaveOutMoveDelayStart * delayScale + WaveOutMoveDelayOffsetScale * delay;
@@ -76,7 +78,8 @@ namespace View.Tween
             LeanTween.moveLocal(gameObject, pos, WaveOutTime * animationSpeed)
                 .setOnStart(() => _gameAudio.Play(GameClip.NodeLeave, WaveOutAudioDelay))
                 .setDelay(moveDelay)
-                .setEase(WaveOutMoveEase);
+                .setEase(WaveOutMoveEase)
+                .setOnComplete(onComplete);
 
             var colorizers = GetComponentsInChildren<Colorizer>();
             foreach (var colorizer in colorizers) {

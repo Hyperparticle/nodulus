@@ -62,9 +62,9 @@ namespace View.Items
             _nodeTransit.WaveIn(delay, onComplete, animationSpeed, delayScale);
         }
 
-        public void WaveOut(int delay, float animationSpeed = 1f, float delayScale = 1f)
+        public void WaveOut(int delay, float animationSpeed = 1f, float delayScale = 1f, Action onComplete = null)
         {
-            _nodeTransit.WaveOut(delay, animationSpeed, delayScale);
+            _nodeTransit.WaveOut(delay, animationSpeed, delayScale, onComplete);
         }
 
         public void Rotate(Direction dir, Action onComplete)

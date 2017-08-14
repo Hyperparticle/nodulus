@@ -150,11 +150,11 @@ namespace View.Game
                 return;
             }
 
-            _saveState.Started = true;
-            
             // Destroy the previous level
             _puzzleSpawner.DestroyBoard();
 
+            _saveState.Started = true;
+            
             // Spawn the new level
             _puzzle = _puzzleSpawner.SpawnBoard(level, animationSpeed, delayScale);
             _playerState = _puzzle.PlayerState;
@@ -255,7 +255,7 @@ namespace View.Game
         }
         
         // TODO: clean this up
-        private struct SaveState
+        public struct SaveState
         {
             public bool Started;
             public int Level;
@@ -265,6 +265,7 @@ namespace View.Game
         }
 
         private SaveState _saveState;
+        public SaveState State => _saveState;
         
         public void Save(int level, Vector3 initialPosition, float animationSpeed = 1f, float delayScale = 1f)
         {
@@ -284,6 +285,12 @@ namespace View.Game
             }
 
             Init(_saveState.Level, _saveState.InitialPosition, _saveState.AnimationSpeed, _saveState.DelayScale);
+        }
+
+        public void DestroyBoard()
+        {
+            _puzzleSpawner.DestroyBoard();
+            _saveState.Started = false;
         }
     }
 }

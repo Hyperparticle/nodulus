@@ -22,9 +22,6 @@ namespace View.Game
         {
             _puzzleScale = GetComponent<PuzzleScale>();
             _puzzleState = GetComponent<PuzzleState>();
-            
-            // Set the maximum number of simultaneous tweens
-            LeanTween.init(30000);
         }
 
         public void Init(Point startNode, Point boardSize, Vector3 initialPosition)
@@ -84,6 +81,10 @@ namespace View.Game
                 var moveNodeView = _puzzleState.PlayerNodes
                     .FirstOrDefault(node => node.Node.Equals(moveNode));
                 moveNodeView?.PushDown();
+
+//                foreach (var node in _puzzleState.PlayerNodes) {
+//                    node.PushDown();
+//                }
             }
 
             // Finally, rotate the node!

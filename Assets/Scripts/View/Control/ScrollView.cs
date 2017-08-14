@@ -13,11 +13,10 @@ namespace View.Control
 		public GameObject PuzzleGamePrefab;
 
         public int StartLevel;
-		
-		private GameObject _selectedLevel;
 
 		private bool _scrollEnabled;
 
+		private int _selectedLevel;
 		private GameObject[] _levels;
 		private Tuple<float, float>[] _levelBounds;
 
@@ -36,15 +35,31 @@ namespace View.Control
 
 		private void Awake()
 		{
-			_selectedLevel = GetComponentInChildren<PuzzleView>().gameObject;
-			_selectedLevel.GetComponent<PuzzleScale>().PuzzleInit += OnPuzzleInit;
+            // Set the maximum number of simultaneous tweens
+            LeanTween.init(30000);
 		}
 
 		private void Start()
 		{
-            // Start with the initially defined start level
-            _selectedLevel.GetComponent<PuzzleState>().Init(StartLevel);
+			// Start with the initially defined start level
+			_selectedLevel = StartLevel;
+			
+			GenerateLevelsList();
+			
+			var puzzleState = _levels[_selectedLevel].GetComponent<PuzzleState>();
+			
+			puzzleState.GetComponent<PuzzleState>().BoardEnabled = true;
+			
+			var bounds = _levelBounds[_selectedLevel];
+			var mid = (bounds.Item1 + bounds.Item2) / 2f;
 
+			transform.position = Vector3.up * mid;
+			
+			puzzleState.Init(_selectedLevel, puzzleState.State.InitialPosition);
+			
+			_levels[_selectedLevel].GetComponent<PuzzleScale>().PuzzleInit += OnPuzzleInit;
+			_levels[_selectedLevel].GetComponent<PuzzleView>().ResumeView();
+			
 			var panRecognizer = new TKPanRecognizer();
 			panRecognizer.gestureRecognizedEvent += OnPan;
 			panRecognizer.gestureCompleteEvent += OnPanComplete;
@@ -62,7 +77,7 @@ namespace View.Control
 			
 			transform.Translate(_panVelocity + _magnetVelocity);
 			_panVelocity *= damping;
-
+			
 			var clampedPos = Mathf.Clamp(transform.position.y, _listBottom, _listTop);
 			transform.position = new Vector2(transform.position.x, clampedPos);
 		}
@@ -74,17 +89,16 @@ namespace View.Control
 			}
 
 			// Find the nearest level and select it
-			var closestLevel = FindLevel(-transform.position.y);
-			var currentLevel = _selectedLevel.GetComponent<PuzzleState>().CurrentLevel;
+			var closestLevel = FindLevel(transform.position.y);
 			
-			InterpolateCameraZoom(currentLevel);
-			Magnetize(currentLevel);
+			InterpolateCameraZoom(_selectedLevel);
+			Magnetize(_selectedLevel);
 			
-			if (closestLevel == currentLevel) {
+			if (closestLevel == _selectedLevel) {
 				return;
 			}
 			
-			_selectedLevel = _levels[closestLevel];
+			_selectedLevel = closestLevel;
 			
 			RevealLevels(closestLevel);
 		}
@@ -99,7 +113,8 @@ namespace View.Control
 			var mid = (bounds.Item1 + bounds.Item2) / 2f;
 			
 			// Interpolate camera zoom between levels
-			var delta = mid + transform.position.y;
+			var yPos = transform.position.y;
+			var delta = -mid + yPos;
 			var closestNextLevel = delta < 0
 				? (currentLevel <= 0 ? 0 : currentLevel - 1)
 				: (currentLevel >= _levelBounds.Length - 1 ? _levelBounds.Length - 1 : currentLevel + 1);
@@ -107,7 +122,7 @@ namespace View.Control
 			var nextMid = (nextBounds.Item1 + nextBounds.Item2) / 2f;
 			var deltaRatio = Mathf.Abs(delta) > Mathf.Abs(nextMid - mid) ? 1f : Mathf.Abs(delta) / Mathf.Abs(nextMid - mid);
 			
-			var puzzleScale = _selectedLevel.GetComponent<PuzzleScale>();
+			var puzzleScale = _levels[_selectedLevel].GetComponent<PuzzleScale>();
 			var selectedLevelZoom = CameraScript.CameraZoomToFit(puzzleScale.Dimensions, puzzleScale.Margin, _scaleRatio);
 
 			var nextPuzzleScale = _levels[closestNextLevel].GetComponent<PuzzleScale>();
@@ -129,7 +144,7 @@ namespace View.Control
 			var bounds = _levelBounds[currentLevel];
 			var mid = (bounds.Item1 + bounds.Item2) / 2f;
 			
-			var delta = mid + transform.position.y;
+			var delta = -mid + transform.position.y;
 
 			_magnetVelocity = Vector3.down * delta * magnetScale;
 		}
@@ -139,9 +154,12 @@ namespace View.Control
 			// Instantiate adjacent levels
 			var prevLevel = currentLevel <= 0 ? 0 : currentLevel - 1;
 			var nextLevel = currentLevel >= _levels.Length - 1 ? _levels.Length - 1 : currentLevel + 1;
+
+			var prev = _levels[prevLevel].GetComponent<PuzzleState>();
+			var next = _levels[nextLevel].GetComponent<PuzzleState>();
 			
-			_levels[prevLevel].GetComponent<PuzzleState>().InitSaved();
-			_levels[nextLevel].GetComponent<PuzzleState>().InitSaved();
+			prev.InitSaved();
+			next.InitSaved();
 		}
 
 		public void EnableScroll()
@@ -152,18 +170,15 @@ namespace View.Control
 				return;
 			}
 			
-			var puzzleState = _selectedLevel.GetComponent<PuzzleState>();
+			var puzzleState = _levels[_selectedLevel].GetComponent<PuzzleState>();
+			var puzzleScale = puzzleState.GetComponent<PuzzleScale>();
 			
 			puzzleState.BoardEnabled = false;
 			
-			_levelBounds = new Tuple<float, float>[Levels.LevelCount];
-			_levels = new GameObject[Levels.LevelCount];
+			RevealLevels(_selectedLevel);
+
+			puzzleScale.PuzzleInit -= OnPuzzleInit;
 			
-			GenerateLevelsList();
-			
-			RevealLevels(puzzleState.CurrentLevel);
-			
-			var puzzleScale = _selectedLevel.GetComponent<PuzzleScale>();
 			var zoom = CameraScript.CameraZoomToFit(puzzleScale.Dimensions, puzzleScale.Margin, _scaleRatio);
 			_cameraZoomId = CameraScript.ZoomCamera(zoom, CameraZoomTime, LeanTweenType.easeInSine);
 
@@ -173,23 +188,21 @@ namespace View.Control
 
 		public void DisableScroll()
 		{
-			foreach (var level in _levels.Where(level => !level.Equals(_selectedLevel))) {
-				level.transform.parent = null;
-				level.GetComponent<PuzzleSpawner>().DestroyBoard();
-				Destroy(level, 5f); // TODO: magic number
-			}
+//			foreach (var level in _levels.Where(level => !level.Equals(_levels[_selectedLevel]))) {
+//				level.GetComponent<PuzzleState>().DestroyBoard();
+//			}
 			
-			_levels = new GameObject[0];
-			_levelBounds = new Tuple<float, float>[0];
-
-			_listBottom = 0f;
-			_listTop = 0f;
+			var prevLevel = _selectedLevel <= 0 ? 0 : _selectedLevel - 1;
+			var nextLevel = _selectedLevel >= _levels.Length - 1 ? _levels.Length - 1 : _selectedLevel + 1;
 			
-			_selectedLevel.GetComponent<PuzzleScale>().PuzzleInit += OnPuzzleInit;
-			_selectedLevel.GetComponent<PuzzleState>().BoardEnabled = true;
-			_selectedLevel.GetComponent<PuzzleView>().ResumeView();
+			_levels[prevLevel].GetComponent<PuzzleState>().DestroyBoard();
+			_levels[nextLevel].GetComponent<PuzzleState>().DestroyBoard();
 			
-			var puzzleScale = _selectedLevel.GetComponent<PuzzleScale>();
+			_levels[_selectedLevel].GetComponent<PuzzleScale>().PuzzleInit += OnPuzzleInit;
+			_levels[_selectedLevel].GetComponent<PuzzleState>().BoardEnabled = true;
+			_levels[_selectedLevel].GetComponent<PuzzleView>().ResumeView();
+			
+			var puzzleScale = _levels[_selectedLevel].GetComponent<PuzzleScale>();
 			CameraScript.FitToDimensions(
 				puzzleScale.Dimensions, 
 				puzzleScale.Margin, 
@@ -197,49 +210,32 @@ namespace View.Control
 				LeanTweenType.easeInSine
 			);
 			
+			var bounds = _levelBounds[_selectedLevel];
+			var mid = (bounds.Item1 + bounds.Item2) / 2f;
+			
 			// TODO: make configurable
 			const float time = 0.5f;
-			LeanTween.moveLocal(gameObject, Vector3.zero, time)
-				.setEase(LeanTweenType.easeInOutSine);
-			LeanTween.moveLocal(_selectedLevel, puzzleScale.Offset, time)
+			LeanTween.moveLocal(gameObject, Vector3.up * mid, time)
 				.setEase(LeanTweenType.easeInOutSine);
 		}
 
 		private void GenerateLevelsList()
 		{
-			var puzzleScale = _selectedLevel.GetComponent<PuzzleScale>();
-			var puzzleState = _selectedLevel.GetComponent<PuzzleState>();
+			_levelBounds = new Tuple<float, float>[Levels.LevelCount];
+			_levels = new GameObject[Levels.LevelCount];
 			
-			_levels[puzzleState.CurrentLevel] = _selectedLevel;
-			
-			// Keep track of the last board's position as the offset for the next board
 			// TODO: make configurable
 			const float margin = 1.5f;
 			
-			var prevOffset = _listTop = -margin;
-			
-			for (var level = Levels.LevelCount - 1; level >= puzzleState.CurrentLevel + 1; level--) {
+			// Keep track of the last board's position as the offset for the next board
+			var prevOffset = _listBottom = 0f;
+
+			// Generate all levels at the appropriate offsets
+			for (var level = 0; level < Levels.LevelCount; level++) {
 				GenerateLevel(level, margin, ref prevOffset);
 			}
-
-			var boardHeight = puzzleScale.Dimensions.y / 2f;
-
-			var boardStartBounds = prevOffset;
-			prevOffset += boardHeight + margin;
 			
-			transform.Translate(Vector2.down * prevOffset);
-			_selectedLevel.transform.position += Vector3.up * prevOffset;
-
-			prevOffset += boardHeight + margin;
-			var boardEndBounds = prevOffset;
-			
-			_levelBounds[puzzleState.CurrentLevel] = new Tuple<float, float>(boardStartBounds, boardEndBounds);
-			
-			for (var level = puzzleState.CurrentLevel - 1; level >= 0; level--) {
-				GenerateLevel(level, margin, ref prevOffset);
-			}
-
-			_listBottom = -prevOffset + margin;
+			_listTop = prevOffset - margin;
 		}
 
 		private void GenerateLevel(int level, float margin, ref float prevOffset)
@@ -251,7 +247,7 @@ namespace View.Control
 			// TODO: get board dimensions from puzzle scale before it is fully initialized
 			var puzzleScale = puzzleGame.GetComponent<PuzzleScale>();
 			var boardSize = (Vector2) Levels.BuildLevel(level).Size * puzzleScale.Scaling / 2f;;
-			puzzleGame.transform.localPosition = Vector3.left * boardSize.x;
+//			puzzleGame.transform.localPosition = Vector3.left * boardSize.x;
 			
 			_levels[level] = puzzleGame;
 
@@ -267,8 +263,9 @@ namespace View.Control
 			// TODO: make configurable
 			const float animationSpeed = 0.4f;
 			const float delayScale = 0f;
-				
-			puzzleGame.GetComponent<PuzzleState>().Save(level, Vector2.up * prevOffset, animationSpeed, delayScale);
+			
+			puzzleGame.transform.localPosition += Vector3.down * prevOffset;
+			puzzleGame.GetComponent<PuzzleState>().Save(level, Vector3.zero, animationSpeed, delayScale);
 			
 			// Add half the board height as the starting point for the next board to spawn
 			prevOffset += boardHeight + margin;
@@ -283,7 +280,7 @@ namespace View.Control
 				return;
 			}
 			
-			var puzzleScale = _selectedLevel.GetComponent<PuzzleScale>();
+			var puzzleScale = _levels[_selectedLevel].GetComponent<PuzzleScale>();
 			CameraScript.FitToDimensions(puzzleScale.Dimensions, puzzleScale.Margin);
 		}
 
@@ -320,27 +317,26 @@ namespace View.Control
 
 		private int FindLevel(float yPos)
 		{
-			var current = _selectedLevel.GetComponent<PuzzleState>().CurrentLevel;
-
 			// TODO: this is linear search, can be binary search
-			var bounds = _levelBounds[current];
+			var bounds = _levelBounds[_selectedLevel];
 			if (yPos < bounds.Item1) {
-				for (var level = current + 1; level < Levels.LevelCount; level++) {
-					bounds = _levelBounds[level];
-					if (yPos >= bounds.Item1) {
-						return level;
-					}
-				}
-			} else if (yPos > bounds.Item2) {
-				for (var level = current - 1; level >= 0; level--) {
+				for (var level = _selectedLevel - 1; level >= 0; level--) {
 					bounds = _levelBounds[level];
 					if (yPos <= bounds.Item2) {
 						return level;
 					}
 				}
+			} else if (yPos > bounds.Item2) {
+				for (var level = _selectedLevel + 1; level < Levels.LevelCount; level++) {
+					bounds = _levelBounds[level];
+					if (yPos >= bounds.Item1) {
+						return level;
+					}
+				}
+				
 			}
 
-			return current;
+			return _selectedLevel;
 		}
 	}
 }

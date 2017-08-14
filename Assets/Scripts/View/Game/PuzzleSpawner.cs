@@ -10,14 +10,11 @@ namespace View.Game
 {
     public class PuzzleSpawner : MonoBehaviour
     {
-        public NodeView NodeScript;
-        public ArcView ArcScript;
-        public FieldView FieldScript;
-
         private GameBoard _gameBoard;
 
         private LatticeView _lattice;
         private PuzzleScale _puzzleScale;
+        private ItemPool _itemPool;
         private GameAudio _gameAudio;
 
         public IDictionary<Point, NodeView> NodeMap { get; } = new Dictionary<Point, NodeView>();
@@ -34,6 +31,7 @@ namespace View.Game
         {
             _lattice = GetComponentInChildren<LatticeView>();
             _puzzleScale = GetComponent<PuzzleScale>();
+            _itemPool = GetComponent<ItemPool>();
             _gameAudio = GameObject.FindGameObjectWithTag("GameAudio").GetComponent<GameAudio>();
         }
 
@@ -74,10 +72,17 @@ namespace View.Game
             }
 
             foreach (Transform child in transform) {
+                var node = child.gameObject.GetComponent<NodeView>();
+                var arc = child.gameObject.GetComponent<ArcView>();
+                var field = child.gameObject.GetComponent<FieldView>();
+
                 // Only destroy board pieces
-                if (child.gameObject.GetComponent<NodeView>() ??
-                    child.gameObject.GetComponent<ArcView>() != null) {
-                        Destroy(child.gameObject, 3f);
+                if (node != null) {
+                    _itemPool.Release(node, 3f);
+                } else if (arc != null) {
+                    _itemPool.Release(arc, 3f);
+                } else if (field != null) {
+                    _itemPool.Release(field, 3f);
                 }
             }
 
@@ -92,7 +97,7 @@ namespace View.Game
         {
             var i = 0;
             foreach (var node in _gameBoard.Nodes) {
-                var nodeView = Instantiate(NodeScript);
+                var nodeView = _itemPool.GetNode();
 
                 // Set the node's parent as this puzzle
                 nodeView.transform.SetParent(transform);
@@ -106,7 +111,7 @@ namespace View.Game
         {
             var i = 0;
             foreach (var field in _gameBoard.Fields) {
-                var fieldView = Instantiate(FieldScript);
+                var fieldView = _itemPool.GetField();
 
                 // Find the node at the field's position and set it as a parent of this field
                 fieldView.transform.SetParent(NodeMap[field.Position].transform);
@@ -124,7 +129,7 @@ namespace View.Game
         {
             var i = 0;
             foreach (var arc in _gameBoard.Arcs) {
-                var arcView = Instantiate(ArcScript);
+                var arcView = _itemPool.GetArc();
 
                 // Find the node at the arc's position and set it as a perent of this arc
                 var parent = NodeMap[arc.Position].transform;

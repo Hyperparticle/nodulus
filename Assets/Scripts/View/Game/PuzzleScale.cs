@@ -21,26 +21,30 @@ namespace View.Game
 
         public Vector2 Offset { get; private set; }
 
-        public Vector3 InitialPosition { get; private set; }
+        public Vector3 InitialPosition { get; private set; } = -Vector3.one;
         
         public event Action PuzzleInit;
 
-        private void Awake()
-        {
-            InitialPosition = transform.localPosition;
-        }
-        
         public void Init(Point startNode, Point boardSize, Vector3 initialPosition)
         {
             Dimensions = new Vector2(boardSize.x, boardSize.y) * Scaling;
 
-            transform.localPosition += initialPosition;
             transform.localEulerAngles = BoardRotation;
 
             // Move the board to the center of the screen
             Offset = -Dimensions / 2f;
-            var movePos = InitialPosition + (Vector3) Offset + initialPosition;
-            movePos.Scale(transform.localScale);
+            Offset.Scale(transform.localScale);
+
+            // TODO: make init idempotent
+            if (InitialPosition == -Vector3.one) {
+                InitialPosition = transform.localPosition;
+                
+                transform.localPosition = InitialPosition + (Vector3) Offset;
+            }
+            
+            var movePos = InitialPosition + (Vector3) Offset;
+            
+            // TODO: make configurable
             LeanTween.moveLocal(gameObject, movePos, 1f)
                 .setEase(LeanTweenType.easeInOutSine);
             

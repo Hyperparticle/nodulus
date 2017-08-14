@@ -24,11 +24,15 @@ namespace View.Game
 
         private const float GridLineScale = 0.15f;
         private const float GridPointScale = 0.2f;
+
+        private ItemPool _itemPool;
         
         private void Awake()
         {
             _nodeWidth = RotorPrefab.transform.localScale.x;
             _gridPointWidth = GridPointPrefab.transform.localScale.x;
+
+            _itemPool = GetComponentInParent<ItemPool>();
         }
 
         public void DestroyGrid()
@@ -44,8 +48,11 @@ namespace View.Game
             if (verticalLinesCount > 1) {
                 // Horizontal lines down Y axis
                 for (var i = 0; i < horizontalLinesCount; i++) {
-                    var gridLine = Instantiate(GridLinePrefab);
+                    var gridLine = _itemPool.GetGridLine();
                     _gridLinesHorizontal.Add(gridLine);
+
+                    var material = gridLine.GetComponent<Renderer>().material;
+                    material.color = Colorizer.Alpha(material.color, 0f);
 
                     gridLine.transform.SetParent(transform);
                     gridLine.name = "GridLineHorizontal " + i;
@@ -75,8 +82,11 @@ namespace View.Game
             if (horizontalLinesCount > 1) {
                 // Vertical lines across X axis
                 for (var i = 0; i < verticalLinesCount; i++) {
-                    var gridLine = Instantiate(GridLinePrefab);
+                    var gridLine = _itemPool.GetGridLine();
                     _gridLinesVertical.Add(gridLine);
+                    
+                    var material = gridLine.GetComponent<Renderer>().material;
+                    material.color = Colorizer.Alpha(material.color, 0f);
 
                     gridLine.transform.SetParent(transform);
                     gridLine.name = "GridLineVertical " + i;
@@ -109,6 +119,9 @@ namespace View.Game
                 for (var j = 0; j < verticalLinesCount; j++) {
                     var gridPoint = Instantiate(GridPointPrefab);
                     _gridPoints[i, j] = gridPoint;
+                    
+                    var material = gridPoint.GetComponent<Renderer>().material;
+                    material.color = Colorizer.Alpha(material.color, 0f);
 
                     gridPoint.transform.SetParent(transform);
                     gridPoint.name = "GridPoint (" + i + "," + j + ")";
@@ -133,11 +146,7 @@ namespace View.Game
         private void Appear(GameObject gameObj, float animationSpeed = 1f, float delayScale = 1f)
         {
             var colorizer = gameObj.GetComponent<Colorizer>();
-            colorizer.PrimaryColor = gameObj.GetComponent<Renderer>().material.color;
-            colorizer.Fade(0.01f, () => {
-                colorizer.Appear(FadeTime, FadeDelay, colorizer.Ease, animationSpeed, delayScale);
-            });
-            
+            colorizer.Appear(FadeTime, FadeDelay, colorizer.Ease, animationSpeed, delayScale);
         }
         
         private void DestroyGridObjects(ICollection<GameObject> gridObjects, Vector3 dir, 
@@ -149,7 +158,7 @@ namespace View.Game
                     k++, dir, LeanTweenType.easeInSine, animationSpeed, delayScale
                 );
                 gridObject.GetComponent<Colorizer>().Fade(FadeTime);
-                Destroy(gridObject, 1.5f);
+                _itemPool.ReleaseGridLines(gridObject, 1.5f);
             }
 
             gridObjects.Clear();

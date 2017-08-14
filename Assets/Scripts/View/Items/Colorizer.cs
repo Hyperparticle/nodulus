@@ -56,6 +56,8 @@ namespace View.Items
         {
             _material = GetComponent<Renderer>().material;
             _childMaterials = GetComponentInChildren<Renderer>().materials;
+
+            PrimaryColor = _material.color;
         }
 
         public void Highlight()
