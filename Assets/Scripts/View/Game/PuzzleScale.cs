@@ -25,7 +25,7 @@ namespace View.Game
         
         public event Action PuzzleInit;
 
-        public void Init(Point startNode, Point boardSize, Vector3 initialPosition)
+        public void Init(Point startNode, Point boardSize)
         {
             Dimensions = new Vector2(boardSize.x, boardSize.y) * Scaling;
 

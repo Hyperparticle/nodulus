@@ -24,9 +24,9 @@ namespace View.Game
             _puzzleState = GetComponent<PuzzleState>();
         }
 
-        public void Init(Point startNode, Point boardSize, Vector3 initialPosition)
+        public void Init(Point startNode, Point boardSize)
         {
-            _puzzleScale.Init(startNode, boardSize, initialPosition);
+            _puzzleScale.Init(startNode, boardSize);
             OnViewUpdated();
         }
 

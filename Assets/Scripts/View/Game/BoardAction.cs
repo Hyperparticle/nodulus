@@ -30,6 +30,8 @@ namespace View.Game
         private int _numActions;
 
         private const int MaxMovesInQueue = 2;
+        
+        public event Action<int> PuzzleWin;
 
         private void Awake()
         {
@@ -145,7 +147,9 @@ namespace View.Game
                     node.WinAnimation(spinDir);
                 }
 
-                _puzzleState.NextLevel(LevelDelay);
+//                _puzzleState.NextLevel(LevelDelay);
+                _puzzleState.DestroyBoard();
+                PuzzleWin?.Invoke(_puzzleState.CurrentLevel);
             } else if (_moveQueue.Count > 0) {
                 var move = _moveQueue.Dequeue();
                 Play(move.Item1, move.Item2);

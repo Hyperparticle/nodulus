@@ -74,7 +74,7 @@ namespace View.Game
 
                     Appear(gridLine, animationSpeed, delayScale);
                     gridLine.GetComponent<GridTransit>().WaveIn(
-                        i, Vector3.right, LeanTweenType.easeOutSine, animationSpeed, delayScale
+                        i, horizontalLinesCount, Vector3.right, LeanTweenType.easeOutSine, animationSpeed, delayScale
                     );
                 }
             }
@@ -108,7 +108,7 @@ namespace View.Game
                 
                     Appear(gridLine, animationSpeed, delayScale);
                     gridLine.GetComponent<GridTransit>().WaveIn(
-                        i, Vector3.up, LeanTweenType.easeOutSine, animationSpeed, delayScale
+                        i, verticalLinesCount, Vector3.up, LeanTweenType.easeOutSine, animationSpeed, delayScale
                     );
                 }
             }
@@ -137,7 +137,7 @@ namespace View.Game
                     
                     Appear(gridPoint, animationSpeed, delayScale);
                     gridPoint.GetComponent<GridTransit>().WaveIn(
-                        i + j, Vector3.down, LeanTweenType.easeOutBack, animationSpeed, delayScale
+                        i + j, horizontalLinesCount * verticalLinesCount,  Vector3.down, LeanTweenType.easeOutBack, animationSpeed, delayScale
                     );
                 }
             }
@@ -146,6 +146,7 @@ namespace View.Game
         private void Appear(GameObject gameObj, float animationSpeed = 1f, float delayScale = 1f)
         {
             var colorizer = gameObj.GetComponent<Colorizer>();
+            delayScale = delayScale < 0.5f ? 0.5f : delayScale;
             colorizer.Appear(FadeTime, FadeDelay, colorizer.Ease, animationSpeed, delayScale);
         }
         
@@ -155,7 +156,7 @@ namespace View.Game
             var k = 0;
             foreach (var gridObject in gridObjects) {
                 gridObject.GetComponent<GridTransit>().WaveOut(
-                    k++, dir, LeanTweenType.easeInSine, animationSpeed, delayScale
+                    k++, gridObjects.Count, dir, LeanTweenType.easeInSine, animationSpeed, delayScale
                 );
                 gridObject.GetComponent<Colorizer>().Fade(FadeTime);
                 _itemPool.ReleaseGridLines(gridObject, 1.5f);
@@ -171,7 +172,7 @@ namespace View.Game
                 for (var j = 0; j < gridObjects.GetLength(1); j++) {
                     var gridObject = gridObjects[i, j];
                     gridObject.GetComponent<GridTransit>().WaveOut(
-                        i + j, dir, LeanTweenType.easeInSine, animationSpeed, delayScale
+                        i + j, gridObjects.GetLength(0) * gridObjects.GetLength(1), dir, LeanTweenType.easeInSine, animationSpeed, delayScale
                     );
                     gridObject.GetComponent<Colorizer>().Fade(FadeTime);
                     Destroy(gridObject, 1.5f);

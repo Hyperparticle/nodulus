@@ -135,15 +135,10 @@ namespace View.Game
             ElapsedTime += Time.deltaTime;
         }
 
-        public void Init(int level)
-        {
-            Init(level, Vector3.zero);
-        }
-
         /// <summary>
         /// Entry point to create a new level
         /// </summary>
-        public void Init(int level, Vector3 initialPosition, float animationSpeed = 1f, float delayScale = 1f)
+        public void Init(int level, float animationSpeed = 1f, float delayScale = 1f)
         {
             if (level < 0 || level > _puzzleSpawner.LevelCount) {
                 Debug.LogWarning("Requested level is outside of bounds, ignoring request");
@@ -167,8 +162,10 @@ namespace View.Game
 
             // Init all scripts that require additional information on startup
             _boardAction.Init();
-            _puzzleView.Init(_puzzle.StartNode.Position, _puzzle.BoardSize, initialPosition);
+            _puzzleView.Init(_puzzle.StartNode.Position, _puzzle.BoardSize);
             _boardInput.Init(_puzzleSpawner.NodeMap);
+            
+            gameObject.name = $"PuzzleGame ({level})*";
         }
 
         public void NextLevel(float delay = 0f)
@@ -259,7 +256,6 @@ namespace View.Game
         {
             public bool Started;
             public int Level;
-            public Vector3 InitialPosition;
             public float AnimationSpeed;
             public float DelayScale;
         }
@@ -267,12 +263,11 @@ namespace View.Game
         private SaveState _saveState;
         public SaveState State => _saveState;
         
-        public void Save(int level, Vector3 initialPosition, float animationSpeed = 1f, float delayScale = 1f)
+        public void Save(int level, float animationSpeed = 1f, float delayScale = 1f)
         {
             _saveState = new SaveState {
                 Started = false,
                 Level = level,
-                InitialPosition = initialPosition,
                 AnimationSpeed = animationSpeed,
                 DelayScale = delayScale
             };
@@ -284,7 +279,7 @@ namespace View.Game
                 return;
             }
 
-            Init(_saveState.Level, _saveState.InitialPosition, _saveState.AnimationSpeed, _saveState.DelayScale);
+            Init(_saveState.Level, _saveState.AnimationSpeed, _saveState.DelayScale);
         }
 
         public void DestroyBoard(bool playSound = true)

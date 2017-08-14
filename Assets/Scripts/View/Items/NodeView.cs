@@ -57,15 +57,15 @@ namespace View.Items
             }
         }
 
-        public void WaveIn(int delay, Action onComplete = null, float animationSpeed = 1f, float delayScale = 1f)
+        public void WaveIn(int delay, int maxDelay, Action onComplete = null, float animationSpeed = 1f, float delayScale = 1f)
         {
-            _nodeTransit.WaveIn(delay, onComplete, animationSpeed, delayScale);
+            _nodeTransit.WaveIn(delay, maxDelay, onComplete, animationSpeed, delayScale);
         }
 
-        public void WaveOut(int delay, float animationSpeed = 1f, float delayScale = 1f, Action onComplete = null,
+        public void WaveOut(int delay, int maxDelay, float animationSpeed = 1f, float delayScale = 1f, Action onComplete = null,
             bool playSound = true)
         {
-            _nodeTransit.WaveOut(delay, animationSpeed, delayScale, onComplete, playSound);
+            _nodeTransit.WaveOut(delay, maxDelay, animationSpeed, delayScale, onComplete, playSound);
         }
 
         public void Rotate(Direction dir, Action onComplete)

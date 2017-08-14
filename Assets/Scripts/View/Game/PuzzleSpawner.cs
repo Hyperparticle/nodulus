@@ -68,7 +68,7 @@ namespace View.Game
             // Destroy all objects in the game board
             var i = 0;
             foreach (var node in NodeMap.Values) {
-                node.WaveOut(i++, playSound: playSound);
+                node.WaveOut(i++, NodeMap.Count, playSound: playSound);
             }
 
             foreach (Transform child in transform) {
@@ -161,11 +161,11 @@ namespace View.Game
             
             var i = 0;
             foreach (var nodeView in NodeMap.Values) {
-                if (i < NodeMap.Values.Count - 1) {
-                    nodeView.WaveIn(i++, animationSpeed: animationSpeed, delayScale: delayScale);
+                if (i < NodeMap.Count - 1) {
+                    nodeView.WaveIn(i++, NodeMap.Count, animationSpeed: animationSpeed, delayScale: delayScale);
                 } else {
                     // On completion of the last node, the puzzle has finished spawning
-                    nodeView.WaveIn(i++, () => FinishedSpawn = true, animationSpeed, delayScale);
+                    nodeView.WaveIn(i++, NodeMap.Count, () => FinishedSpawn = true, animationSpeed, delayScale);
                 }
             }
         }

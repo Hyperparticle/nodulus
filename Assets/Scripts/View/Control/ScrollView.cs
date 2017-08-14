@@ -47,17 +47,19 @@ namespace View.Control
 			GenerateLevelsList();
 			
 			var puzzleState = _levels[_selectedLevel].GetComponent<PuzzleState>();
+			var puzzleScale = _levels[_selectedLevel].GetComponent<PuzzleScale>();
 			
 			puzzleState.GetComponent<PuzzleState>().BoardEnabled = true;
+			_levels[_selectedLevel].GetComponent<PuzzleScale>().PuzzleInit += OnPuzzleInit;
+			_levels[_selectedLevel].GetComponent<BoardAction>().PuzzleWin += OnPuzzleWin;
 			
 			var bounds = _levelBounds[_selectedLevel];
 			var mid = (bounds.Item1 + bounds.Item2) / 2f;
 
 			transform.position = Vector3.up * mid;
 			
-			puzzleState.Init(_selectedLevel, puzzleState.State.InitialPosition);
+			puzzleState.Init(_selectedLevel);
 			
-			_levels[_selectedLevel].GetComponent<PuzzleScale>().PuzzleInit += OnPuzzleInit;
 			_levels[_selectedLevel].GetComponent<PuzzleView>().ResumeView();
 			
 			var panRecognizer = new TKPanRecognizer();
@@ -172,12 +174,14 @@ namespace View.Control
 			
 			var puzzleState = _levels[_selectedLevel].GetComponent<PuzzleState>();
 			var puzzleScale = puzzleState.GetComponent<PuzzleScale>();
+			var boardAction = puzzleState.GetComponent<BoardAction>();
 			
 			puzzleState.BoardEnabled = false;
 			
 			RevealLevels(_selectedLevel);
 
 			puzzleScale.PuzzleInit -= OnPuzzleInit;
+			boardAction.PuzzleWin -= OnPuzzleWin;
 			
 			var zoom = CameraScript.CameraZoomToFit(puzzleScale.Dimensions, puzzleScale.Margin, _scaleRatio);
 			_cameraZoomId = CameraScript.ZoomCamera(zoom, CameraZoomTime, LeanTweenType.easeInSine);
@@ -186,12 +190,8 @@ namespace View.Control
 			_scrollEnabled = true;
 		}
 
-		public void DisableScroll()
+		public void DisableScroll(float delay = 0f)
 		{
-//			foreach (var level in _levels.Where(level => !level.Equals(_levels[_selectedLevel]))) {
-//				level.GetComponent<PuzzleState>().DestroyBoard();
-//			}
-			
 			var prevLevel = _selectedLevel <= 0 ? 0 : _selectedLevel - 1;
 			var nextLevel = _selectedLevel >= _levels.Length - 1 ? _levels.Length - 1 : _selectedLevel + 1;
 			
@@ -199,6 +199,7 @@ namespace View.Control
 			_levels[nextLevel].GetComponent<PuzzleState>().DestroyBoard(false);
 			
 			_levels[_selectedLevel].GetComponent<PuzzleScale>().PuzzleInit += OnPuzzleInit;
+			_levels[_selectedLevel].GetComponent<BoardAction>().PuzzleWin += OnPuzzleWin;
 			_levels[_selectedLevel].GetComponent<PuzzleState>().BoardEnabled = true;
 			_levels[_selectedLevel].GetComponent<PuzzleView>().ResumeView();
 			
@@ -216,7 +217,8 @@ namespace View.Control
 			// TODO: make configurable
 			const float time = 0.5f;
 			LeanTween.moveLocal(gameObject, Vector3.up * mid, time)
-				.setEase(LeanTweenType.easeInOutSine);
+				.setEase(LeanTweenType.easeInOutSine)
+				.setDelay(delay);
 		}
 
 		private void GenerateLevelsList()
@@ -247,7 +249,6 @@ namespace View.Control
 			// TODO: get board dimensions from puzzle scale before it is fully initialized
 			var puzzleScale = puzzleGame.GetComponent<PuzzleScale>();
 			var boardSize = (Vector2) Levels.BuildLevel(level).Size * puzzleScale.Scaling / 2f;;
-//			puzzleGame.transform.localPosition = Vector3.left * boardSize.x;
 			
 			_levels[level] = puzzleGame;
 
@@ -265,7 +266,7 @@ namespace View.Control
 			const float delayScale = 0f;
 			
 			puzzleGame.transform.localPosition += Vector3.down * prevOffset;
-			puzzleGame.GetComponent<PuzzleState>().Save(level, Vector3.zero, animationSpeed, delayScale);
+			puzzleGame.GetComponent<PuzzleState>().Save(level, animationSpeed, delayScale);
 			
 			// Add half the board height as the starting point for the next board to spawn
 			prevOffset += boardHeight + margin;
@@ -282,6 +283,45 @@ namespace View.Control
 			
 			var puzzleScale = _levels[_selectedLevel].GetComponent<PuzzleScale>();
 			CameraScript.FitToDimensions(puzzleScale.Dimensions, puzzleScale.Margin);
+		}
+
+		private void OnPuzzleWin(int level)
+		{
+			_levels[_selectedLevel].GetComponent<PuzzleState>().BoardEnabled = false;
+			_levels[_selectedLevel].GetComponent<PuzzleScale>().PuzzleInit -= OnPuzzleInit;
+			_levels[_selectedLevel].GetComponent<BoardAction>().PuzzleWin -= OnPuzzleWin;
+			
+			_selectedLevel = level >= _levels.Length - 1 ? _levels.Length - 1 : level + 1;
+			
+			var puzzleState = _levels[_selectedLevel].GetComponent<PuzzleState>();
+			
+			_levels[_selectedLevel].GetComponent<PuzzleScale>().PuzzleInit += OnPuzzleInit;
+			_levels[_selectedLevel].GetComponent<BoardAction>().PuzzleWin += OnPuzzleWin;
+			_levels[_selectedLevel].GetComponent<PuzzleState>().BoardEnabled = true;
+			
+			// Move to the new board
+			var bounds = _levelBounds[_selectedLevel];
+			var mid = (bounds.Item1 + bounds.Item2) / 2f;
+			
+			// TODO: make configurable
+			const float time = 0.5f;
+			const float moveDelay = 1f;
+			LeanTween.moveLocal(gameObject, Vector3.up * mid, time)
+				.setEase(LeanTweenType.easeInOutSine)
+				.setDelay(moveDelay);
+			
+			// Initialize the new board
+			// TODO: make configurable
+			const float initDelay = 0.5f;
+			LeanTween.delayedCall(initDelay, () => {
+				puzzleState.Init(_selectedLevel);
+				
+				_levels[_selectedLevel].GetComponent<PuzzleView>().ResumeView();
+			});
+			
+			if (_selectedLevel < _levels.Length - 1) {
+				_levels[_selectedLevel + 1].GetComponent<PuzzleState>().DestroyBoard(false);
+			}
 		}
 
 		private void OnPan(TKPanRecognizer recognizer)

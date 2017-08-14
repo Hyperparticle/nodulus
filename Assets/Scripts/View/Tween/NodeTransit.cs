@@ -38,7 +38,7 @@ namespace View.Tween
             _rotor = GetComponentInChildren<Colorizer>().gameObject;
         }
 
-        public void WaveIn(int delay, Action onComplete = null, float animationSpeed = 1f, float delayScale = 1f)
+        public void WaveIn(int delay, int maxDelay, Action onComplete = null, float animationSpeed = 1f, float delayScale = 1f)
         {
             onComplete = onComplete ?? (() => {});
             var pos = transform.localPosition;
@@ -52,7 +52,7 @@ namespace View.Tween
             }
 
             // TODO: use smooth function over linear delay
-            var moveDelay = WaveInMoveDelayStart * delayScale + WaveInMoveDelayOffsetScale * delay;
+            var moveDelay = WaveInMoveDelayStart * delayScale + (WaveInMoveDelayOffsetScale * delay) / maxDelay;
 
             // Start a nice animation effect
             LeanTween.moveLocal(gameObject, pos, WaveInTime * animationSpeed)
@@ -66,14 +66,14 @@ namespace View.Tween
             }
         }
 
-        public void WaveOut(int delay, float animationSpeed = 1f, float delayScale = 1f, Action onComplete = null,
+        public void WaveOut(int delay, int maxDelay, float animationSpeed = 1f, float delayScale = 1f, Action onComplete = null,
             bool playSound = true)
         {
             onComplete = onComplete ?? (() => {});
             
             // TODO: use smooth function over linear delay
             var pos = transform.localPosition + WaveOutTravel * Vector3.forward;
-            var moveDelay = WaveOutMoveDelayStart * delayScale + WaveOutMoveDelayOffsetScale * delay;
+            var moveDelay = WaveOutMoveDelayStart * delayScale + (WaveOutMoveDelayOffsetScale * delay) / maxDelay;
 
             // Start a nice animation effect
             LeanTween.moveLocal(gameObject, pos, WaveOutTime * animationSpeed)
