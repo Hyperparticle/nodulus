@@ -50,7 +50,7 @@ namespace View.Control
 			var puzzleScale = _levels[_selectedLevel].GetComponent<PuzzleScale>();
 			
 			puzzleState.GetComponent<PuzzleState>().BoardEnabled = true;
-			_levels[_selectedLevel].GetComponent<PuzzleScale>().PuzzleInit += OnPuzzleInit;
+			puzzleScale.PuzzleInit += OnPuzzleInit;
 			_levels[_selectedLevel].GetComponent<BoardAction>().PuzzleWin += OnPuzzleWin;
 			
 			var bounds = _levelBounds[_selectedLevel];
@@ -192,16 +192,18 @@ namespace View.Control
 
 		public void DisableScroll(float delay = 0f)
 		{
-			var prevLevel = _selectedLevel <= 0 ? 0 : _selectedLevel - 1;
-			var nextLevel = _selectedLevel >= _levels.Length - 1 ? _levels.Length - 1 : _selectedLevel + 1;
+			var level = _levels[_selectedLevel];
 			
-			_levels[prevLevel].GetComponent<PuzzleState>().DestroyBoard(false);
-			_levels[nextLevel].GetComponent<PuzzleState>().DestroyBoard(false);
+			var prevLevel = _selectedLevel - 1;
+			var nextLevel = _selectedLevel + 1;
 			
-			_levels[_selectedLevel].GetComponent<PuzzleScale>().PuzzleInit += OnPuzzleInit;
-			_levels[_selectedLevel].GetComponent<BoardAction>().PuzzleWin += OnPuzzleWin;
-			_levels[_selectedLevel].GetComponent<PuzzleState>().BoardEnabled = true;
-			_levels[_selectedLevel].GetComponent<PuzzleView>().ResumeView();
+			_levels.ElementAtOrDefault(prevLevel)?.GetComponent<PuzzleState>()?.DestroyBoard(false);
+			_levels.ElementAtOrDefault(nextLevel)?.GetComponent<PuzzleState>()?.DestroyBoard(false);
+			
+			level.GetComponent<PuzzleScale>().PuzzleInit += OnPuzzleInit;
+			level.GetComponent<BoardAction>().PuzzleWin += OnPuzzleWin;
+			level.GetComponent<PuzzleState>().BoardEnabled = true;
+			level.GetComponent<PuzzleView>().ResumeView();
 			
 			var puzzleScale = _levels[_selectedLevel].GetComponent<PuzzleScale>();
 			CameraScript.FitToDimensions(
@@ -228,9 +230,11 @@ namespace View.Control
 			
 			// TODO: make configurable
 			const float margin = 1.5f;
+
+			_listBottom = margin;
 			
 			// Keep track of the last board's position as the offset for the next board
-			var prevOffset = _listBottom = 0f;
+			var prevOffset = 0f;
 
 			// Generate all levels at the appropriate offsets
 			for (var level = 0; level < Levels.LevelCount; level++) {
@@ -337,7 +341,10 @@ namespace View.Control
 			
 			// TODO: make configurable
 			const float scalingFactor = 50f;
-			transform.Translate(Vector3.up * recognizer.deltaTranslation.y / scalingFactor); 
+			transform.Translate(Vector3.up * recognizer.deltaTranslation.y / scalingFactor);
+			
+			var clampedPos = Mathf.Clamp(transform.position.y, _listBottom, _listTop);
+			transform.position = new Vector2(transform.position.x, clampedPos);
 		}
 
 		private void OnPanComplete(TKPanRecognizer recognizer)
