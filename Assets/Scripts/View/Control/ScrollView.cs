@@ -223,6 +223,15 @@ namespace View.Control
 				.setDelay(delay);
 		}
 
+		public void RestartLevel()
+		{
+			if (_scrollEnabled) {
+				return;
+			}
+			
+			_levels[_selectedLevel].GetComponent<PuzzleState>().RestartLevel();
+		}
+
 		private void GenerateLevelsList()
 		{
 			_levelBounds = new Tuple<float, float>[Levels.LevelCount];

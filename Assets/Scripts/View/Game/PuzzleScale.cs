@@ -25,6 +25,14 @@ namespace View.Game
         
         public event Action PuzzleInit;
 
+        private BoxCollider _collider;
+
+        private void Awake()
+        {
+            _collider = GetComponent<BoxCollider>();
+        }
+
+
         public void Init(Point startNode, Point boardSize)
         {
             Dimensions = new Vector2(boardSize.x, boardSize.y) * Scaling;
@@ -49,11 +57,23 @@ namespace View.Game
                 .setEase(LeanTweenType.easeInOutSine);
             
             PuzzleInit?.Invoke();
+            
+            ScaleCollider();
         }
 
         public Vector2 Scale(Vector2 boardPos)
         {
             return boardPos*Scaling;
+        }
+
+        private void ScaleCollider()
+        {
+            var rot = transform.rotation.eulerAngles;
+            var rotOffset = new Vector2(Mathf.Sin(Mathf.Deg2Rad * rot.y), Mathf.Sin(Mathf.Deg2Rad * rot.x));
+            
+            _collider.size = Dimensions + Vector2.one * NodeScaling * 4f + rotOffset;
+            _collider.center = - (Vector3) Offset + Vector3.back * NodeScaling / 2f;
+            _collider.center += new Vector3(rotOffset.x, -rotOffset.y) / 2f;
         }
     }
 }

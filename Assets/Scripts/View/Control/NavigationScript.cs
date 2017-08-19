@@ -13,7 +13,8 @@ namespace View.Control
 
         private readonly IDictionary<ButtonType, Action<ScrollView>> _buttonActions = 
                 new Dictionary<ButtonType, Action<ScrollView>> {
-            { ButtonType.LevelSelect, scrollView => scrollView.EnableScroll() }
+            { ButtonType.LevelSelect, scrollView => scrollView.EnableScroll() },
+            { ButtonType.RestartLevel, scrollView => scrollView.RestartLevel() }
         };
 
         private void Awake()

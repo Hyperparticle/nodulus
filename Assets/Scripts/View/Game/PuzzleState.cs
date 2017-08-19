@@ -172,6 +172,11 @@ namespace View.Game
         {
             Init(CurrentLevel == Levels.LevelCount - 1 ? CurrentLevel : CurrentLevel + 1);
         }
+        
+        public void RestartLevel(float delay = 0f)
+        {
+            Init(CurrentLevel);
+        }
 
         public void PrevLevel(float delay = 0f)
         {

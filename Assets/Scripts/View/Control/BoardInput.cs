@@ -108,21 +108,42 @@ namespace View.Control
         /// </summary>
         private NodeView GetNearestNode(Vector2 screenPoint)
         {
-            // TODO: make this more robust
+            // TODO: make configurable
+            const float maxDistance = 100f;
+            RaycastHit hit;
+            
+            // Start a raycast from the screen to the board
+            var ray = Camera.main.ScreenPointToRay(screenPoint);
+            if (!Physics.Raycast(ray, out hit, maxDistance)) {
+                return null;
+            }
+            
+            // Convert hit position to relative coordinates
+            var relativePos = Quaternion.Inverse(transform.rotation) * (hit.point - transform.position);
 
-            // Obtain the gesture positions
-            var startTouch = Camera.main.ScreenToWorldPoint(screenPoint);
-            var scaledPos = (Vector2) (startTouch - transform.position);
-
-            // Remove any scaling, and round the position to the nearest integer
-            var pos = scaledPos/_puzzleScale.Scaling;
+            // Remove any scaling
+            var scaledPos = relativePos / _puzzleScale.Scaling;
+            
+            // Offset the position by the rotation of the board that has slightly shifted the cube centroids
+            var rot = transform.rotation.eulerAngles;
+            var rotOffset = new Vector3(Mathf.Sin(Mathf.Deg2Rad * rot.y), -Mathf.Sin(Mathf.Deg2Rad * rot.x)) / 2f;
+            
+            var pos = scaledPos - rotOffset;
+            
+            // Round the position to the nearest integer
             var point = Point.Round(pos);
-
+            
             // Retrieve the node, if it exists
             NodeView node;
             _nodeMap.TryGetValue(point, out node);
             return node;
         }
+        
+//        private void OnDrawGizmosSelected()
+//        {
+//            Gizmos.color = new Color(1, 0, 0, 0.5F);
+//            Gizmos.DrawWireCube(transform.position, Vector3.one);
+//        }
 
 //        private FieldView GetNearestField(TKTapRecognizer recognizer)
 //        {
