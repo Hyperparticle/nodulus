@@ -46,6 +46,8 @@ namespace View.Items
     public enum ButtonType
     {
         LevelSelect,
-        RestartLevel
+        ContinueLevel,
+        RestartLevel,
+        Settings
     }
 }

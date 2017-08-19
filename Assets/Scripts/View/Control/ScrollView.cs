@@ -33,10 +33,14 @@ namespace View.Control
 
 		private int _cameraZoomId;
 
+		private MenuRotator _menuRotator;
+
 		private void Awake()
 		{
             // Set the maximum number of simultaneous tweens
             LeanTween.init(30000);
+
+			_menuRotator = GameObject.FindGameObjectWithTag("ButtonSelect").GetComponent<MenuRotator>();
 		}
 
 		private void Start()
@@ -66,6 +70,10 @@ namespace View.Control
 			panRecognizer.gestureRecognizedEvent += OnPan;
 			panRecognizer.gestureCompleteEvent += OnPanComplete;
 			TouchKit.addGestureRecognizer(panRecognizer);
+			
+			var tapRecognizer = new TKTapRecognizer();
+			tapRecognizer.gestureRecognizedEvent += OnTap;
+			TouchKit.addGestureRecognizer(tapRecognizer);
 		}
 
 		private void FixedUpdate()
@@ -172,6 +180,8 @@ namespace View.Control
 				return;
 			}
 			
+			_menuRotator.Toggle();
+			
 			var puzzleState = _levels[_selectedLevel].GetComponent<PuzzleState>();
 			var puzzleScale = puzzleState.GetComponent<PuzzleScale>();
 			var boardAction = puzzleState.GetComponent<BoardAction>();
@@ -188,10 +198,13 @@ namespace View.Control
 
 			_panVelocity = Vector3.up / VelocityScalingFactor;
 			_scrollEnabled = true;
+			
 		}
 
 		public void DisableScroll(float delay = 0f)
 		{
+			_menuRotator.Toggle();
+			
 			var level = _levels[_selectedLevel];
 			
 			var prevLevel = _selectedLevel - 1;
@@ -393,6 +406,39 @@ namespace View.Control
 			}
 
 			return _selectedLevel;
+		}
+
+		public void ShowSettings()
+		{
+			
+		}
+
+		private void OnTap(TKTapRecognizer recognizer)
+		{
+			if (!_scrollEnabled) {
+				return;
+			}
+
+			var touch = (Vector2) Camera.main.ScreenToViewportPoint(recognizer.touchLocation()) - Vector2.one / 2f;
+			// TODO: make configurable
+			const float maxTouchDistance = 0.25f;
+			
+			if (touch.magnitude > maxTouchDistance) {
+				return;
+			}
+
+			var velocity = (_panVelocity + _magnetVelocity).magnitude;
+			
+			// TODO: make configurable
+			const float threshold = 0.20f;
+			
+			Debug.Log(velocity);
+
+			if (velocity > threshold) {
+				return;
+			}
+			
+			EnableScroll();
 		}
 	}
 }
