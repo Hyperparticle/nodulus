@@ -12,7 +12,7 @@ namespace Core.Builders
         {
             var gameBoard = new GameBoard();
 
-            var buildNodes = BuildNodes(gameBoard, level.Nodes);
+            var buildNodes = BuildNodes(gameBoard, level.Nodes, level.StartNode, level.FinalNode);
             var buildArcs = BuildArcs(gameBoard, level.Arcs);
 
             // Fail fast if something went wrong
@@ -21,30 +21,39 @@ namespace Core.Builders
             return gameBoard;
         }
 
-        private static bool BuildNodes(GameBoard gameBoard, IEnumerable<Point> nodePositions)
-        {
+        private static bool BuildNodes(
+            GameBoard gameBoard, 
+            IEnumerable<Point> nodePositions,
+            Point startNode,
+            Point finalNode
+        ) {
+            if (startNode.Equals(finalNode)) {
+                return false;
+            }
+            
             // Generate a list of nodes
             var nodes = nodePositions
                 .Select(pos => new Node(pos))
                 .ToList();
 
             // Set start and final nodes
-            gameBoard.StartNode = nodes.First();
-            nodes.Last().Final = true;
-
+            gameBoard.StartNode = nodes.FirstOrDefault(node => node.Position.Equals(startNode)) ?? nodes.First();
+            var final = nodes.FirstOrDefault(node => node.Position.Equals(finalNode)) ?? nodes.Last();
+            final.Final = true;
+            
             // Place all nodes on the board, and return success if all placements were valid
             var success = nodes
                 .Select(gameBoard.PlaceNode)
                 .All(valid => valid);
-
+            
             return success;
         }
 
-        private static bool BuildArcs(GameBoard gameBoard, IEnumerable<PointDir> arcPositions)
+        private static bool BuildArcs(GameBoard gameBoard, IEnumerable<ArcState> arcStates)
         {
             // Place all arcs on the board, and return sucess if all placements were valid
-            var success = arcPositions
-                .Select(pointDir => gameBoard.CreateArc(pointDir.Point, pointDir.Direction))
+            var success = arcStates
+                .Select(state => gameBoard.CreateArc(state.Point, state.Direction, state.Pulled))
                 .All(valid => valid);
 
             return success;

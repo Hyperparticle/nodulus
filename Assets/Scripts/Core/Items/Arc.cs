@@ -78,4 +78,44 @@ namespace Core.Items
             return IsPulled || Field.Equals(other.Field);
         }
     }
+
+    public class ArcState
+    {
+        public Point Point { get; }
+        public Direction Direction { get; }
+        public bool Pulled { get; }
+
+        public ArcState(Point point, Direction direction, bool pulled)
+        {
+            Point = point;
+            Direction = direction;
+            Pulled = pulled;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            return obj is ArcState && Equals((ArcState) obj);
+        }
+
+        public bool Equals(ArcState other)
+        {
+            return Point.Equals(other.Point) && Direction == other.Direction && Pulled == other.Pulled;
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked {
+                var hashCode = Point.GetHashCode();
+                hashCode = (hashCode * 397) ^ (int) Direction;
+                hashCode = (hashCode * 397) ^ Pulled.GetHashCode();
+                return hashCode;
+            }
+        }
+        
+        public override string ToString()
+        {
+            return $"{{{Point}, {Direction}, {Pulled}}}";
+        }
+    }
 }

@@ -14,15 +14,11 @@ namespace Core.Game
         private readonly Grid _grid;
 
         public HashSet<Node> Nodes => _grid.Nodes;
-
         public HashSet<Arc> Arcs { get; } = new HashSet<Arc>();
-
         public HashSet<Field> Fields => _grid.Fields;
 
         public Node StartNode { get; set; }
-
         public Island StartIsland => IslandSet.Get(StartNode);
-
         public IslandSet IslandSet { get; } = new IslandSet();
 
         public Point Size { get; private set; }
@@ -41,13 +37,15 @@ namespace Core.Game
             return added;
         }
 
-        public bool CreateArc(Point pos, Direction dir)
+        public bool CreateArc(Point pos, Direction dir, bool pull = false)
         {
             var node = _grid.NodeAt(pos);
             if (node == null) return false;
 
             Field field;
-            return node.Fields.TryGetValue(dir, out field) && CreateArc(field);
+
+            var success = node.GetField(pos, dir, out field) && CreateArc(field, pull);
+            return success;
         }
 
         public Arc GetArcAt(Point arcPos, Direction arcDir)
@@ -60,12 +58,22 @@ namespace Core.Game
             return _grid.GetFieldAt(fieldPos, fieldDir);
         }
 
-        public bool CreateArc(Field field)
+        public bool CreateArc(Field field, bool pull = false)
         {
             if (field.HasArc) return false;
             var arc = new Arc(field);
 
-            return Push(arc, field);
+            var success = Push(arc, field);
+
+            if (!success) {
+                return false;
+            }
+
+//            if (pull) {
+//                arc.Pull();
+//            }
+
+            return true;
         }
 
         /// <summary>

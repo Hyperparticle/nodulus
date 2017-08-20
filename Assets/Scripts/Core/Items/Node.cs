@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Core.Data;
+using UnityEngine;
 
 namespace Core.Items
 {
@@ -56,6 +57,19 @@ namespace Core.Items
         {
             var diff = end.Position - Position;
             return diff.x != 0 ? diff.x : diff.y;
+        }
+
+        public bool GetField(Point pos, Direction dir, out Field field)
+        {
+            if (!dir.IsDownLeft()) {
+                return Fields.TryGetValue(dir, out field);
+            }
+
+            field = Fields.Values
+                .Where(f => f.ConnectedPointDir.Point.Equals(pos))
+                .FirstOrDefault(f => f.ConnectedPointDir.Direction == dir);
+
+            return field != null;
         }
 
         public override string ToString()

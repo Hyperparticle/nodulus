@@ -45,10 +45,24 @@ namespace View.Control
 
 		private void Start()
 		{
+			var panRecognizer = new TKPanRecognizer();
+			panRecognizer.gestureRecognizedEvent += OnPan;
+			panRecognizer.gestureCompleteEvent += OnPanComplete;
+			TouchKit.addGestureRecognizer(panRecognizer);
+			
+			var tapRecognizer = new TKTapRecognizer();
+			tapRecognizer.gestureRecognizedEvent += OnTap;
+			TouchKit.addGestureRecognizer(tapRecognizer);
+			
 			// Start with the initially defined start level
 			_selectedLevel = StartLevel;
 			
 			GenerateLevelsList();
+
+			if (_levels[_selectedLevel] == null) {
+				Debug.LogError($"Failed to start at level ({_selectedLevel})");
+				return;
+			}
 			
 			var puzzleState = _levels[_selectedLevel].GetComponent<PuzzleState>();
 			var puzzleScale = _levels[_selectedLevel].GetComponent<PuzzleScale>();
@@ -65,15 +79,6 @@ namespace View.Control
 			puzzleState.Init(_selectedLevel);
 			
 			_levels[_selectedLevel].GetComponent<PuzzleView>().ResumeView();
-			
-			var panRecognizer = new TKPanRecognizer();
-			panRecognizer.gestureRecognizedEvent += OnPan;
-			panRecognizer.gestureCompleteEvent += OnPanComplete;
-			TouchKit.addGestureRecognizer(panRecognizer);
-			
-			var tapRecognizer = new TKTapRecognizer();
-			tapRecognizer.gestureRecognizedEvent += OnTap;
-			TouchKit.addGestureRecognizer(tapRecognizer);
 		}
 
 		private void FixedUpdate()
@@ -274,7 +279,15 @@ namespace View.Control
 
 			// TODO: get board dimensions from puzzle scale before it is fully initialized
 			var puzzleScale = puzzleGame.GetComponent<PuzzleScale>();
-			var boardSize = (Vector2) Levels.BuildLevel(level).Size * puzzleScale.Scaling / 2f;;
+
+			var board = Levels.BuildLevel(level);
+
+			if (board == null) {
+				Debug.LogWarning($"Failed to create level ({level})");
+				return;
+			}
+			
+			var boardSize = (Vector2) board.Size * puzzleScale.Scaling / 2f;;
 			
 			_levels[level] = puzzleGame;
 
@@ -432,8 +445,6 @@ namespace View.Control
 			// TODO: make configurable
 			const float threshold = 0.20f;
 			
-			Debug.Log(velocity);
-
 			if (velocity > threshold) {
 				return;
 			}
