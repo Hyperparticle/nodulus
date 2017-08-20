@@ -14,6 +14,7 @@ namespace Core.Data
         public Player(GameBoard gameBoard)
         {
             PlayerState = new PlayerState(gameBoard);
+            
             MoveTo(gameBoard.StartNode);
 
             NumMoves += gameBoard.Metadata.Moves;

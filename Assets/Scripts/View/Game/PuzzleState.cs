@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Core.Data;
@@ -112,6 +113,8 @@ namespace View.Game
                 _boardEnabled = value;
             }
         }
+
+        public event Action<Level> LevelStateChanged;
 
         public bool HasArcAt(Point pos, Direction dir) { return _arcMap.ContainsArc(pos, dir); }
         public bool NodeOccupies(Point pos) { return _nodeMap.ContainsKey(pos); }
@@ -242,6 +245,8 @@ namespace View.Game
             var arc = PulledArcView.Arc;
             _arcMap.Add(arc.Position, arc.Direction, PulledArcView);
             _arcMap.Add(arc.ConnectedPosition, arc.Direction.Opposite(), PulledArcView);
+            
+            LevelStateChanged?.Invoke(LevelState());
 
             return true;
         }
@@ -266,6 +271,8 @@ namespace View.Game
             PulledArcView = arcView;
             _arcMap.Remove(arcPos, arcDir);
             _arcMap.Remove(arcConnPos, arcConnDir);
+            
+            LevelStateChanged?.Invoke(LevelState());
 
             return true;
         }
@@ -305,6 +312,30 @@ namespace View.Game
         {
             _puzzleSpawner.DestroyBoard(playSound);
             _saveState.Started = false;
+        }
+
+        private Level LevelState()
+        {
+            var levelName = Metadata.Name;
+            var description = Metadata.Description;
+            var moves = NumMoves;
+            var timeElapsed = TimeElapsed;
+
+            var nodes = _nodeMap.Values.Select(node => node.Position);
+            var arcs = _arcMap.Arcs.Select(arc => arc.Arc.Field.PointDir);
+
+            var startNode = _lastNodePulled.Position;
+            var finalNode = _nodeMap.Values
+                .Where(node => node.Node.Final)
+                .Select(node => node.Node.Position)
+                .FirstOrDefault();
+            
+            var startPull = IsPulled ? _puzzle.PulledDirection : Direction.None;
+            
+            var level = new Level(levelName, description, nodes, arcs, 
+                startNode, finalNode, startPull, moves, timeElapsed);
+
+            return level;
         }
     }
 }

@@ -13,11 +13,9 @@ namespace Core.Game
     public class Levels
     {
         private const string BeginnerLevels = "Levels/BeginnerLevels";
-//        private const string BeginnerLevels = "Levels/SavedLevels";
-        private const string SavedLevels = "Levels/SavedLevels";
+        private static readonly string SavedLevels = Application.persistentDataPath + "/SavedLevels.yaml";
         
-        private static readonly LevelPack LevelPack = LevelParser.DeserializeLevelPack(BeginnerLevels);
-        private static readonly LevelPack SavedPack = LevelParser.DeserializeLevelPack(SavedLevels);
+        private static readonly LevelPack LevelPack = LevelParser.DeserializeLevelPack(SavedLevels, BeginnerLevels);
         
         public static int LevelCount => LevelPack.Levels.Count;
 
@@ -26,7 +24,7 @@ namespace Core.Game
             if (levelNum < 0 || levelNum >= LevelCount) {
                 return null;
             }
-
+            
             var level = LevelPack.Levels[levelNum];
             return GameBoardBuilder.BuildBoard(level);
         }
@@ -34,7 +32,20 @@ namespace Core.Game
 
     public class LevelParser
     {
-        public static LevelPack DeserializeLevelPack(string filePath)
+        public static LevelPack DeserializeLevelPack(string filePath, string fallbackFilePath)
+        {
+            if (File.Exists(filePath)) {
+                var file = File.ReadAllText(filePath);
+                return DeserializeLevelPack(file);
+            }
+
+            var fallbackFile = Resources.Load<TextAsset>(fallbackFilePath);
+            File.WriteAllText(filePath, fallbackFile.text);
+            
+            return DeserializeLevelPack(fallbackFile.text);
+        }
+        
+        public static LevelPack DeserializeLevelPack(string fileText)
         {
             var builder = new DeserializerBuilder();
             builder.WithNamingConvention(new CamelCaseNamingConvention());
@@ -42,9 +53,7 @@ namespace Core.Game
             
             var deserializer = builder.Build();
             
-            var file = Resources.Load<TextAsset>(filePath);
-
-            using (var reader = new StringReader(file.text))
+            using (var reader = new StringReader(fileText))
             {
                 var levelPackSer = deserializer.Deserialize<LevelPackSer>(reader);
                 return new LevelPack(levelPackSer);
@@ -112,6 +121,7 @@ namespace Core.Game
 
         public Point StartNode { get; }
         public Point FinalNode { get; }
+        
         public Direction StartPull { get; }
         
         public Level(LevelParser.LevelSer levelSer)
@@ -137,6 +147,25 @@ namespace Core.Game
             FinalNode = new Point(finalNode[0], finalNode[1]);
 
             StartPull = levelSer.StartPull;
+        }
+
+        public Level(string name, string description, 
+            IEnumerable<Point> nodes, IEnumerable<PointDir> arcs,
+            Point startNode, Point finalNode, Direction startPull = Direction.None,
+            long moves = 0, double timeElapsed = 0)
+        {
+            Name = name;
+            Description = description;
+            Moves = moves;
+            TimeElapsed = timeElapsed;
+
+            Nodes = nodes.ToList();
+            Arcs = arcs.ToList();
+
+            StartNode = startNode;
+            FinalNode = finalNode;
+
+            StartPull = startPull;
         }
     }
 }
