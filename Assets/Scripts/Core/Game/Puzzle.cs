@@ -16,6 +16,7 @@ namespace Core.Game
         private readonly List<IMove> _moveHistory = new List<IMove>();
 
         public Node StartNode => _gameBoard.StartNode;
+        public Direction StartPull => _gameBoard.StartPull;
         public bool Win => _player.Win;
         public Point BoardSize => _gameBoard.Size;
         public int NumMoves => _player.NumMoves;
@@ -23,6 +24,7 @@ namespace Core.Game
         public PlayerState PlayerState => _player.PlayerState;
 
         public Arc PulledArc { get; private set; }
+        public Direction PulledDirection { get; private set; } = Direction.None;
         public bool IsPulled => PulledArc != null;
 
         public Puzzle(GameBoard gameBoard)
@@ -45,6 +47,7 @@ namespace Core.Game
             }
 
             PulledArc = result ? arc : PulledArc;
+            PulledDirection = result ? pullDir : PulledDirection;
             return result;
         }
 
@@ -69,6 +72,7 @@ namespace Core.Game
             }
 
             PulledArc = result ? null : PulledArc;
+            PulledDirection = result ? Direction.None : PulledDirection;
             return result;
         }
 

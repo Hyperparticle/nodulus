@@ -74,20 +74,20 @@ namespace Core.Game
             public List<ArcSer> Arcs { get; set; }
             public int[] StartNode { get; set; }
             public int[] FinalNode { get; set; }
+            public Direction StartPull { get; set; } = Direction.None;
         }
 
         public class ArcSer
         {
             public int[] Parent { get; set; }
             public Direction Direction { get; set; }
-            public bool Pulled { get; set; }
         }
     }
 
     public class LevelPack
     {
-        public readonly LevelPackInfo PackInfo;
-        public readonly List<Level> Levels;
+        public LevelPackInfo PackInfo { get; }
+        public List<Level> Levels { get; }
 
         public LevelPack(LevelParser.LevelPackSer levelPackSer)
         {
@@ -107,13 +107,15 @@ namespace Core.Game
 
     public class Level
     {
-        public readonly string Name;
-        public readonly string Description;
-        public readonly IEnumerable<Point> Nodes;
-        public readonly IEnumerable<ArcState> Arcs;
+        public string Name { get; }
+        public string Description { get; }
+        public IEnumerable<Point> Nodes { get; }
+        public IEnumerable<PointDir> Arcs { get; }
 
-        public readonly Point StartNode;
-        public readonly Point FinalNode;
+        public Point StartNode { get; }
+        public Point FinalNode { get; }
+
+        public readonly Direction StartPull;
         
         public Level(LevelParser.LevelSer levelSer)
         {
@@ -126,7 +128,7 @@ namespace Core.Game
             Arcs = levelSer.Arcs
                 .Select(arc => {
                     var point = new Point(arc.Parent[0], arc.Parent[1]);
-                    return new ArcState(point, arc.Direction, arc.Pulled);
+                    return new PointDir(point, arc.Direction);
                 });
 
             var startNode = levelSer.StartNode ?? levelSer.Nodes[0];
@@ -134,6 +136,8 @@ namespace Core.Game
             
             StartNode = new Point(startNode[0], startNode[1]);
             FinalNode = new Point(finalNode[0], finalNode[1]);
+
+            StartPull = levelSer.StartPull;
         }
     }
 }

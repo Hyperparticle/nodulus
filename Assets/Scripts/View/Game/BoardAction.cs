@@ -110,7 +110,7 @@ namespace View.Game
             _numActions++;
         }
 
-        private void HighlightAll()
+        public void HighlightAll()
         {
             // Update node highlighting
             _puzzleView.Highlight(_puzzleState.NonPlayerNodes, false);
@@ -119,6 +119,7 @@ namespace View.Game
             // Update arc highlighting
             _puzzleView.Highlight(_puzzleState.NonPlayerArcs, false);
             _puzzleView.Highlight(_puzzleState.PlayerArcs, true);
+            _puzzleView.Highlight(_puzzleState.PulledArcView, true);
 
             // Update field highlighting
             _puzzleView.Highlight(_puzzleState.NonPushFields, false);

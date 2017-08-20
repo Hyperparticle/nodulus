@@ -13,12 +13,12 @@ levels:
       - [3, 0]
       - [4, 0]
       - [5, 0]
-#   startNode: [0, 0]  # The position of the start and final nodes. If left out, they are
-#   finalNode: [5, 0]  # assumed as the first and last nodes in the nodes list above
+#    startNode: [0, 0]   # The position of the start and final nodes. If left out, they are
+#    finalNode: [5, 0]   # assumed as the first and last nodes in the nodes list above
+#    startPull: Left     # An arc connected to the start node can start as pulled
     arcs:
       - parent: [0, 0]   # Arcs are constructed by specifying parent node coordinates
         direction: Right # and the direction it points to (Left, Right, Up, or Down)
-#       pulled: true     # Arcs can be created in their pulled state as well
     
   - name: Roundabout
     description: Moving in different directions

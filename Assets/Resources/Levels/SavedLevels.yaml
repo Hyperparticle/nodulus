@@ -16,9 +16,9 @@ levels:
       - [3, 2]
       - [5, 0]
     startNode: [1, 2]
+    startPull: Right
     arcs:
       - parent: [0, 2]
         direction: Right
-        pulled: true
       - parent: [1, 2]
         direction: Right

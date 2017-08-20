@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using Core.Data;
 using Core.Items;
 using UnityEngine;
@@ -34,7 +35,7 @@ namespace View.Items
         private void Awake()
         {
             _nodeScale = GetComponent<ScaleScript>();
-            _colorizer = GetComponentInChildren<Colorizer>();
+            _colorizer = GetComponentsInChildren<Colorizer>().FirstOrDefault(c => c.GetComponent<ArcView>() == null);
             _nodeTransit = GetComponent<NodeTransit>();
         }
 

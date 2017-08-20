@@ -15,6 +15,8 @@ namespace Core.Builders
             var buildNodes = BuildNodes(gameBoard, level.Nodes, level.StartNode, level.FinalNode);
             var buildArcs = BuildArcs(gameBoard, level.Arcs);
 
+            gameBoard.StartPull = level.StartPull;
+
             // Fail fast if something went wrong
             if (!buildNodes || !buildArcs) return null;
 
@@ -49,11 +51,11 @@ namespace Core.Builders
             return success;
         }
 
-        private static bool BuildArcs(GameBoard gameBoard, IEnumerable<ArcState> arcStates)
+        private static bool BuildArcs(GameBoard gameBoard, IEnumerable<PointDir> arcStates)
         {
             // Place all arcs on the board, and return sucess if all placements were valid
             var success = arcStates
-                .Select(state => gameBoard.CreateArc(state.Point, state.Direction, state.Pulled))
+                .Select(state => gameBoard.CreateArc(state.Point, state.Direction))
                 .All(valid => valid);
 
             return success;

@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using UnityEngine;
 using Utility;
 using View.Control;
@@ -17,6 +18,7 @@ namespace View.Items
         {
             get { return _primaryColor; }
             set {
+                _previousColor = _primaryColor;
                 _primaryColor = value;
                 _primaryHsb = new HsbColor(_primaryColor);
                 _darkHsb = new HsbColor(_primaryHsb.H, _primaryHsb.S, _primaryHsb.B*DarkBrightnessScale, _primaryHsb.A);
@@ -55,7 +57,10 @@ namespace View.Items
         private void Awake()
         {
             _material = GetComponent<Renderer>().material;
-            _childMaterials = GetComponentInChildren<Renderer>().materials;
+            _childMaterials = GetComponentsInChildren<Renderer>()
+                .Where(r => r.GetComponent<ArcView>() == null)
+                .Select(r => r.material)
+                .ToArray();
 
             PrimaryColor = _material.color;
         }
@@ -173,19 +178,9 @@ namespace View.Items
                 });
         }
 
-        public void Previous()
-        {
-            Previous(TransitionTime, 0f, Ease);
-        }
-
-        public void Previous(float time)
-        {
-            Previous(time, 0f, Ease);
-        }
-
         public void Previous(float time, float delay, LeanTweenType ease)
         {
-            LeanTween.color(gameObject, _previousColor, time)
+            LeanTween.alpha(gameObject, _previousColor.a, time)
                 .setDelay(delay)
                 .setEase(ease);
         }

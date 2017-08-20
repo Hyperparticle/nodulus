@@ -166,6 +166,17 @@ namespace View.Game
             _boardInput.Init(_puzzleSpawner.NodeMap);
             
             gameObject.name = $"PuzzleGame ({level})*";
+
+            // Start with a pulled node if defined
+            if (_puzzle.StartPull == Direction.None) {
+                return;
+            }
+
+            var startNode = _nodeMap[_puzzle.StartNode.Position];
+            Play(startNode, _puzzle.StartPull);
+            
+            _puzzleView.Rotate(startNode, PulledArcView, _puzzle.StartPull, true);
+            _boardAction.HighlightAll();
         }
 
         public void NextLevel(float delay = 0f)

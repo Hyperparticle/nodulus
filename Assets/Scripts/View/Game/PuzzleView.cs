@@ -127,6 +127,11 @@ namespace View.Game
             }
         }
 
+        public void Highlight(ArcView arcView, bool enable)
+        {
+            arcView.Highlight(enable);
+        }
+        
         public void Highlight(IEnumerable<FieldView> fields, bool enable)
         {
             foreach (var fieldView in fields) {

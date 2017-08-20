@@ -8,11 +8,11 @@ namespace Core.Data
     /// </summary>
     public enum Direction
     {
+        None,
         Up,
         Down,
         Left,
         Right,
-        None
     }
 
     public static class DirectionExtensions

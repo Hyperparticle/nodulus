@@ -22,6 +22,8 @@ namespace Core.Game
         public IslandSet IslandSet { get; } = new IslandSet();
 
         public Point Size { get; private set; }
+        
+        public Direction StartPull { get; set; } = Direction.None;
 
         public GameBoard()
         {
@@ -37,14 +39,14 @@ namespace Core.Game
             return added;
         }
 
-        public bool CreateArc(Point pos, Direction dir, bool pull = false)
+        public bool CreateArc(Point pos, Direction dir)
         {
             var node = _grid.NodeAt(pos);
             if (node == null) return false;
 
             Field field;
 
-            var success = node.GetField(pos, dir, out field) && CreateArc(field, pull);
+            var success = node.GetField(pos, dir, out field) && CreateArc(field);
             return success;
         }
 
@@ -64,16 +66,7 @@ namespace Core.Game
             var arc = new Arc(field);
 
             var success = Push(arc, field);
-
-            if (!success) {
-                return false;
-            }
-
-//            if (pull) {
-//                arc.Pull();
-//            }
-
-            return true;
+            return success;
         }
 
         /// <summary>
