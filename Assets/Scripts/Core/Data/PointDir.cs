@@ -30,9 +30,8 @@ namespace Core.Data
 
         public override int GetHashCode()
         {
-            unchecked
-            {
-                return (Point.GetHashCode() * 397) ^ (int)Direction;
+            unchecked {
+                return (Point.GetHashCode() * 397) ^ (int) Direction;
             }
         }
         

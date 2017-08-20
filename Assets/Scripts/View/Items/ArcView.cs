@@ -159,7 +159,6 @@ namespace View.Items
                 var fractionPos = ((float) i / Arc.Length * 2f - 1f) / 10f;
                 marker.transform.localPosition = Vector3.right * fractionPos;
             }
-            
         }
     }
 }

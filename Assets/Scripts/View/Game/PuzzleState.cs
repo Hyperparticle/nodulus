@@ -208,13 +208,17 @@ namespace View.Game
                 var pushMove = _fieldMap.TryGetField(nodeView.Position, dir, out fieldView) &&
                        PushArc(nodeView, fieldView);
 
-                if (pushMove) {
-                    PushNodePath = _playerState.PushPath(_lastNodePulled.Node, nodeView.Node)
-                        .Select(node => _nodeMap[node.Position])
-                        .ToList();
+                if (!pushMove) {
+                    return false;
                 }
+                
+                PushNodePath = _playerState.PushPath(_lastNodePulled.Node, nodeView.Node)
+                    .Select(node => _nodeMap[node.Position])
+                    .ToList();
+                    
+                LevelStateChanged?.Invoke(LevelState());
 
-                return pushMove;
+                return true;
             }
 
             // Pull move
@@ -222,6 +226,11 @@ namespace View.Game
             var pullMove = _arcMap.TryGetArc(nodeView.Position, dir.Opposite(), out arcView) &&
                    PullArc(arcView, dir);
             _lastNodePulled = nodeView;
+
+            if (pullMove) {
+                LevelStateChanged?.Invoke(LevelState());
+            }
+            
             return pullMove;
         }
 
@@ -246,7 +255,6 @@ namespace View.Game
             _arcMap.Add(arc.Position, arc.Direction, PulledArcView);
             _arcMap.Add(arc.ConnectedPosition, arc.Direction.Opposite(), PulledArcView);
             
-            LevelStateChanged?.Invoke(LevelState());
 
             return true;
         }
@@ -272,8 +280,6 @@ namespace View.Game
             _arcMap.Remove(arcPos, arcDir);
             _arcMap.Remove(arcConnPos, arcConnDir);
             
-            LevelStateChanged?.Invoke(LevelState());
-
             return true;
         }
         
@@ -322,7 +328,11 @@ namespace View.Game
             var timeElapsed = TimeElapsed;
 
             var nodes = _nodeMap.Values.Select(node => node.Position);
-            var arcs = _arcMap.Arcs.Select(arc => arc.Arc.Field.PointDir);
+            var arcs = _arcMap.Arcs.Select(arc => arc.Arc.Field.PointDir).Distinct().ToList();
+            
+            if (IsPulled) {
+                arcs.Add(PulledArcView.Arc.PrevField.PointDir);
+            }
 
             var startNode = _lastNodePulled.Position;
             var finalNode = _nodeMap.Values

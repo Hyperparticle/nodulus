@@ -17,6 +17,7 @@ namespace Core.Items
         public Node ParentNode => Field.ParentNode;
         public Node ConnectedNode => Field.ConnectedNode;
         public Field Field { get; private set; }
+        public Field PrevField { get; private set; }
 
         /// <summary>
         /// True if this arc is in its pulled state.
@@ -32,6 +33,7 @@ namespace Core.Items
         {
             // Disconnect this Arc from an existing field
             Field?.DisconnectArc(this);
+            PrevField = Field;
             Field = null;
         }
 

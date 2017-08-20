@@ -67,9 +67,10 @@ namespace View.Control
 			var puzzleState = _levels[_selectedLevel].GetComponent<PuzzleState>();
 			var puzzleScale = _levels[_selectedLevel].GetComponent<PuzzleScale>();
 			
-			puzzleState.GetComponent<PuzzleState>().BoardEnabled = true;
+			puzzleState.BoardEnabled = true;
 			puzzleScale.PuzzleInit += OnPuzzleInit;
 			_levels[_selectedLevel].GetComponent<BoardAction>().PuzzleWin += OnPuzzleWin;
+			puzzleState.LevelStateChanged += OnLevelStateChanged;
 			
 			var bounds = _levelBounds[_selectedLevel];
 			var mid = (bounds.Item1 + bounds.Item2) / 2f;
@@ -195,6 +196,7 @@ namespace View.Control
 
 			puzzleScale.PuzzleInit -= OnPuzzleInit;
 			boardAction.PuzzleWin -= OnPuzzleWin;
+			puzzleState.LevelStateChanged -= OnLevelStateChanged;
 			
 			var zoom = CameraScript.CameraZoomToFit(puzzleScale.Dimensions, puzzleScale.Margin, _scaleRatio);
 			_cameraZoomId = CameraScript.ZoomCamera(zoom, CameraZoomTime, LeanTweenType.easeInSine);
@@ -218,6 +220,7 @@ namespace View.Control
 			
 			level.GetComponent<PuzzleScale>().PuzzleInit += OnPuzzleInit;
 			level.GetComponent<BoardAction>().PuzzleWin += OnPuzzleWin;
+			level.GetComponent<PuzzleState>().LevelStateChanged += OnLevelStateChanged;
 			level.GetComponent<PuzzleState>().BoardEnabled = true;
 			level.GetComponent<PuzzleView>().ResumeView();
 			
@@ -327,6 +330,7 @@ namespace View.Control
 			_levels[_selectedLevel].GetComponent<PuzzleState>().BoardEnabled = false;
 			_levels[_selectedLevel].GetComponent<PuzzleScale>().PuzzleInit -= OnPuzzleInit;
 			_levels[_selectedLevel].GetComponent<BoardAction>().PuzzleWin -= OnPuzzleWin;
+			_levels[_selectedLevel].GetComponent<PuzzleState>().LevelStateChanged -= OnLevelStateChanged;
 			
 			_selectedLevel = level >= _levels.Length - 1 ? _levels.Length - 1 : level + 1;
 			
@@ -334,6 +338,7 @@ namespace View.Control
 			
 			_levels[_selectedLevel].GetComponent<PuzzleScale>().PuzzleInit += OnPuzzleInit;
 			_levels[_selectedLevel].GetComponent<BoardAction>().PuzzleWin += OnPuzzleWin;
+			_levels[_selectedLevel].GetComponent<PuzzleState>().LevelStateChanged += OnLevelStateChanged;
 			_levels[_selectedLevel].GetComponent<PuzzleState>().BoardEnabled = true;
 			
 			// Move to the new board
@@ -393,6 +398,11 @@ namespace View.Control
 			var velocityMagnitude = Mathf.Abs(delta) < 5f ? 0f : Mathf.Clamp(delta, -50f, 50f);
 			
 			_panVelocity = Vector3.up * velocityMagnitude / VelocityScalingFactor;
+		}
+
+		private void OnLevelStateChanged(Level level)
+		{
+			Debug.Log(level.Moves);
 		}
 
 		private int FindLevel(float yPos)
