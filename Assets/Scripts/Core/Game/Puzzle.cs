@@ -16,10 +16,10 @@ namespace Core.Game
         private readonly List<IMove> _moveHistory = new List<IMove>();
 
         public Node StartNode => _gameBoard.StartNode;
-        public Direction StartPull => _gameBoard.StartPull;
+        public Level Metadata => _gameBoard.Metadata;
         public bool Win => _player.Win;
         public Point BoardSize => _gameBoard.Size;
-        public int NumMoves => _player.NumMoves;
+        public long NumMoves => _player.NumMoves;
 
         public PlayerState PlayerState => _player.PlayerState;
 

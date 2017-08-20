@@ -30,15 +30,6 @@ namespace Core.Game
             var level = LevelPack.Levels[levelNum];
             return GameBoardBuilder.BuildBoard(level);
         }
-
-//        public static Level GetLevelInfo(int levelNum)
-//        {
-//            if (levelNum < 0 || levelNum >= LevelCount) {
-//                return null;
-//            }
-//
-//            return LevelPack.Levels[levelNum];
-//        }
     }
 
     public class LevelParser
@@ -70,8 +61,12 @@ namespace Core.Game
         {
             public string Name { get; set; }
             public string Description { get; set; }
+            public long Moves { get; set; }
+            public double TimeElapsed { get; set; }
+            
             public List<int[]> Nodes { get; set; }
             public List<ArcSer> Arcs { get; set; }
+            
             public int[] StartNode { get; set; }
             public int[] FinalNode { get; set; }
             public Direction StartPull { get; set; } = Direction.None;
@@ -109,18 +104,22 @@ namespace Core.Game
     {
         public string Name { get; }
         public string Description { get; }
+        public long Moves { get; }
+        public double TimeElapsed { get; }
+        
         public IEnumerable<Point> Nodes { get; }
         public IEnumerable<PointDir> Arcs { get; }
 
         public Point StartNode { get; }
         public Point FinalNode { get; }
-
-        public readonly Direction StartPull;
+        public Direction StartPull { get; }
         
         public Level(LevelParser.LevelSer levelSer)
         {
             Name = levelSer.Name;
             Description = levelSer.Description;
+            Moves = levelSer.Moves;
+            TimeElapsed = levelSer.TimeElapsed;
 
             Nodes = levelSer.Nodes
                 .Select(node => new Point(node[0], node[1]));

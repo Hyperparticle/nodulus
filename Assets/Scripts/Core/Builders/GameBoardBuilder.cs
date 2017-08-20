@@ -10,12 +10,10 @@ namespace Core.Builders
     {
         public static GameBoard BuildBoard(Level level)
         {
-            var gameBoard = new GameBoard();
+            var gameBoard = new GameBoard(level);
 
             var buildNodes = BuildNodes(gameBoard, level.Nodes, level.StartNode, level.FinalNode);
             var buildArcs = BuildArcs(gameBoard, level.Arcs);
-
-            gameBoard.StartPull = level.StartPull;
 
             // Fail fast if something went wrong
             if (!buildNodes || !buildArcs) return null;

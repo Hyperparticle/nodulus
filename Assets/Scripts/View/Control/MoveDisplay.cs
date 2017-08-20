@@ -16,6 +16,10 @@ namespace View.Control
 
         public void UpdateText(string text, bool resetAnimation = false)
         {
+            if (LeanTween.isTweening(gameObject)) {
+                return;
+            }
+            
             // TODO: make configurable
             const float time = 0.8f;
             const float delay = 2f;

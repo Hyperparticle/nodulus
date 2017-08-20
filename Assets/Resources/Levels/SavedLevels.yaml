@@ -6,6 +6,8 @@ info:
 levels:
   - name: Ladder
     description: Multiple pieces
+    moves: 1
+    timeElapsed: 100.0
     nodes:
       - [0, 2]
       - [1, 0]

@@ -29,8 +29,9 @@ namespace View.Game
         public ArcView PulledArcView { get; private set; }
         public bool IsPulled => _puzzle.IsPulled;
         public Point PullPosition => _playerState.PullPosition;
-        public int NumMoves => _puzzle.NumMoves;
-        public float ElapsedTime { get; private set; }
+        public long NumMoves => _puzzle.NumMoves;
+        public double TimeElapsed { get; private set; }
+        public Level Metadata => _puzzle.Metadata;
 
         public int CurrentLevel { get; private set; }
         public List<NodeView> PushNodePath { get; private set; }
@@ -132,7 +133,7 @@ namespace View.Game
 
         private void Update()
         {
-            ElapsedTime += Time.deltaTime;
+            TimeElapsed += Time.deltaTime;
         }
 
         /// <summary>
@@ -167,15 +168,17 @@ namespace View.Game
             
             gameObject.name = $"PuzzleGame ({level})*";
 
+            TimeElapsed += Metadata.TimeElapsed;
+
             // Start with a pulled node if defined
-            if (_puzzle.StartPull == Direction.None) {
+            if (Metadata.StartPull == Direction.None) {
                 return;
             }
 
             var startNode = _nodeMap[_puzzle.StartNode.Position];
-            Play(startNode, _puzzle.StartPull);
+            Play(startNode, Metadata.StartPull);
             
-            _puzzleView.Rotate(startNode, PulledArcView, _puzzle.StartPull, true);
+            _puzzleView.Rotate(startNode, PulledArcView, Metadata.StartPull, true);
             _boardAction.HighlightAll();
         }
 

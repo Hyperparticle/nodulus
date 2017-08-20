@@ -23,12 +23,13 @@ namespace Core.Game
 
         public Point Size { get; private set; }
         
-        public Direction StartPull { get; set; } = Direction.None;
+        public Level Metadata { get; }
 
-        public GameBoard()
+        public GameBoard(Level metadata)
         {
             _grid = new Grid();
             Size = _grid.Size;
+            Metadata = metadata;
         }
 
         public bool PlaceNode(Node node)

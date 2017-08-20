@@ -77,8 +77,6 @@ namespace View.Control
 			transform.position = Vector3.up * mid;
 			
 			puzzleState.Init(_selectedLevel);
-			
-			_levels[_selectedLevel].GetComponent<PuzzleView>().ResumeView();
 		}
 
 		private void FixedUpdate()

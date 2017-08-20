@@ -8,13 +8,15 @@ namespace Core.Data
     {
         public PlayerState PlayerState { get; }
 
-        public int NumMoves { get; private set; }
+        public long NumMoves { get; private set; }
         public bool Win => PlayerState.IsFinal;
 
         public Player(GameBoard gameBoard)
         {
             PlayerState = new PlayerState(gameBoard);
             MoveTo(gameBoard.StartNode);
+
+            NumMoves += gameBoard.Metadata.Moves;
         }
 
         public void MoveTo(Node node)
