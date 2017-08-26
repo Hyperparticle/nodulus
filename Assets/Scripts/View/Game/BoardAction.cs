@@ -20,7 +20,7 @@ namespace View.Game
         private PuzzleView _puzzleView;
         private PuzzleState _puzzleState;
         private MoveDisplay _moveDisplay;
-        private GameAudio _gameAudio;
+        private GameBoardAudio _gameAudio;
         
         private readonly Queue<Tuple<NodeView, Direction>> _moveQueue 
             = new Queue<Tuple<NodeView, Direction>>(); 
@@ -38,7 +38,7 @@ namespace View.Game
             _puzzleView = GetComponent<PuzzleView>();
             _puzzleState = GetComponent<PuzzleState>();
             _moveDisplay = GameObject.FindGameObjectWithTag("MoveDisplay").GetComponent<MoveDisplay>();
-            _gameAudio = GameObject.FindGameObjectWithTag("GameAudio").GetComponent<GameAudio>();
+            _gameAudio = GetComponent<GameBoardAudio>();
 
             _puzzleView.ViewUpdated += OnViewUpdated;
         }

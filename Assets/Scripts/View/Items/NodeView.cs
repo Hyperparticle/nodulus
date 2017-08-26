@@ -56,6 +56,8 @@ namespace View.Items
             if (node.Final) {
                 PulseScale();
             }
+            
+            _nodeTransit.Init();
         }
 
         public void WaveIn(int delay, int maxDelay, Action onComplete = null, float animationSpeed = 1f, float delayScale = 1f)

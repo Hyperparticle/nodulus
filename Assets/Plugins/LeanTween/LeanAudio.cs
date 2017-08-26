@@ -263,9 +263,10 @@ public class LeanAudio : object {
 		return audioClip;
 	}
 
-	public static AudioSource play( AudioClip audio, float volume, float delay = 0f, bool loop = false ){
+	public static AudioSource play( AudioClip audio, float volume, float delay = 0f, bool loop = false, float time = 0f ){
 		AudioSource audioSource = playClipAt(audio, Vector3.zero, delay, loop);
 		audioSource.volume = volume;
+		audioSource.time = time;
 		return audioSource; 
 	}
 

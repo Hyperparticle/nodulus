@@ -19,7 +19,7 @@ namespace View.Items
 
         private ScaleScript _arcScale;
         private Colorizer _colorizer;
-        private GameAudio _gameAudio;
+        private GameBoardAudio _gameAudio;
 
         public GameObject MarkerPrefab;
 
@@ -34,11 +34,12 @@ namespace View.Items
         {
             _arcScale = GetComponent<ScaleScript>();
             _colorizer = GetComponent<Colorizer>();
-            _gameAudio = GameObject.FindGameObjectWithTag("GameAudio").GetComponent<GameAudio>();
         }
 
         public void Init(Arc arc, Transform parent, bool inStartIsland)
         {
+            _gameAudio = GetComponentInParent<GameBoardAudio>();
+            
             Arc = arc;
             Parent = parent;
 

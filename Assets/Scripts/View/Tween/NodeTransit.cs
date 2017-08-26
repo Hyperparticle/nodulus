@@ -11,7 +11,7 @@ namespace View.Tween
     /// </summary>
     public class NodeTransit : MonoBehaviour
     {
-        private GameAudio _gameAudio;
+        private GameBoardAudio _gameAudio;
         private GameObject _rotor;
 
         public float NodeRotateTime => GameDef.Get.NodeRotateTime;
@@ -34,8 +34,12 @@ namespace View.Tween
 
         private void Awake()
         {
-            _gameAudio = GameObject.FindGameObjectWithTag("GameAudio").GetComponent<GameAudio>();
             _rotor = GetComponentInChildren<Colorizer>().gameObject;
+        }
+
+        public void Init()
+        {
+            _gameAudio = GetComponentInParent<GameBoardAudio>();
         }
 
         public void WaveIn(int delay, int maxDelay, Action onComplete = null, float animationSpeed = 1f, float delayScale = 1f)

@@ -20,7 +20,7 @@ namespace View.Game
         private PuzzleView _puzzleView;
         private BoardInput _boardInput;
         private BoardAction _boardAction;
-        private GameAudio _gameAudio;
+        private GameBoardAudio _gameAudio;
 
         private Puzzle _puzzle;
         private PlayerState _playerState;
@@ -131,7 +131,7 @@ namespace View.Game
             _puzzleView = GetComponent<PuzzleView>();
             _boardInput = GetComponent<BoardInput>();
             _boardAction = GetComponent<BoardAction>();
-            _gameAudio = GameObject.FindGameObjectWithTag("GameAudio").GetComponent<GameAudio>();
+            _gameAudio = GetComponent<GameBoardAudio>();
         }
 
         private void Update()

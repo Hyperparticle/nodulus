@@ -16,7 +16,7 @@ namespace View.Game
         private LatticeView _lattice;
         private PuzzleScale _puzzleScale;
         private ItemPool _itemPool;
-        private GameAudio _gameAudio;
+        private GameBoardAudio _gameAudio;
 
         public IDictionary<Point, NodeView> NodeMap { get; } = new Dictionary<Point, NodeView>();
 
@@ -33,7 +33,7 @@ namespace View.Game
             _lattice = GetComponentInChildren<LatticeView>();
             _puzzleScale = GetComponent<PuzzleScale>();
             _itemPool = GetComponent<ItemPool>();
-            _gameAudio = GameObject.FindGameObjectWithTag("GameAudio").GetComponent<GameAudio>();
+            _gameAudio = GetComponent<GameBoardAudio>();
         }
 
         public Puzzle SpawnBoard(int level, float animationSpeed = 1f, float delayScale = 1f)

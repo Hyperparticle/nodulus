@@ -34,6 +34,7 @@ namespace View.Control
 		private int _cameraZoomId;
 
 		private MenuRotator _menuRotator;
+		private GameAudio _gameAudio;
 
 		private void Awake()
 		{
@@ -41,6 +42,7 @@ namespace View.Control
             LeanTween.init(30000);
 
 			_menuRotator = GameObject.FindGameObjectWithTag("ButtonSelect").GetComponent<MenuRotator>();
+			_gameAudio = GameObject.FindGameObjectWithTag("GameAudio").GetComponent<GameAudio>();
 		}
 
 		private void Start()
@@ -171,6 +173,9 @@ namespace View.Control
 
 			var prev = _levels[prevLevel].GetComponent<PuzzleState>();
 			var next = _levels[nextLevel].GetComponent<PuzzleState>();
+
+			prev.BoardEnabled = false;
+			next.BoardEnabled = false;
 			
 			prev.InitSaved();
 			next.InitSaved();
@@ -204,6 +209,9 @@ namespace View.Control
 			_panVelocity = Vector3.up / VelocityScalingFactor;
 			_scrollEnabled = true;
 			
+			// TODO: make configurable
+			const float volume = 0.3f;
+			_gameAudio.Play(GameClip.MenuSelect, volume: volume);
 		}
 
 		public void DisableScroll(float delay = 0f)
@@ -328,6 +336,7 @@ namespace View.Control
 		private void OnPuzzleWin(int level)
 		{
 			_levels[_selectedLevel].GetComponent<PuzzleState>().BoardEnabled = false;
+			_levels[_selectedLevel].GetComponent<GameBoardAudio>().enabled = true;
 			_levels[_selectedLevel].GetComponent<PuzzleScale>().PuzzleInit -= OnPuzzleInit;
 			_levels[_selectedLevel].GetComponent<BoardAction>().PuzzleWin -= OnPuzzleWin;
 			_levels[_selectedLevel].GetComponent<PuzzleState>().LevelStateChanged -= OnLevelStateChanged;
@@ -336,10 +345,10 @@ namespace View.Control
 			
 			var puzzleState = _levels[_selectedLevel].GetComponent<PuzzleState>();
 			
+			_levels[_selectedLevel].GetComponent<PuzzleState>().BoardEnabled = false;
 			_levels[_selectedLevel].GetComponent<PuzzleScale>().PuzzleInit += OnPuzzleInit;
 			_levels[_selectedLevel].GetComponent<BoardAction>().PuzzleWin += OnPuzzleWin;
 			_levels[_selectedLevel].GetComponent<PuzzleState>().LevelStateChanged += OnLevelStateChanged;
-			_levels[_selectedLevel].GetComponent<PuzzleState>().BoardEnabled = true;
 			
 			// Move to the new board
 			var bounds = _levelBounds[_selectedLevel];
@@ -356,6 +365,8 @@ namespace View.Control
 			// TODO: make configurable
 			const float initDelay = 0.5f;
 			LeanTween.delayedCall(initDelay, () => {
+				_levels[_selectedLevel].GetComponent<PuzzleState>().BoardEnabled = true;
+				
 				puzzleState.Init(_selectedLevel);
 				
 				_levels[_selectedLevel].GetComponent<PuzzleView>().ResumeView();
@@ -364,6 +375,7 @@ namespace View.Control
 			if (_selectedLevel < _levels.Length - 1) {
 				_levels[_selectedLevel + 1].GetComponent<PuzzleState>().DestroyBoard(false);
 			}
+			
 		}
 
 		private void OnPan(TKPanRecognizer recognizer)
