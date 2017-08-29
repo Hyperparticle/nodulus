@@ -95,16 +95,18 @@ namespace View.Items
             var color = _initEmissionColor;
             _emissionPulseId = LeanTween.value(0.7f, 1.1f, time)
                 .setOnUpdate((float value) => {
-                    if (_renderer != null) {
-                        _renderer.material?.SetColor("_EmissionColor", color * value);
-                    }
+                    if (_renderer == null) { return; }
+                    _renderer.material?.SetColor("_EmissionColor", color * value);
                 })
                 .setEase(LeanTweenType.easeInOutSine)
                 .setLoopPingPong(-1)
                 .id;
 
             _lightPulseId = LeanTween.value(0f, 2f, time) // TODO: magic numbers
-                .setOnUpdate(value => _light.intensity = value)
+                .setOnUpdate(value => {
+                    if (_light == null) { return; }
+                    _light.intensity = value;
+                })
                 .setEase(LeanTweenType.easeInOutSine)
                 .setLoopPingPong(-1)
                 .id;

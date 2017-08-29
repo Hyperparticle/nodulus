@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using Core.Builders;
 using Core.Data;
 using Core.Items;
@@ -13,7 +14,8 @@ namespace Core.Game
     public class Levels
     {
         private const string BeginnerLevels = "Levels/BeginnerLevels";
-        private static readonly string SavedLevels = Application.persistentDataPath + "/SavedLevels.yaml";
+        
+        public static readonly string SavedLevels = Application.persistentDataPath + "/SavedLevels.yaml";
 
         private static readonly LevelPack OriginalLevels = LevelParser.DeserializeLevelPackDef(BeginnerLevels);
         private static readonly LevelPack CurrentLevels = LevelParser.DeserializeLevelPack(SavedLevels, BeginnerLevels);
@@ -43,12 +45,17 @@ namespace Core.Game
             
             CurrentLevels.CurrentLevelNum = level.Number;
             CurrentLevels.Levels[level.Number] = level;
-            LevelParser.SerializeLevelPack(SavedLevels, CurrentLevels);
+            LevelParser.SerializeLevelPack(CurrentLevels, SavedLevels);
         }
     }
 
     public class LevelParser
     {
+        private static readonly string TempFilePath = Application.persistentDataPath + "/TempLevels.yaml";
+        private static StreamWriter _tempFileWriter;
+
+        private static Thread _writerThread;
+
         public static LevelPack DeserializeLevelPack(string filePath, string fallbackFilePath)
         {
             if (File.Exists(filePath)) {
@@ -81,7 +88,7 @@ namespace Core.Game
             }
         }
 
-        public static void SerializeLevelPack(string filePath, LevelPack levelPack)
+        public static void SerializeLevelPack(LevelPack levelPack, string filePath)
         {
             var levelPackSer = LevelPackSer.Create(levelPack);
             
@@ -89,18 +96,23 @@ namespace Core.Game
                 .WithNamingConvention(new CamelCaseNamingConvention())
                 .Build();
 
-            var copyFilePath = filePath + "_Next";
-            var replaceFilePath = filePath + "_Prev";
-
-            // ATOMIC OPERATION
-            // Write the level to a copy file
-            using (var writer = new StreamWriter(copyFilePath)) {
-                serializer.Serialize(writer, levelPackSer);
+            if (_tempFileWriter == null) {
+                _tempFileWriter = new StreamWriter(TempFilePath);
             }
+
+            if (_writerThread?.IsAlive ?? false) return;
             
-            // Replace the original file with the new copy,
-            // creating a backup of the original file in the process
-            File.Replace(copyFilePath, filePath, replaceFilePath);
+            _writerThread = new Thread(() => {
+                // ATOMIC OPERATION
+                // Write the level to a temporary file
+                serializer.Serialize(_tempFileWriter, levelPackSer);
+                _tempFileWriter.Flush();
+                    
+                // Replace the original file with the temporary file
+                File.Copy(TempFilePath, filePath, true);
+            });
+                
+            _writerThread.Start();
         }
 
         public class LevelPackSer
