@@ -3,6 +3,8 @@ info:
   description: Introduces the player to the game
   version: 1.1
 
+currentLevel: 0
+
 levels:
   - name: First Steps
     description: Moving in a straight line

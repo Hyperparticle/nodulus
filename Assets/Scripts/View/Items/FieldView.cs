@@ -95,7 +95,9 @@ namespace View.Items
             var color = _initEmissionColor;
             _emissionPulseId = LeanTween.value(0.7f, 1.1f, time)
                 .setOnUpdate((float value) => {
-                    _renderer?.material?.SetColor("_EmissionColor", color * value);
+                    if (_renderer != null) {
+                        _renderer.material?.SetColor("_EmissionColor", color * value);
+                    }
                 })
                 .setEase(LeanTweenType.easeInOutSine)
                 .setLoopPingPong(-1)

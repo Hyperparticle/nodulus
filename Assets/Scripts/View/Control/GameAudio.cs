@@ -12,7 +12,7 @@ namespace View.Control
             // TODO: make configurable
             const float fadeTime = 3f;
 //            const float volume = 0.6f;
-            const float volume = 0.3f;
+            const float volume = 0.2f;
             const float startTime = 32f;
             Play(MusicClip.Ambient02, fadeTime: fadeTime, volume: volume, startTime: startTime);
         }

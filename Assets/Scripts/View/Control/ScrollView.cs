@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
 using Core.Game;
 using UnityEngine;
 using View.Game;
@@ -11,8 +9,6 @@ namespace View.Control
 	public class ScrollView : MonoBehaviour
 	{
 		public GameObject PuzzleGamePrefab;
-
-        public int StartLevel;
 
 		private bool _scrollEnabled;
 
@@ -56,8 +52,8 @@ namespace View.Control
 			tapRecognizer.gestureRecognizedEvent += OnTap;
 			TouchKit.addGestureRecognizer(tapRecognizer);
 			
-			// Start with the initially defined start level
-			_selectedLevel = StartLevel;
+			// Start with the saved start level
+			_selectedLevel = Levels.CurrentLevelNum;
 			
 			GenerateLevelsList();
 
@@ -226,13 +222,15 @@ namespace View.Control
 			_levels.ElementAtOrDefault(prevLevel)?.GetComponent<PuzzleState>()?.DestroyBoard(false);
 			_levels.ElementAtOrDefault(nextLevel)?.GetComponent<PuzzleState>()?.DestroyBoard(false);
 			
-			level.GetComponent<PuzzleScale>().PuzzleInit += OnPuzzleInit;
+			var puzzleScale = _levels[_selectedLevel].GetComponent<PuzzleScale>();
+			var puzzleState = _levels[_selectedLevel].GetComponent<PuzzleState>();
+			
+			puzzleScale.PuzzleInit += OnPuzzleInit;
 			level.GetComponent<BoardAction>().PuzzleWin += OnPuzzleWin;
-			level.GetComponent<PuzzleState>().LevelStateChanged += OnLevelStateChanged;
-			level.GetComponent<PuzzleState>().BoardEnabled = true;
+			puzzleState.LevelStateChanged += OnLevelStateChanged;
+			puzzleState.BoardEnabled = true;
 			level.GetComponent<PuzzleView>().ResumeView();
 			
-			var puzzleScale = _levels[_selectedLevel].GetComponent<PuzzleScale>();
 			CameraScript.FitToDimensions(
 				puzzleScale.Dimensions, 
 				puzzleScale.Margin, 
@@ -248,6 +246,8 @@ namespace View.Control
 			LeanTween.moveLocal(gameObject, Vector3.up * mid, time)
 				.setEase(LeanTweenType.easeInOutSine)
 				.setDelay(delay);
+			
+			Levels.SaveLevel(puzzleState.LevelState());
 		}
 
 		public void RestartLevel()
@@ -412,9 +412,9 @@ namespace View.Control
 			_panVelocity = Vector3.up * velocityMagnitude / VelocityScalingFactor;
 		}
 
-		private void OnLevelStateChanged(Level level)
+		private static void OnLevelStateChanged(Level level, bool win)
 		{
-			Debug.Log(level.Moves);
+			Levels.SaveLevel(level, win);
 		}
 
 		private int FindLevel(float yPos)

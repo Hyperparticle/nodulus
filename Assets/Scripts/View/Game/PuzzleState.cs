@@ -114,7 +114,7 @@ namespace View.Game
             }
         }
 
-        public event Action<Level> LevelStateChanged;
+        public event Action<Level, bool> LevelStateChanged;
 
         public bool HasArcAt(Point pos, Direction dir) { return _arcMap.ContainsArc(pos, dir); }
         public bool NodeOccupies(Point pos) { return _nodeMap.ContainsKey(pos); }
@@ -183,6 +183,8 @@ namespace View.Game
             
             _puzzleView.Rotate(startNode, PulledArcView, Metadata.StartPull, true);
             _boardAction.HighlightAll();
+            
+            LevelStateChanged?.Invoke(LevelState(), _puzzle.Win);
         }
 
         public void NextLevel(float delay = 0f)
@@ -216,7 +218,7 @@ namespace View.Game
                     .Select(node => _nodeMap[node.Position])
                     .ToList();
                     
-                LevelStateChanged?.Invoke(LevelState());
+                LevelStateChanged?.Invoke(LevelState(), _puzzle.Win);
 
                 return true;
             }
@@ -228,7 +230,7 @@ namespace View.Game
             _lastNodePulled = nodeView;
 
             if (pullMove) {
-                LevelStateChanged?.Invoke(LevelState());
+                LevelStateChanged?.Invoke(LevelState(), _puzzle.Win);
             }
             
             return pullMove;
@@ -255,7 +257,6 @@ namespace View.Game
             _arcMap.Add(arc.Position, arc.Direction, PulledArcView);
             _arcMap.Add(arc.ConnectedPosition, arc.Direction.Opposite(), PulledArcView);
             
-
             return true;
         }
 
@@ -316,16 +317,20 @@ namespace View.Game
 
         public void DestroyBoard(bool playSound = true)
         {
+            _lastNodePulled = null;
             _puzzleSpawner.DestroyBoard(playSound);
             _saveState.Started = false;
         }
 
-        private Level LevelState()
+        public Level LevelState()
         {
             var levelName = Metadata.Name;
             var description = Metadata.Description;
             var moves = NumMoves;
             var timeElapsed = TimeElapsed;
+            var winCount = Metadata.WinCount;
+
+            var number = CurrentLevel;
 
             var nodes = _nodeMap.Values.Select(node => node.Position);
             var arcs = _arcMap.Arcs.Select(arc => arc.Arc.Field.PointDir).Distinct().ToList();
@@ -334,7 +339,7 @@ namespace View.Game
                 arcs.Add(PulledArcView.Arc.PrevField.PointDir);
             }
 
-            var startNode = _lastNodePulled.Position;
+            var startNode = _lastNodePulled?.Position ?? _puzzle.StartNode.Position;
             var finalNode = _nodeMap.Values
                 .Where(node => node.Node.Final)
                 .Select(node => node.Node.Position)
@@ -342,8 +347,8 @@ namespace View.Game
             
             var startPull = IsPulled ? _puzzle.PulledDirection : Direction.None;
             
-            var level = new Level(levelName, description, nodes, arcs, 
-                startNode, finalNode, startPull, moves, timeElapsed);
+            var level = new Level(levelName, description, number, nodes, arcs, 
+                startNode, finalNode, startPull, moves, timeElapsed, winCount);
 
             return level;
         }
