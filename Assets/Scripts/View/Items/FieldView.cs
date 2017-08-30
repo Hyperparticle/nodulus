@@ -15,14 +15,14 @@ namespace View.Items
         private ScaleScript _fieldScale;
         private Colorizer _colorizer;
         private Renderer _renderer;
-        private Light _light;
+//        private Light _light;
 
         private Vector3 _initScale;
         private Color _initEmissionColor;
         
         private int _scalePulseId;
         private int _emissionPulseId;
-        private int _lightPulseId;
+//        private int _lightPulseId;
 
         public Field Field { get; private set; }
 
@@ -36,7 +36,7 @@ namespace View.Items
             _fieldScale = GetComponent<ScaleScript>();
             _colorizer = GetComponent<Colorizer>();
             _renderer = GetComponent<Renderer>();
-            _light = GetComponent<Light>();
+//            _light = GetComponent<Light>();
         }
 
         public void Init(Field field, NodeView parent, NodeView connected)
@@ -65,11 +65,11 @@ namespace View.Items
             } else {
                 LeanTween.cancel(gameObject);
                 LeanTween.cancel(_emissionPulseId);
-                LeanTween.cancel(_lightPulseId);
+//                LeanTween.cancel(_lightPulseId);
 
-                LeanTween.value(_light.intensity, 0f, time / 2f)
-                    .setEase(LeanTweenType.easeInOutSine)
-                    .setOnUpdate(value => _light.intensity = value);
+//                LeanTween.value(_light.intensity, 0f, time / 2f)
+//                    .setEase(LeanTweenType.easeInOutSine)
+//                    .setOnUpdate(value => _light.intensity = value);
                 
                 _colorizer.Fade(() => {
                     transform.localScale = _initScale;
@@ -102,14 +102,14 @@ namespace View.Items
                 .setLoopPingPong(-1)
                 .id;
 
-            _lightPulseId = LeanTween.value(0f, 2f, time) // TODO: magic numbers
-                .setOnUpdate(value => {
-                    if (_light == null) { return; }
-                    _light.intensity = value;
-                })
-                .setEase(LeanTweenType.easeInOutSine)
-                .setLoopPingPong(-1)
-                .id;
+//            _lightPulseId = LeanTween.value(0f, 2f, time) // TODO: magic numbers
+//                .setOnUpdate(value => {
+//                    if (_light == null) { return; }
+//                    _light.intensity = value;
+//                })
+//                .setEase(LeanTweenType.easeInOutSine)
+//                .setLoopPingPong(-1)
+//                .id;
         }
 
         private void PulseIntensity(float time)

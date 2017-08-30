@@ -61,7 +61,8 @@ namespace View.Control
         ArcMove,
         NodeRotate90,
         InvalidRotate,
-        MenuSelect
+        MenuSelect,
+        GameEnd
     }
 
     public enum MusicClip

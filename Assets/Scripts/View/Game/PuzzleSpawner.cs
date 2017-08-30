@@ -72,6 +72,10 @@ namespace View.Game
                 node.WaveOut(i++, NodeMap.Count, playSound: playSound);
             }
 
+            foreach (var field in FieldMap.Fields) {
+                field.Highlight(false);
+            }
+
             foreach (Transform child in transform) {
                 var node = child.gameObject.GetComponent<NodeView>();
                 var arc = child.gameObject.GetComponent<ArcView>();
@@ -92,6 +96,14 @@ namespace View.Game
             FieldMap.Clear();
 
             _gameBoard = null;
+
+            if (!playSound) {
+                return;
+            }
+            
+            // TODO: make configurable
+            const float volume = 0.5f;
+            _gameAudio.Play(GameClip.GameEnd, volume: volume);
         }
 
         private void InstantiateNodes()
@@ -149,7 +161,7 @@ namespace View.Game
         {
             // TODO: make configurable
             const float delay = 1.1f;
-            const float volume = 0.3f;
+            const float volume = 0.4f;
             _gameAudio.Play(GameClip.GameStart, delay * delayScale, volume);
             
             _lattice.Init(

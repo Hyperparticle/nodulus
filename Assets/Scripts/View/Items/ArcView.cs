@@ -108,7 +108,10 @@ namespace View.Items
 
             transform.parent = nodeView.transform;
 
-            _gameAudio.Play(GameClip.ArcMove);
+            // TODO: make configurable
+            const float volume = 0.5f;
+            const float startTime = 0.01f;
+            _gameAudio.Play(GameClip.ArcMove, volume: volume, startTime: startTime);
             
             LeanTween.move(gameObject, nodeView.transform, ArcMoveTime)
                 .setEase(ArcMoveEase)

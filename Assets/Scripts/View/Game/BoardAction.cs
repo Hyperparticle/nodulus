@@ -148,7 +148,6 @@ namespace View.Game
                     node.WinAnimation(spinDir);
                 }
 
-//                _puzzleState.NextLevel(LevelDelay);
                 _puzzleState.DestroyBoard();
                 PuzzleWin?.Invoke(_puzzleState.CurrentLevel);
             } else if (_moveQueue.Count > 0) {
