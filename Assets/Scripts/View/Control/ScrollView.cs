@@ -460,7 +460,7 @@ namespace View.Control
 
 			var touch = (Vector2) Camera.main.ScreenToViewportPoint(recognizer.touchLocation()) - Vector2.one / 2f;
 			// TODO: make configurable
-			const float maxTouchDistance = 0.25f;
+			const float maxTouchDistance = 0.4f;
 			
 			if (touch.magnitude > maxTouchDistance) {
 				return;
