@@ -15,6 +15,7 @@ namespace View.Game
     {
         private PuzzleScale _puzzleScale;
         private PuzzleState _puzzleState;
+        private PuzzleInfo _puzzleInfo;
 
         public event Action ViewUpdated;
 
@@ -22,11 +23,13 @@ namespace View.Game
         {
             _puzzleScale = GetComponent<PuzzleScale>();
             _puzzleState = GetComponent<PuzzleState>();
+            _puzzleInfo = GetComponent<PuzzleInfo>();
         }
 
         public void Init(Point startNode, Point boardSize)
         {
             _puzzleScale.Init(startNode, boardSize);
+            _puzzleInfo.Init();
             OnViewUpdated();
         }
 
