@@ -13,6 +13,7 @@ namespace Core.Data
         private readonly HashSet<Field> _connectedFields;
 
         public HashSet<Node> ConnectedNodes { get; }
+        
         /// <summary>
         /// True if this island contains a final node
         /// </summary>

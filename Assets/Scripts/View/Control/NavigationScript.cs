@@ -11,6 +11,18 @@ namespace View.Control
     {
         private ScrollView _scrollView;
 
+        private Transform _moveDisplay;
+        private Transform _buttonSelect;
+
+        private Vector3 _moveDisplayStart;
+        private Vector3 _buttonSelectStart;
+        private Vector3 _moveDisplayEnd = new Vector3(-4f, 1.5f, 0f);
+        private Vector3 _buttonSelectEnd = new Vector3(3f, 1.5f, 0f);
+        
+        // TODO: make configurable
+        private const float TransitionTime = 1f;
+        private const float TransitionDelay = 0.2f;
+
         private readonly IDictionary<ButtonType, Action<ScrollView>> _buttonActions = 
                 new Dictionary<ButtonType, Action<ScrollView>> {
             { ButtonType.LevelSelect, scrollView => scrollView.EnableScroll() },
@@ -23,6 +35,9 @@ namespace View.Control
         {
             _scrollView = GameObject.FindGameObjectWithTag("MainView").GetComponent<ScrollView>();
 
+            _moveDisplay = GetComponentInChildren<MoveDisplay>().transform;
+            _buttonSelect = GetComponentInChildren<MenuRotator>().transform;
+
             var buttons = GetComponentsInChildren<ButtonScript>();
 
             foreach (var button in buttons) {
@@ -32,12 +47,34 @@ namespace View.Control
 
         private void Start()
         {
-            // Slide right
-            var pos = transform.localPosition;
-            transform.Translate(20 * Vector3.left);
+            _moveDisplayStart = _moveDisplay.localPosition;
+            _buttonSelectStart = _buttonSelect.localPosition;
+            
+            _moveDisplay.Translate(_moveDisplayEnd);
+            _buttonSelect.Translate(_buttonSelectEnd);
+            
+            Show();
+        }
 
-            LeanTween.moveLocal(gameObject, pos, 1f)
-                .setDelay(0.25f)
+        public void Show()
+        {
+            LeanTween.moveLocal(_moveDisplay.gameObject, _moveDisplayStart, TransitionTime)
+                .setDelay(TransitionDelay)
+                .setEase(LeanTweenType.easeOutSine);
+            
+            LeanTween.moveLocal(_buttonSelect.gameObject, _buttonSelectStart, TransitionTime)
+                .setDelay(TransitionDelay)
+                .setEase(LeanTweenType.easeOutSine);
+        }
+
+        public void Hide()
+        {
+            LeanTween.moveLocal(_moveDisplay.gameObject, _moveDisplay.localPosition + _moveDisplayEnd, TransitionTime)
+                .setDelay(TransitionDelay)
+                .setEase(LeanTweenType.easeOutSine);
+            
+            LeanTween.moveLocal(_buttonSelect.gameObject, _buttonSelect.localPosition + _buttonSelectEnd, TransitionTime)
+                .setDelay(TransitionDelay)
                 .setEase(LeanTweenType.easeOutSine);
         }
 

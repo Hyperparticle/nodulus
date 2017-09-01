@@ -29,14 +29,18 @@ namespace View.Control
 
 		private int _cameraZoomId;
 
+		private NavigationScript _navigation;
+		private MoveDisplay _moveDisplay;
 		private MenuRotator _menuRotator;
 		private GameAudio _gameAudio;
 
 		private void Awake()
 		{
             // Set the maximum number of simultaneous tweens
-            LeanTween.init(30000);
+            LeanTween.init(10000);
 
+			_navigation = GameObject.FindGameObjectWithTag("Navigation").GetComponent<NavigationScript>();
+			_moveDisplay = GameObject.FindGameObjectWithTag("MoveDisplay").GetComponent<MoveDisplay>();
 			_menuRotator = GameObject.FindGameObjectWithTag("ButtonSelect").GetComponent<MenuRotator>();
 			_gameAudio = GameObject.FindGameObjectWithTag("GameAudio").GetComponent<GameAudio>();
 		}
@@ -185,7 +189,7 @@ namespace View.Control
 				return;
 			}
 			
-			_menuRotator.Toggle();
+			_navigation.Hide();
 			
 			var puzzleState = _levels[_selectedLevel].GetComponent<PuzzleState>();
 			var puzzleScale = puzzleState.GetComponent<PuzzleScale>();
@@ -212,7 +216,12 @@ namespace View.Control
 
 		public void DisableScroll(float delay = 0f)
 		{
-			_menuRotator.Toggle();
+			var puzzleScale = _levels[_selectedLevel].GetComponent<PuzzleScale>();
+			var puzzleState = _levels[_selectedLevel].GetComponent<PuzzleState>();
+			
+			_navigation.Show();
+			var moveText = puzzleState.NumMoves.ToString();
+			_moveDisplay.UpdateText(moveText, true, true);
 			
 			var level = _levels[_selectedLevel];
 			
@@ -221,9 +230,6 @@ namespace View.Control
 			
 			_levels.ElementAtOrDefault(prevLevel)?.GetComponent<PuzzleState>()?.DestroyBoard(false);
 			_levels.ElementAtOrDefault(nextLevel)?.GetComponent<PuzzleState>()?.DestroyBoard(false);
-			
-			var puzzleScale = _levels[_selectedLevel].GetComponent<PuzzleScale>();
-			var puzzleState = _levels[_selectedLevel].GetComponent<PuzzleState>();
 			
 			puzzleScale.PuzzleInit += OnPuzzleInit;
 			level.GetComponent<BoardAction>().PuzzleWin += OnPuzzleWin;
