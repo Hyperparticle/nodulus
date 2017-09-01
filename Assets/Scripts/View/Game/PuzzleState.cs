@@ -142,7 +142,7 @@ namespace View.Game
         /// <summary>
         /// Entry point to create a new level
         /// </summary>
-        public void Init(int level, float animationSpeed = 1f, float delayScale = 1f)
+        public void Init(int level, float animationSpeed = 1f, float delayScale = 1f, bool restart = false)
         {
             if (level < 0 || level > _puzzleSpawner.LevelCount) {
                 Debug.LogWarning("Requested level is outside of bounds, ignoring request");
@@ -155,7 +155,7 @@ namespace View.Game
             _saveState.Started = true;
             
             // Spawn the new level
-            _puzzle = _puzzleSpawner.SpawnBoard(level, animationSpeed, delayScale);
+            _puzzle = _puzzleSpawner.SpawnBoard(level, animationSpeed, delayScale, restart);
             _playerState = _puzzle.PlayerState;
             CurrentLevel = level;
 
@@ -194,7 +194,7 @@ namespace View.Game
         
         public void RestartLevel(float delay = 0f)
         {
-            Init(CurrentLevel);
+            Init(CurrentLevel, restart: true);
         }
 
         public void PrevLevel(float delay = 0f)

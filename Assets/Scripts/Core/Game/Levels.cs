@@ -24,13 +24,13 @@ namespace Core.Game
 
         public static int CurrentLevelNum => CurrentLevels.CurrentLevelNum;
 
-        public static GameBoard BuildLevel(int levelNum)
+        public static GameBoard BuildLevel(int levelNum, bool restart = false)
         {
             if (levelNum < 0 || levelNum >= LevelCount) {
                 return null;
             }
             
-            var level = CurrentLevels.Levels[levelNum];
+            var level = restart ? OriginalLevels.Levels[levelNum] : CurrentLevels.Levels[levelNum];
             return GameBoardBuilder.BuildBoard(level);
         }
 

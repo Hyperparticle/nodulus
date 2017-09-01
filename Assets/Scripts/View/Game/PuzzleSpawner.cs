@@ -36,10 +36,10 @@ namespace View.Game
             _gameAudio = GetComponent<GameBoardAudio>();
         }
 
-        public Puzzle SpawnBoard(int level, float animationSpeed = 1f, float delayScale = 1f)
+        public Puzzle SpawnBoard(int level, float animationSpeed = 1f, float delayScale = 1f, bool restart = false)
         {
             // Create the game board model
-            var newGameBoard = Levels.BuildLevel(level);
+            var newGameBoard = Levels.BuildLevel(level, restart);
 
             if (newGameBoard != null) {
                 _gameBoard = newGameBoard;
