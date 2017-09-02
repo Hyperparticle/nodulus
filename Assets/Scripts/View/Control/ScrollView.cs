@@ -421,7 +421,7 @@ namespace View.Control
 			_magnetVelocity = Vector2.zero;
 			
 			// TODO: make configurable
-			const float scalingFactor = 50f;
+			const float scalingFactor = 100f;
 			transform.Translate(Vector3.up * recognizer.deltaTranslation.y / scalingFactor);
 			
 			var clampedPos = Mathf.Clamp(transform.position.y, _listBottom, _listTop);

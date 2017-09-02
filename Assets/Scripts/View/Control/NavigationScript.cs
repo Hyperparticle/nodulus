@@ -11,11 +11,15 @@ namespace View.Control
 
         private Transform _moveDisplay;
         private Transform _buttonSelect;
+        private Transform _scrollHelper;
 
         private Vector3 _moveDisplayStart;
         private Vector3 _buttonSelectStart;
+        private Vector3 _scrollHelperStart;
+        
         private readonly Vector3 _moveDisplayEnd = new Vector3(-4f, 1.5f, 0f);
         private readonly Vector3 _buttonSelectEnd = new Vector3(3f, 1.5f, 0f);
+        private readonly Vector3 _scrollHelperEnd = new Vector3(5f, 0f, 0f);
         
         // TODO: make configurable
         private const float TransitionTime = 1f;
@@ -35,6 +39,7 @@ namespace View.Control
 
             _moveDisplay = GetComponentInChildren<MoveDisplay>().transform;
             _buttonSelect = GetComponentInChildren<MenuRotator>().transform;
+            _scrollHelper = GameObject.FindGameObjectWithTag("ScrollHelper").transform;
 
             var buttons = GetComponentsInChildren<ButtonScript>();
 
@@ -47,9 +52,11 @@ namespace View.Control
         {
             _moveDisplayStart = _moveDisplay.localPosition;
             _buttonSelectStart = _buttonSelect.localPosition;
+            _scrollHelperStart = _scrollHelper.localPosition;
             
             _moveDisplay.Translate(_moveDisplayEnd);
             _buttonSelect.Translate(_buttonSelectEnd);
+            _scrollHelper.Translate(_scrollHelperEnd);
             
             Show();
         }
@@ -63,6 +70,10 @@ namespace View.Control
             LeanTween.moveLocal(_buttonSelect.gameObject, _buttonSelectStart, TransitionTime)
                 .setDelay(TransitionDelay)
                 .setEase(LeanTweenType.easeOutSine);
+            
+            LeanTween.moveLocal(_scrollHelper.gameObject, _scrollHelperStart + _scrollHelperEnd, TransitionTime)
+                .setDelay(TransitionDelay)
+                .setEase(LeanTweenType.easeOutSine);
         }
 
         public void Hide()
@@ -72,6 +83,10 @@ namespace View.Control
                 .setEase(LeanTweenType.easeOutSine);
             
             LeanTween.moveLocal(_buttonSelect.gameObject, _buttonSelectStart + _buttonSelectEnd, TransitionTime)
+                .setDelay(TransitionDelay)
+                .setEase(LeanTweenType.easeOutSine);
+            
+            LeanTween.moveLocal(_scrollHelper.gameObject, _scrollHelperStart, TransitionTime)
                 .setDelay(TransitionDelay)
                 .setEase(LeanTweenType.easeOutSine);
         }

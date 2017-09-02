@@ -44,7 +44,7 @@ namespace View.Game
 	
 //			_bar.transform.localScale = new Vector3(_puzzleScale.Offset.x * 2f / _canvas.transform.localScale.x, _bar.transform.localScale.y, _bar.transform.localScale.z);
 
-			var complete = _puzzleState.Metadata.WinCount > 0 ? "*" : "";
+			var complete = _puzzleState.Metadata.WinCount > 0 ? "☑" : "";
 			_text.text = $"{_puzzleState.Metadata.Number}. {_puzzleState.Metadata.Name} {complete}";
 			
 			_canvas.transform.Translate(_hidePos);
