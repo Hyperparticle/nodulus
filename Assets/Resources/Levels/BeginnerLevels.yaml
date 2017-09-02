@@ -1,7 +1,7 @@
 info:
   title: Beginner Level Pack
   description: Introduces the player to the game
-  version: 1.1
+  version: 1.2
 
 currentLevel: 0
 
@@ -76,7 +76,7 @@ levels:
       - parent: [4, 0]
         direction: Right
 
-  - name: Broken Ladder
+  - name: Broken
     description: A bit harder this time
     nodes:
       - [0, 2]
@@ -133,7 +133,7 @@ levels:
       - parent: [2, 0]
         direction: Right
 
-  - name: tbd
+  - name: Back and Forth
     description: tbd
     nodes:
       - [0, 1]
@@ -157,7 +157,7 @@ levels:
       - parent: [6, 0]
         direction: Up
 
-  - name: tbd
+  - name: Switcheroo
     description: tbd
     nodes:
       - [0, 1]
@@ -181,7 +181,7 @@ levels:
       - parent: [4, 1]
         direction: Up
 
-  - name: tbd
+  - name: Patience
     description: tbd
     nodes:
       - [0, 1]
@@ -206,7 +206,7 @@ levels:
       - parent: [2, 1]
         direction: Up
 
-  - name: tbd
+  - name: Slick
     description: tbd
     nodes:
       - [0, 1]

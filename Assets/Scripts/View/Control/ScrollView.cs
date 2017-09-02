@@ -171,6 +171,7 @@ namespace View.Control
 			var prevLevel = currentLevel <= 0 ? 0 : currentLevel - 1;
 			var nextLevel = currentLevel >= _levels.Length - 1 ? _levels.Length - 1 : currentLevel + 1;
 
+			var current = _levels[currentLevel];
 			var prev = _levels[prevLevel].GetComponent<PuzzleState>();
 			var next = _levels[nextLevel].GetComponent<PuzzleState>();
 
@@ -180,8 +181,18 @@ namespace View.Control
 			prev.InitSaved();
 			next.InitSaved();
 			
-			prev.GetComponentInChildren<PuzzleInfo>().Show();
-			next.GetComponentInChildren<PuzzleInfo>().Show();
+			var currentPuzzleInfo = current.GetComponentInChildren<PuzzleInfo>();
+			var prevPuzzleInfo = prev.GetComponentInChildren<PuzzleInfo>();
+			var nextPuzzleInfo = next.GetComponentInChildren<PuzzleInfo>();
+			
+			prevPuzzleInfo.Show();
+			nextPuzzleInfo.Show();
+			
+			prevPuzzleInfo.Highlight(false);
+			nextPuzzleInfo.Highlight(false);
+			currentPuzzleInfo.Highlight(true);
+			
+			_gameAudio.Play(GameClip.LevelEnable);
 		}
 
 		public void EnableScroll()

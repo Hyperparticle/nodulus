@@ -62,7 +62,8 @@ namespace View.Control
         NodeRotate90,
         InvalidRotate,
         MenuSelect,
-        GameEnd
+        GameEnd,
+        LevelEnable
     }
 
     public enum MusicClip

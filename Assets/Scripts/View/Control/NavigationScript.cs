@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
-using View.Game;
 using View.Items;
 
 namespace View.Control
@@ -73,7 +71,7 @@ namespace View.Control
                 .setDelay(TransitionDelay)
                 .setEase(LeanTweenType.easeOutSine);
             
-            LeanTween.moveLocal(_buttonSelect.gameObject, _moveDisplayStart + _buttonSelectEnd, TransitionTime)
+            LeanTween.moveLocal(_buttonSelect.gameObject, _buttonSelectStart + _buttonSelectEnd, TransitionTime)
                 .setDelay(TransitionDelay)
                 .setEase(LeanTweenType.easeOutSine);
         }

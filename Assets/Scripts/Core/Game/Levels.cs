@@ -29,7 +29,7 @@ namespace Core.Game
             if (levelNum < 0 || levelNum >= LevelCount) {
                 return null;
             }
-            
+
             var level = restart ? OriginalLevels.Levels[levelNum] : CurrentLevels.Levels[levelNum];
             return GameBoardBuilder.BuildBoard(level);
         }
@@ -58,15 +58,26 @@ namespace Core.Game
 
         public static LevelPack DeserializeLevelPack(string filePath, string fallbackFilePath)
         {
-            if (File.Exists(filePath)) {
-                var file = File.ReadAllText(filePath);
-                return DeserializeLevelPack(file);
+            var fallbackFile = Resources.Load<TextAsset>(fallbackFilePath);
+            var fallbackLevelPack = DeserializeLevelPack(fallbackFile.text);
+
+            // If the save file doesn't exist, copy from the fallback
+            if (!File.Exists(filePath)) {
+                File.WriteAllText(filePath, fallbackFile.text);
+                return fallbackLevelPack;
+            }
+
+            var file = File.ReadAllText(filePath);
+            var levelPack = DeserializeLevelPack(file);
+            var update = !levelPack.PackInfo.Version.Equals(fallbackLevelPack.PackInfo.Version);
+
+            if (!update) {
+                return levelPack;
             }
             
-            var fallbackFile = Resources.Load<TextAsset>(fallbackFilePath);
+            // If there is an update, use the fallback
             File.WriteAllText(filePath, fallbackFile.text);
-            
-            return DeserializeLevelPack(fallbackFile.text);
+            return fallbackLevelPack;
         }
 
         public static LevelPack DeserializeLevelPackDef(string filePath)

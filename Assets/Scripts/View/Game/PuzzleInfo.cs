@@ -5,6 +5,9 @@ namespace View.Game
 {
 	public class PuzzleInfo : MonoBehaviour
 	{
+		public Color EnableColor;
+		public Color DisableColor;
+		
 		private PuzzleState _puzzleState;
 		private PuzzleScale _puzzleScale;
 
@@ -40,18 +43,17 @@ namespace View.Game
 				_initPos - (Vector3) _puzzleScale.Offset - Vector3.up * _puzzleScale.Offset.y;
 	
 //			_bar.transform.localScale = new Vector3(_puzzleScale.Offset.x * 2f / _canvas.transform.localScale.x, _bar.transform.localScale.y, _bar.transform.localScale.z);
-			
-			_text.text = $"{_puzzleState.Metadata.Number}. {_puzzleState.Metadata.Name}";
+
+			var complete = _puzzleState.Metadata.WinCount > 0 ? "*" : "";
+			_text.text = $"{_puzzleState.Metadata.Number}. {_puzzleState.Metadata.Name} {complete}";
 			
 			_canvas.transform.Translate(_hidePos);
+			
+			Highlight(false);
 		}
 
 		public void Show()
 		{
-//			if (LeanTween.isTweening(_canvas.gameObject)) {
-             //				return;
-             //			}
-			
 			LeanTween.moveLocal(_canvas.gameObject, _showPos, TransitionTime)
 				.setDelay(TransitionDelay)
 				.setEase(LeanTweenType.easeOutBack);
@@ -59,13 +61,14 @@ namespace View.Game
 
 		public void Hide()
 		{
-//			if (LeanTween.isTweening(_canvas.gameObject)) {
-//				return;
-//			}
-			
 			LeanTween.moveLocal(_canvas.gameObject, _showPos + _hidePos, TransitionTime)
 				.setDelay(TransitionDelay)
 				.setEase(LeanTweenType.easeOutSine);
+		}
+
+		public void Highlight(bool enable)
+		{
+			_text.color = enable ? EnableColor : DisableColor;
 		}
 	}
 }
