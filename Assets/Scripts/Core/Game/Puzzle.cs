@@ -20,6 +20,7 @@ namespace Core.Game
         public bool Win => _player.Win;
         public Point BoardSize => _gameBoard.Size;
         public long NumMoves => _player.NumMoves;
+        public long MovesBestScore => _player.MovesBestScore;
 
         public PlayerState PlayerState => _player.PlayerState;
 

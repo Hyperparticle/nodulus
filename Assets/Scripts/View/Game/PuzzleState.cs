@@ -31,6 +31,7 @@ namespace View.Game
         public bool IsPulled => _puzzle.IsPulled;
         public Point PullPosition => _playerState.PullPosition;
         public long NumMoves => _puzzle.NumMoves;
+        public long MovesBestScore => _puzzle.MovesBestScore;
         public double TimeElapsed { get; private set; }
         public Level Metadata => _puzzle.Metadata;
 
@@ -327,6 +328,7 @@ namespace View.Game
             var levelName = Metadata.Name;
             var description = Metadata.Description;
             var moves = NumMoves;
+            var movesBestScore = MovesBestScore;
             var timeElapsed = TimeElapsed;
             var winCount = Metadata.WinCount;
 
@@ -348,7 +350,7 @@ namespace View.Game
             var startPull = IsPulled ? _puzzle.PulledDirection : Direction.None;
             
             var level = new Level(levelName, description, number, nodes, arcs, 
-                startNode, finalNode, startPull, moves, timeElapsed, winCount);
+                startNode, finalNode, startPull, moves, movesBestScore, timeElapsed, winCount);
 
             return level;
         }

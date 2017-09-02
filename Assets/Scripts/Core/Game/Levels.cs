@@ -40,7 +40,10 @@ namespace Core.Game
                 var originalLevel = OriginalLevels.Levels[level.Number];
                 
                 var winCount = level.WinCount + 1;
-                level = new Level(originalLevel) { WinCount = winCount};
+                level = new Level(originalLevel) {
+                    WinCount = winCount,
+                    MovesBestScore = level.MovesBestScore
+                };
             }
             
             CurrentLevels.CurrentLevelNum = level.Number;
@@ -147,6 +150,7 @@ namespace Core.Game
             public string Name { get; set; }
             public string Description { get; set; }
             public long Moves { get; set; }
+            public long MovesBestScore { get; set; }
             public double TimeElapsed { get; set; }
             public long WinCount { get; set; }
             
@@ -163,6 +167,7 @@ namespace Core.Game
                     Name = level.Name,
                     Description = level.Description,
                     Moves = level.Moves,
+                    MovesBestScore = level.MovesBestScore,
                     TimeElapsed = level.TimeElapsed,
                     Nodes = level.Nodes.Select(node => new[] {node.x, node.y}).ToList(),
                     Arcs = level.Arcs
@@ -214,6 +219,7 @@ namespace Core.Game
         public string Name { get; }
         public string Description { get; }
         public long Moves { get; }
+        public long MovesBestScore { get; set; }
         public double TimeElapsed { get; }
         public long WinCount { get; set; }
         
@@ -232,6 +238,7 @@ namespace Core.Game
             Name = levelSer.Name;
             Description = levelSer.Description;
             Moves = levelSer.Moves;
+            MovesBestScore = levelSer.MovesBestScore;
             TimeElapsed = levelSer.TimeElapsed;
             WinCount = levelSer.WinCount;
 
@@ -260,11 +267,12 @@ namespace Core.Game
         public Level(string name, string description, int number,
             IEnumerable<Point> nodes, IEnumerable<PointDir> arcs,
             Point startNode, Point finalNode, Direction startPull = Direction.None,
-            long moves = 0, double timeElapsed = 0, long winCount = 0)
+            long moves = 0, long movesBestScore = 0, double timeElapsed = 0, long winCount = 0)
         {
             Name = name;
             Description = description;
             Moves = moves;
+            MovesBestScore = movesBestScore;
             TimeElapsed = timeElapsed;
             WinCount = winCount;
 
@@ -284,6 +292,7 @@ namespace Core.Game
             Name = level.Name;
             Description = level.Description;
             Moves = level.Moves;
+            MovesBestScore = level.MovesBestScore;
             TimeElapsed = level.TimeElapsed;
             WinCount = level.WinCount;
 
