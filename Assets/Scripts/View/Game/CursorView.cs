@@ -9,9 +9,9 @@ namespace View.Game
 		private const CursorMode CursorMode = UnityEngine.CursorMode.Auto;
 		private readonly Vector2 _hotSpot = Vector2.zero;
 
-//		private void Start() {
-//			Cursor.SetCursor(CursorTexture, _hotSpot, CursorMode);
-//		}
+		private void Start() {
+			Cursor.SetCursor(CursorTexture, _hotSpot, CursorMode);
+		}
 	
 	}
 }

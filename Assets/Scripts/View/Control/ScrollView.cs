@@ -179,6 +179,9 @@ namespace View.Control
 			
 			prev.InitSaved();
 			next.InitSaved();
+			
+			prev.GetComponentInChildren<PuzzleInfo>().Show();
+			next.GetComponentInChildren<PuzzleInfo>().Show();
 		}
 
 		public void EnableScroll()
@@ -212,6 +215,9 @@ namespace View.Control
 			// TODO: make configurable
 			const float volume = 0.3f;
 			_gameAudio.Play(GameClip.MenuSelect, volume: volume);
+
+			var puzzleInfo = puzzleState.GetComponentInChildren<PuzzleInfo>();
+			puzzleInfo.Show();
 		}
 
 		public void DisableScroll(float delay = 0f)
@@ -225,11 +231,16 @@ namespace View.Control
 			
 			var level = _levels[_selectedLevel];
 			
-			var prevLevel = _selectedLevel - 1;
-			var nextLevel = _selectedLevel + 1;
+			level.GetComponentInChildren<PuzzleInfo>().Hide();
 			
-			_levels.ElementAtOrDefault(prevLevel)?.GetComponent<PuzzleState>()?.DestroyBoard(false);
-			_levels.ElementAtOrDefault(nextLevel)?.GetComponent<PuzzleState>()?.DestroyBoard(false);
+			var prevLevel = _levels.ElementAtOrDefault(_selectedLevel - 1);
+			var nextLevel = _levels.ElementAtOrDefault(_selectedLevel + 1);
+			
+			prevLevel?.GetComponent<PuzzleState>()?.DestroyBoard(false);
+			nextLevel?.GetComponent<PuzzleState>()?.DestroyBoard(false);
+			
+			prevLevel?.GetComponentInChildren<PuzzleInfo>()?.Hide();
+			nextLevel?.GetComponentInChildren<PuzzleInfo>()?.Hide();
 			
 			puzzleScale.PuzzleInit += OnPuzzleInit;
 			level.GetComponent<BoardAction>().PuzzleWin += OnPuzzleWin;
@@ -377,11 +388,14 @@ namespace View.Control
 				
 				_levels[_selectedLevel].GetComponent<PuzzleView>().ResumeView();
 			});
-			
-			if (_selectedLevel < _levels.Length - 1) {
-				_levels[_selectedLevel + 1].GetComponent<PuzzleState>().DestroyBoard(false);
+
+			if (_selectedLevel >= _levels.Length - 1) {
+				return;
 			}
 			
+			var next = _levels[_selectedLevel + 1];
+			next.GetComponent<PuzzleState>().DestroyBoard(false);
+			next.GetComponentInChildren<PuzzleInfo>().Hide();
 		}
 
 		private void OnPan(TKPanRecognizer recognizer)

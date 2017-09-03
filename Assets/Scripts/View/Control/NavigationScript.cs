@@ -16,8 +16,8 @@ namespace View.Control
 
         private Vector3 _moveDisplayStart;
         private Vector3 _buttonSelectStart;
-        private Vector3 _moveDisplayEnd = new Vector3(-4f, 1.5f, 0f);
-        private Vector3 _buttonSelectEnd = new Vector3(3f, 1.5f, 0f);
+        private readonly Vector3 _moveDisplayEnd = new Vector3(-4f, 1.5f, 0f);
+        private readonly Vector3 _buttonSelectEnd = new Vector3(3f, 1.5f, 0f);
         
         // TODO: make configurable
         private const float TransitionTime = 1f;
@@ -69,11 +69,11 @@ namespace View.Control
 
         public void Hide()
         {
-            LeanTween.moveLocal(_moveDisplay.gameObject, _moveDisplay.localPosition + _moveDisplayEnd, TransitionTime)
+            LeanTween.moveLocal(_moveDisplay.gameObject, _moveDisplayStart + _moveDisplayEnd, TransitionTime)
                 .setDelay(TransitionDelay)
                 .setEase(LeanTweenType.easeOutSine);
             
-            LeanTween.moveLocal(_buttonSelect.gameObject, _buttonSelect.localPosition + _buttonSelectEnd, TransitionTime)
+            LeanTween.moveLocal(_buttonSelect.gameObject, _moveDisplayStart + _buttonSelectEnd, TransitionTime)
                 .setDelay(TransitionDelay)
                 .setEase(LeanTweenType.easeOutSine);
         }

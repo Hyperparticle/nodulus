@@ -23,7 +23,7 @@ namespace View.Game
         {
             _puzzleScale = GetComponent<PuzzleScale>();
             _puzzleState = GetComponent<PuzzleState>();
-            _puzzleInfo = GetComponent<PuzzleInfo>();
+            _puzzleInfo = GetComponentInChildren<PuzzleInfo>();
         }
 
         public void Init(Point startNode, Point boardSize)
