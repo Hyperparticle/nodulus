@@ -84,7 +84,7 @@ levels:
         direction: Right
 
   - name: Ladder
-    description: Multiple pieces
+    description: Move the big piece down
     nodes:
       - [0, 2]
       - [1, 0]

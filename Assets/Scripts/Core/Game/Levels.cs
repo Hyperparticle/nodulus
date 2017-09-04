@@ -48,6 +48,7 @@ namespace Core.Game
             
             CurrentLevels.CurrentLevelNum = level.Number;
             CurrentLevels.Levels[level.Number] = level;
+            
             LevelParser.SerializeLevelPack(CurrentLevels, SavedLevels);
         }
     }
@@ -104,6 +105,8 @@ namespace Core.Game
 
         public static void SerializeLevelPack(LevelPack levelPack, string filePath)
         {
+            #if !UNITY_WEBGL
+            
             var levelPackSer = LevelPackSer.Create(levelPack);
             
             var serializer = new SerializerBuilder()
@@ -129,6 +132,8 @@ namespace Core.Game
             });
                 
             _writerThread.Start();
+            
+            #endif
         }
 
         public class LevelPackSer
