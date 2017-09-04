@@ -1,7 +1,7 @@
 info:
   title: Beginner Level Pack
   description: Introduces the player to the game
-  version: 1.2
+  version: 1.3
 
 currentLevel: 0
 
@@ -31,12 +31,56 @@ levels:
       - [1, 1]
       - [1, 2]
       - [2, 2]
-      - [3, 2]
-      - [3, 1]
       - [3, 0]
+      - [3, 1]
+      - [3, 2]
       - [4, 0]
     arcs:
       - parent: [0, 1]
+        direction: Right
+
+  - name: Pieces
+    description: Multiple pieces
+    nodes:
+      - [0, 3]
+      - [1, 0]
+      - [1, 2]
+      - [2, 0]
+      - [2, 3]
+      - [3, 2]
+      - [4, 2]
+      - [4, 3]
+      - [5, 0]
+    arcs:
+      - parent: [0, 3]
+        direction: Right 
+      - parent: [1, 0]
+        direction: Right 
+      - parent: [1, 2]
+        direction: Right 
+      - parent: [2, 0]
+        direction: Right 
+      - parent: [4, 2]
+        direction: Up 
+
+  - name: Bridge
+    description: Jumping over pieces
+    nodes:
+      - [0, 2]
+      - [1, 2]
+      - [3, 2]
+      - [4, 0]
+      - [4, 2]
+      - [6, 0]
+      - [6, 1]
+    arcs:
+      - parent: [0, 2]
+        direction: Right
+      - parent: [1, 2]
+        direction: Right
+      - parent: [4, 0]
+        direction: Up
+      - parent: [4, 0]
         direction: Right
 
   - name: Ladder
@@ -54,26 +98,6 @@ levels:
       - parent: [0, 2]
         direction: Right
       - parent: [1, 2]
-        direction: Right
-
-  - name: Bridge
-    description: Jumping over pieces
-    nodes:
-      - [0, 2]
-      - [1, 2]
-      - [3, 2]
-      - [4, 0]
-      - [4, 2]
-      - [6, 0]
-      - [7, 0]
-    arcs:
-      - parent: [0, 2]
-        direction: Right
-      - parent: [1, 2]
-        direction: Right
-      - parent: [4, 0]
-        direction: Up
-      - parent: [4, 0]
         direction: Right
 
   - name: Broken
@@ -477,15 +501,15 @@ levels:
       - parent: [7, 0]
         direction: Up 
         
-  - name: test
-    description: test
-    nodes:
-      - [0, 0]
-      - [0, 1]
-      - [0, 2]
-      - [0, 3]
-      - [0, 4]
-      - [0, 5]
-    arcs:
-      - parent: [0, 0]
-        direction: Up
+#  - name: test
+#    description: test
+#    nodes:
+#      - [0, 0]
+#      - [0, 1]
+#      - [0, 2]
+#      - [0, 3]
+#      - [0, 4]
+#      - [0, 5]
+#    arcs:
+#      - parent: [0, 0]
+#        direction: Up
