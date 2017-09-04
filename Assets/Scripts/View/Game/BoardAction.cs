@@ -135,8 +135,7 @@ namespace View.Game
             _viewUpdating = false;
 
             // Update the Move Display
-            var moveText = _puzzleState.NumMoves.ToString();
-            _moveDisplay.UpdateText(moveText, _numActions == 0);
+            _moveDisplay.UpdateText(_puzzleState.NumMoves, _puzzleState.MovesBestScore, _numActions == 0);
 
             if (_puzzleState.Win) {
                 _gameAudio.Play(GameClip.WinBoard);

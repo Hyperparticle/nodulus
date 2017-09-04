@@ -237,8 +237,7 @@ namespace View.Control
 			var puzzleState = _levels[_selectedLevel].GetComponent<PuzzleState>();
 			
 			_navigation.Show();
-			var moveText = puzzleState.NumMoves.ToString();
-			_moveDisplay.UpdateText(moveText, true, true);
+			_moveDisplay.UpdateText(puzzleState.NumMoves, puzzleState.MovesBestScore, true, true);
 			
 			var level = _levels[_selectedLevel];
 			

@@ -114,7 +114,9 @@ namespace Core.Game
                 _tempFileWriter = new StreamWriter(TempFilePath);
             }
 
-            if (_writerThread?.IsAlive ?? false) return;
+            if (_writerThread?.IsAlive ?? false) {
+                return;
+            }
             
             _writerThread = new Thread(() => {
                 // ATOMIC OPERATION

@@ -28,7 +28,7 @@ namespace Core.Data
             PlayerState.MoveTo(node);
 
             if (Win && (NumMoves < MovesBestScore || MovesBestScore == 0)) {
-                MovesBestScore = NumMoves;
+                MovesBestScore = NumMoves + 1;
             }
         }
 
