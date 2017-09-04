@@ -27,6 +27,8 @@ namespace View.Game
         public bool FinishedSpawn { get; private set; }
 
         public int LevelCount => Levels.LevelCount;
+        
+        private bool levelCompleted { get; set; }
 
         private void Awake()
         {
@@ -46,6 +48,8 @@ namespace View.Game
             } else {
                 Debug.LogError($"The game board for level {level} is in an invalid format");
             }
+
+            levelCompleted = _gameBoard.Metadata.WinCount > 0;
 
             // Instantiate all the necessary components to view the board
             FinishedSpawn = false;
@@ -114,7 +118,7 @@ namespace View.Game
 
                 // Set the node's parent as this puzzle
                 nodeView.transform.SetParent(transform);
-                nodeView.Init(node, _gameBoard.StartIsland.Contains(node), i);
+                nodeView.Init(node, _gameBoard.StartIsland.Contains(node), levelCompleted, i);
                 nodeView.name = "Node " + i++;
                 NodeMap.Add(node.Position, nodeView);
             }

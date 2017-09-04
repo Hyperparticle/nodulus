@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using Core.Data;
 using UnityEngine;
 using View.Control;
@@ -13,6 +14,7 @@ namespace View.Tween
     {
         private GameBoardAudio _gameAudio;
         private GameObject _rotor;
+        private GameObject _checkmark;
 
         public float NodeRotateTime => GameDef.Get.NodeRotateTime;
 
@@ -40,6 +42,10 @@ namespace View.Tween
         public void Init()
         {
             _gameAudio = GetComponentInParent<GameBoardAudio>();
+
+            if (_rotor.transform.childCount > 0) {
+                _checkmark = _rotor.transform.GetChild(0).gameObject;
+            }
         }
 
         public void WaveIn(int delay, int maxDelay, Action onComplete = null, float animationSpeed = 1f, float delayScale = 1f)
@@ -60,7 +66,16 @@ namespace View.Tween
 
             // Start a nice animation effect
             LeanTween.moveLocal(gameObject, pos, WaveInTime * animationSpeed)
-                .setOnStart(() => _gameAudio.Play(GameClip.NodeEnter, WaveInAudioDelay))
+                .setOnStart(() => {
+                    _gameAudio.Play(GameClip.NodeEnter, WaveInAudioDelay);
+
+                    if (_checkmark == null) {
+                        return;
+                    }
+                    _checkmark.SetActive(true);
+                    LeanTween.moveLocal(_checkmark, Vector3.back * 0.5f, WaveInTime * animationSpeed / 2f)
+                        .setEase(LeanTweenType.easeInOutSine);
+                })
                 .setDelay(moveDelay)
                 .setEase(WaveInMoveEase)
                 .setOnComplete(onComplete);
@@ -82,11 +97,16 @@ namespace View.Tween
             // Start a nice animation effect
             LeanTween.moveLocal(gameObject, pos, WaveOutTime * animationSpeed)
                 .setOnStart(() => {
-                    if (!playSound) {
-                        return;
+                    if (playSound) {
+                        _gameAudio.Play(GameClip.NodeLeave, WaveOutAudioDelay);
                     }
                     
-                    _gameAudio.Play(GameClip.NodeLeave, WaveOutAudioDelay);
+                    if (_checkmark == null) {
+                        return;
+                    }
+                    LeanTween.moveLocal(_checkmark, Vector3.zero, WaveOutTime * animationSpeed)
+                        .setEase(LeanTweenType.easeInOutSine)
+                        .setOnComplete(() => _checkmark.SetActive(false));
                 })
                 .setDelay(moveDelay)
                 .setEase(WaveOutMoveEase)

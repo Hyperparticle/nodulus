@@ -5,10 +5,10 @@ namespace View.Items
 {
     public class ItemPool : MonoBehaviour
     {
-        private readonly Queue<NodeView> _nodes = new Queue<NodeView>();
-        private readonly Queue<ArcView> _arcs = new Queue<ArcView>();
-        private readonly Queue<FieldView> _fields = new Queue<FieldView>();
-        private readonly Queue<GameObject> _gridLines = new Queue<GameObject>();
+//        private readonly Queue<NodeView> _nodes = new Queue<NodeView>();
+//        private readonly Queue<ArcView> _arcs = new Queue<ArcView>();
+//        private readonly Queue<FieldView> _fields = new Queue<FieldView>();
+//        private readonly Queue<GameObject> _gridLines = new Queue<GameObject>();
 
         public NodeView NodePrefab;
         public ArcView ArcPrefab;

@@ -16,6 +16,8 @@ namespace View.Items
     {
         public Transform Rotor;
 
+        public GameObject CheckmarkPrefab;
+
         public Color NodeColor => GameDef.Get.NodeColor;
         public Color NodeFinalColor => GameDef.Get.NodeFinalColor;
 
@@ -39,7 +41,7 @@ namespace View.Items
             _nodeTransit = GetComponent<NodeTransit>();
         }
 
-        public void Init(Node node, bool inStartIsland, int delay)
+        public void Init(Node node, bool inStartIsland, bool levelCompleted, int delay)
         {
             Node = node;
 
@@ -55,8 +57,13 @@ namespace View.Items
             // Grow and shrink the final node
             if (node.Final) {
                 PulseScale();
+                
+                // Indicate visually that the level has been completed before
+                if (levelCompleted) {
+                    ShowCompleted();
+                }
             }
-            
+
             _nodeTransit.Init();
         }
 
@@ -118,6 +125,16 @@ namespace View.Items
             LeanTween.scale(Rotor.gameObject, Rotor.transform.localScale + Vector3.one * scale, time)
                 .setEase(LeanTweenType.easeInOutSine)
                 .setLoopPingPong(-1);
+        }
+
+        private void ShowCompleted()
+        {
+            var checkmark = Instantiate(CheckmarkPrefab);
+            checkmark.SetActive(false);
+            checkmark.name = "Checkmark";
+            checkmark.transform.parent = Rotor;
+            checkmark.transform.localPosition = Vector3.zero;
+            checkmark.transform.localEulerAngles = Vector3.forward * 45f;
         }
     }
 }
