@@ -28,7 +28,7 @@ namespace View.Items
         public Arc Arc { get; private set; }
         
         // TODO: make configurable
-        private static float MoveVolume => 0.3f;
+        private const float MoveVolume = 0.3f;
 
         private void Awake()
         {
@@ -97,6 +97,21 @@ namespace View.Items
                     break;
             }
         }
+
+        private void MoveSound()
+        {
+            switch (Arc.Length) {
+                    case 1:
+                        _gameAudio.Play(GameClip.ArcMoveHigh, volume: 0.5f);
+                        break;
+                    case 2:
+                        _gameAudio.Play(GameClip.ArcMoveMid);
+                        break;
+                    default:
+                        _gameAudio.Play(GameClip.ArcMoveLow);
+                        break;
+            }
+        }
         
         public void MoveTo(NodeView nodeView, Action onComplete)
         {
@@ -108,10 +123,7 @@ namespace View.Items
 
             transform.parent = nodeView.transform;
 
-            // TODO: make configurable
-            const float volume = 0.5f;
-            const float startTime = 0.01f;
-            _gameAudio.Play(GameClip.ArcMove, volume: volume, startTime: startTime);
+            MoveSound();
             
             LeanTween.move(gameObject, nodeView.transform, ArcMoveTime)
                 .setEase(ArcMoveEase)

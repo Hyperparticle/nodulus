@@ -58,12 +58,14 @@ namespace View.Control
         MovePushMid,
         MovePullLow,
         MovePushLow,
-        ArcMove,
+        ArcMoveHigh,
         NodeRotate90,
         InvalidRotate,
         MenuSelect,
         GameEnd,
-        LevelEnable
+        LevelEnable,
+        ArcMoveMid,
+        ArcMoveLow
     }
 
     public enum MusicClip
