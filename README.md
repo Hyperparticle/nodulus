@@ -14,5 +14,9 @@ Have a cool idea for this game and want to build it into the game? Just open a G
 4. [Post Processing Stack](https://www.assetstore.unity3d.com/en/#!/content/83912)
 5. [Dice](https://www.assetstore.unity3d.com/en/#!/content/26670)
 
+## Helpful Articles
+
+1. http://hightalestudios.com/2017/09/reduce-draw-calls-using-vertex-colors/
+
 ## Credits
 Created, designed, and developed by Dan Kondratyuk. Please give credit to this project if you use it elsewhere. Open sourced under the [MIT license](LICENSE.md). :heart:

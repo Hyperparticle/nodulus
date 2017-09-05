@@ -7,10 +7,10 @@ namespace View.Game
 		public Texture2D CursorTexture;
 
 		private const CursorMode CursorMode = UnityEngine.CursorMode.Auto;
-		private readonly Vector2 _hotSpot = Vector2.zero;
 
 		private void Start() {
-			Cursor.SetCursor(CursorTexture, _hotSpot, CursorMode);
+			var hotSpot = new Vector2 (CursorTexture.width, CursorTexture.height) / 2f;
+			Cursor.SetCursor(CursorTexture, hotSpot, CursorMode);
 		}
 	
 	}

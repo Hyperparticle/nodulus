@@ -31,7 +31,7 @@ namespace View.Control
 
 		private NavigationScript _navigation;
 		private MoveDisplay _moveDisplay;
-		private MenuRotator _menuRotator;
+//		private MenuRotator _menuRotator;
 		private GameAudio _gameAudio;
 
 		private void Awake()
@@ -41,7 +41,7 @@ namespace View.Control
 
 			_navigation = GameObject.FindGameObjectWithTag("Navigation").GetComponent<NavigationScript>();
 			_moveDisplay = GameObject.FindGameObjectWithTag("MoveDisplay").GetComponent<MoveDisplay>();
-			_menuRotator = GameObject.FindGameObjectWithTag("ButtonSelect").GetComponent<MenuRotator>();
+//			_menuRotator = GameObject.FindGameObjectWithTag("ButtonSelect").GetComponent<MenuRotator>();
 			_gameAudio = GameObject.FindGameObjectWithTag("GameAudio").GetComponent<GameAudio>();
 		}
 

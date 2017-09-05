@@ -178,7 +178,7 @@ namespace View.Tween
             var rot = Quaternion.Inverse(_rotor.transform.localRotation);
             var axis = rot * dir.Rotated(1).Axis();
 
-            LeanTween.rotateAroundLocal(_rotor, axis, 720f, NodeRotateTime * 3)
+            LeanTween.rotateAroundLocal(_rotor, axis, 900f, NodeRotateTime * 3)
                 .setEase(LeanTweenType.easeInOutSine);
         }
 
