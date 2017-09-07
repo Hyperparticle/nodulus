@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Core.Game;
 using UnityEngine;
+using UnityEngine.Analytics;
 using View.Game;
 
 namespace View.Control
@@ -37,7 +39,7 @@ namespace View.Control
 		private void Awake()
 		{
             // Set the maximum number of simultaneous tweens
-            LeanTween.init(10000);
+            LeanTween.init(30000);
 
 			_navigation = GameObject.FindGameObjectWithTag("Navigation").GetComponent<NavigationScript>();
 			_moveDisplay = GameObject.FindGameObjectWithTag("MoveDisplay").GetComponent<MoveDisplay>();
@@ -362,15 +364,26 @@ namespace View.Control
 
 		private void OnPuzzleWin(int level)
 		{
-			_levels[_selectedLevel].GetComponent<PuzzleState>().BoardEnabled = false;
+			var puzzleState = _levels[_selectedLevel].GetComponent<PuzzleState>();
+			
+			puzzleState.BoardEnabled = false;
 			_levels[_selectedLevel].GetComponent<GameBoardAudio>().enabled = true;
 			_levels[_selectedLevel].GetComponent<PuzzleScale>().PuzzleInit -= OnPuzzleInit;
 			_levels[_selectedLevel].GetComponent<BoardAction>().PuzzleWin -= OnPuzzleWin;
-			_levels[_selectedLevel].GetComponent<PuzzleState>().LevelStateChanged -= OnLevelStateChanged;
+			puzzleState.LevelStateChanged -= OnLevelStateChanged;
+			
+			// Unity Analytics
+			Analytics.CustomEvent("nodulus.level.complete", new Dictionary<string, object> {
+				{ "level.name", puzzleState.Metadata.Name },
+				{ "level.moves", puzzleState.NumMoves },
+				{ "level.movesBestScore", puzzleState.Metadata.MovesBestScore },
+				{ "level.timeElapsed", puzzleState.TimeElapsed },
+				{ "level.winCount", puzzleState.Metadata.WinCount }
+			});
 			
 			_selectedLevel = level >= _levels.Length - 1 ? _levels.Length - 1 : level + 1;
 			
-			var puzzleState = _levels[_selectedLevel].GetComponent<PuzzleState>();
+			puzzleState = _levels[_selectedLevel].GetComponent<PuzzleState>();
 			
 			_levels[_selectedLevel].GetComponent<PuzzleState>().BoardEnabled = false;
 			_levels[_selectedLevel].GetComponent<PuzzleScale>().PuzzleInit += OnPuzzleInit;
@@ -392,8 +405,7 @@ namespace View.Control
 			// TODO: make configurable
 			const float initDelay = 0.5f;
 			LeanTween.delayedCall(initDelay, () => {
-				_levels[_selectedLevel].GetComponent<PuzzleState>().BoardEnabled = true;
-				
+				puzzleState.GetComponent<PuzzleState>().BoardEnabled = true;
 				puzzleState.Init(_selectedLevel);
 				
 				_levels[_selectedLevel].GetComponent<PuzzleView>().ResumeView();
