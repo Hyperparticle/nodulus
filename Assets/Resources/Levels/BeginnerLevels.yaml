@@ -1,16 +1,20 @@
 info:
   title: Beginner Level Pack
   description: Introduces the player to the game
-  version: 1.3
+  version: 1.4
 
 currentLevel: 0
 
 levels:
   - name: First Steps
     description: Moving in a straight line
+    
 #    moves: 0          # The starting number of moves
 #    timeElapsed: 0.0  # The amount of seconds elapsed for this level represented as a floating point double
-    nodes:
+#    movesBestScore: 0 # The minimum number of moves played over all level completions
+#    winCount: 0       # The number of times this level has been completed
+
+    nodes:     # A list of nodes
       - [0, 0] # Nodes are constructed by specifying their [x, y] coordinates
       - [1, 0]
       - [2, 0]
@@ -19,10 +23,29 @@ levels:
       - [5, 0]
 #    startNode: [0, 0]  # The position of the start and final nodes. If left out, they are
 #    finalNode: [5, 0]  # assumed as the first and last nodes in the nodes list above
-#    startPull: None    # An arc connected to the start node can start as pulled
-    arcs:
+#    startPull: None    # The direction specifying an initial pull move on the arc connected to the start node
+
+    arcs:                # A list of arcs
       - parent: [0, 0]   # Arcs are constructed by specifying parent node coordinates
         direction: Right # and the direction it points to (Left, Right, Up, or Down)
+        
+    tutorial:            # A tutorial is a sequence of push/pull moves
+      - parent: [1, 0]   # A move is given by the parent node coordinates and the direction of the move
+        direction: Right # The type of move (push/pull) is assumed to be in an alternating sequence
+      - parent: [1, 0]
+        direction: Right
+      - parent: [2, 0]
+        direction: Right
+      - parent: [2, 0]
+        direction: Right
+      - parent: [3, 0]
+        direction: Right
+      - parent: [3, 0]
+        direction: Right
+      - parent: [4, 0]
+        direction: Right
+      - parent: [4, 0]
+        direction: Right
     
   - name: Roundabout
     description: Moving in different directions
@@ -37,6 +60,31 @@ levels:
       - [4, 0]
     arcs:
       - parent: [0, 1]
+        direction: Right
+    tutorial:
+      - parent: [1, 1]
+        direction: Right
+      - parent: [1, 1]
+        direction: Up
+      - parent: [1, 2]
+        direction: Up 
+      - parent: [1, 2]
+        direction: Right
+      - parent: [2, 2]
+        direction: Right
+      - parent: [2, 2]
+        direction: Right
+      - parent: [3, 2]
+        direction: Right
+      - parent: [3, 2]
+        direction: Down
+      - parent: [3, 1]
+        direction: Down
+      - parent: [3, 1]
+        direction: Down
+      - parent: [3, 0]
+        direction: Down
+      - parent: [3, 0]
         direction: Right
 
   - name: Pieces
@@ -61,7 +109,20 @@ levels:
       - parent: [2, 0]
         direction: Right 
       - parent: [4, 2]
-        direction: Up 
+        direction: Up
+    tutorial:
+      - parent: [2, 3]
+        direction: Right
+      - parent: [2, 3]
+        direction: Right
+      - parent: [4, 2]
+        direction: Down
+      - parent: [4, 2]
+        direction: Left
+      - parent: [1, 2]
+        direction: Left
+      - parent: [1, 2]
+        direction: Down
 
   - name: Bridge
     description: Jumping over pieces
@@ -82,7 +143,16 @@ levels:
         direction: Up
       - parent: [4, 0]
         direction: Right
-
+    tutorial:
+      - parent: [1, 2]
+        direction: Right
+      - parent: [3, 2]
+        direction: Right
+      - parent: [4, 2]
+        direction: Right
+      - parent: [6, 0]
+        direction: Up
+        
   - name: Ladder
     description: Move the big piece down
     nodes:

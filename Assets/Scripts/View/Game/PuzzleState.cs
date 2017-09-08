@@ -34,64 +34,45 @@ namespace View.Game
         public long MovesBestScore => _puzzle.MovesBestScore;
         public double TimeElapsed { get; private set; }
         public Level Metadata => _puzzle.Metadata;
+        private int TutorialNum => (int) NumMoves * 2 + Convert.ToInt32(IsPulled);
+        public bool IsTutorial => _puzzle.Metadata.Tutorial != null 
+                                  && Metadata.WinCount <= 0 && TutorialNum < Tutorial.Count;
+        private List<PointDir> Tutorial => _puzzle.Metadata.Tutorial;
+        public PointDir TutorialMove => Tutorial[TutorialNum];
 
         public int CurrentLevel { get; private set; }
         public List<NodeView> PushNodePath { get; private set; }
 
-        public IEnumerable<NodeView> PlayerNodes
-        {
-            get { return _playerState.PlayerNodes.Select(node => _nodeMap[node.Position]); }
-        }
+        public IEnumerable<NodeView> PlayerNodes => 
+            _playerState.PlayerNodes.Select(node => _nodeMap[node.Position]);
 
-        public IEnumerable<ArcView> PlayerArcs
-        {
-            get
-            {
-                return _playerState.PlayerArcs
-                    .Where(arc => !arc.IsPulled)
-                    .Select(arc => _arcMap[new PointDir(arc.Position, arc.Direction)]);
-            }
-        }
+        public IEnumerable<ArcView> PlayerArcs => 
+            _playerState.PlayerArcs
+                .Where(arc => !arc.IsPulled)
+                .Select(arc => _arcMap[new PointDir(arc.Position, arc.Direction)]);
 
-        public IEnumerable<FieldView> PushFields
-        {
-            get
-            {
-                return _playerState.PushFields
+        public IEnumerable<FieldView> PushFields =>
+            _playerState.PushFields
+                .Select(field => _fieldMap[new PointDir(field.Position, field.Direction)]);
+
+        public IEnumerable<NodeView> NonPlayerNodes => 
+            _playerState.NonPlayerNodes.Select(node => _nodeMap[node.Position]);
+
+        public IEnumerable<ArcView> NonPlayerArcs =>
+            _playerState.NonPlayerArcs
+                .Where(arc => !arc.IsPulled)
+                .Select(arc => _arcMap[new PointDir(arc.Position, arc.Direction)]);
+
+        public IEnumerable<FieldView> NonPushFields => 
+            _playerState.NonPushFields
                     .Select(field => _fieldMap[new PointDir(field.Position, field.Direction)]);
-            }
-        }
-
-        public IEnumerable<NodeView> NonPlayerNodes
-        {
-            get { return _playerState.NonPlayerNodes.Select(node => _nodeMap[node.Position]); }
-        }
-
-        public IEnumerable<ArcView> NonPlayerArcs
-        {
-            get {
-                return _playerState.NonPlayerArcs
-                    .Where(arc => !arc.IsPulled)
-                    .Select(arc => _arcMap[new PointDir(arc.Position, arc.Direction)]);
-            }
-        }
-
-        public IEnumerable<FieldView> NonPushFields
-        {
-            get
-            {
-                return _playerState.NonPushFields
-                    .Select(field => _fieldMap[new PointDir(field.Position, field.Direction)]);
-            }
-        }
 
         /// <summary>
         /// Get centroid (average position) of the player island
         /// </summary>
         public Vector2 IslandAverage
         {
-            get
-            {
+            get {
                 var islandSize = _playerState.PlayerNodes.Count();
                 var sumPos = _playerState.PlayerNodes.Select(node => node.Position)
                     .Aggregate(Point.Zero, (a, b) => a + b);
@@ -348,9 +329,11 @@ namespace View.Game
                 .FirstOrDefault();
             
             var startPull = IsPulled ? _puzzle.PulledDirection : Direction.None;
+
+            var tutorial = Metadata.Tutorial;
             
             var level = new Level(levelName, description, number, nodes, arcs, 
-                startNode, finalNode, startPull, moves, movesBestScore, timeElapsed, winCount);
+                startNode, finalNode, startPull, moves, movesBestScore, timeElapsed, winCount, tutorial);
 
             return level;
         }

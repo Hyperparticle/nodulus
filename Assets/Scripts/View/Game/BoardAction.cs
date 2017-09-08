@@ -68,6 +68,15 @@ namespace View.Game
                 return;
             }
 
+            // If this level has a tutorial, and this is not the expected move, don't play it
+            if (_puzzleState.IsTutorial) {
+                var move = _puzzleState.TutorialMove;
+                
+                if (!nodeView.Node.Position.Equals(move.Point) || move.Direction != dir) {
+                    return;
+                }
+            }
+
             _viewUpdating = true;
 
             // Try to play the move

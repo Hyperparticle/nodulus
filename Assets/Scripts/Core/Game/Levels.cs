@@ -162,11 +162,13 @@ namespace Core.Game
             public long WinCount { get; set; }
             
             public List<int[]> Nodes { get; set; }
-            public List<ArcSer> Arcs { get; set; }
+            public List<PointDirSer> Arcs { get; set; }
             
             public int[] StartNode { get; set; }
             public int[] FinalNode { get; set; }
             public Direction StartPull { get; set; } = Direction.None;
+            
+            public List<PointDirSer> Tutorial { get; set; }
 
             public static LevelSer Create(Level level)
             {
@@ -178,7 +180,7 @@ namespace Core.Game
                     TimeElapsed = level.TimeElapsed,
                     Nodes = level.Nodes.Select(node => new[] {node.x, node.y}).ToList(),
                     Arcs = level.Arcs
-                        .Select(arc => new ArcSer() {
+                        .Select(arc => new PointDirSer {
                             Parent = new[] {arc.Point.x, arc.Point.y},
                             Direction = arc.Direction
                         })
@@ -186,12 +188,18 @@ namespace Core.Game
                     StartNode = new[] {level.StartNode.x, level.StartNode.y},
                     FinalNode = new[] {level.FinalNode.x, level.FinalNode.y},
                     StartPull = level.StartPull,
-                    WinCount = level.WinCount
+                    WinCount = level.WinCount,
+                    Tutorial =  level.Tutorial
+                        ?.Select(arc => new PointDirSer {
+                            Parent = new[] {arc.Point.x, arc.Point.y},
+                            Direction = arc.Direction
+                        })
+                        ?.ToList()
                 };
             }
         }
 
-        public class ArcSer
+        public class PointDirSer
         {
             public int[] Parent { get; set; }
             public Direction Direction { get; set; }
@@ -240,6 +248,8 @@ namespace Core.Game
         
         public Direction StartPull { get; }
         
+        public List<PointDir> Tutorial { get; }
+        
         public Level(LevelParser.LevelSer levelSer, int number)
         {
             Name = levelSer.Name;
@@ -269,12 +279,20 @@ namespace Core.Game
             FinalNode = new Point(finalNode[0], finalNode[1]);
 
             StartPull = levelSer.StartPull;
+
+            Tutorial = levelSer.Tutorial
+                ?.Select(arc => {
+                    var point = new Point(arc.Parent[0], arc.Parent[1]);
+                    return new PointDir(point, arc.Direction);
+                })
+                ?.ToList();
         }
 
         public Level(string name, string description, int number,
             IEnumerable<Point> nodes, IEnumerable<PointDir> arcs,
             Point startNode, Point finalNode, Direction startPull = Direction.None,
-            long moves = 0, long movesBestScore = 0, double timeElapsed = 0, long winCount = 0)
+            long moves = 0, long movesBestScore = 0, double timeElapsed = 0, long winCount = 0,
+            IEnumerable<PointDir> tutorial = null)
         {
             Name = name;
             Description = description;
@@ -292,6 +310,8 @@ namespace Core.Game
             FinalNode = finalNode;
 
             StartPull = startPull;
+
+            Tutorial = tutorial?.ToList();
         }
 
         public Level(Level level)
@@ -312,6 +332,8 @@ namespace Core.Game
             FinalNode = level.FinalNode;
 
             StartPull = level.StartPull;
+
+            Tutorial = level.Tutorial;
         }
     }
 }

@@ -16,6 +16,7 @@ namespace View.Game
         private PuzzleScale _puzzleScale;
         private PuzzleState _puzzleState;
         private PuzzleInfo _puzzleInfo;
+        private CursorSwipe _cursorSwipe;
 
         public event Action ViewUpdated;
 
@@ -24,6 +25,7 @@ namespace View.Game
             _puzzleScale = GetComponent<PuzzleScale>();
             _puzzleState = GetComponent<PuzzleState>();
             _puzzleInfo = GetComponentInChildren<PuzzleInfo>();
+            _cursorSwipe = GetComponentInChildren<CursorSwipe>();
         }
 
         public void Init(Point startNode, Point boardSize)
@@ -167,6 +169,15 @@ namespace View.Game
 
         private void OnViewUpdated()
         {
+            if (_puzzleState.IsTutorial) {
+                var move = _puzzleState.TutorialMove;
+
+                var pos = (Vector2) move.Point * _puzzleScale.Scaling;
+                _cursorSwipe.Show(pos, move.Direction);
+            } else {
+                _cursorSwipe.Hide();
+            }
+            
             ViewUpdated?.Invoke();
         }
 
