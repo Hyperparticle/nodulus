@@ -56,7 +56,7 @@ namespace Core.Game
     public class LevelParser
     {
         private static readonly string TempFilePath = Application.persistentDataPath + "/TempLevels.yaml";
-        private static StreamWriter _tempFileWriter;
+//        private static StreamWriter _tempFileWriter;
 
         private static Thread _writerThread;
 
@@ -113,22 +113,22 @@ namespace Core.Game
                 .WithNamingConvention(new CamelCaseNamingConvention())
                 .Build();
 
-            if (_tempFileWriter == null) {
-                _tempFileWriter = new StreamWriter(TempFilePath);
-            }
-
             if (_writerThread?.IsAlive ?? false) {
                 return;
             }
             
             _writerThread = new Thread(() => {
-                // ATOMIC OPERATION
-                // Write the level to a temporary file
-                serializer.Serialize(_tempFileWriter, levelPackSer);
-                _tempFileWriter.Flush();
-                    
-                // Replace the original file with the temporary file
-                File.Copy(TempFilePath, filePath, true);
+                File.Delete(TempFilePath);
+                
+                using (var tempFileWriter = new StreamWriter(TempFilePath)) {
+                    // ATOMIC OPERATION
+                    // Write the level to a temporary file
+                    serializer.Serialize(tempFileWriter, levelPackSer);
+                    tempFileWriter.Flush();
+                        
+                    // Replace the original file with the temporary file
+                    File.Copy(TempFilePath, filePath, true);
+                }
             });
                 
             _writerThread.Start();
