@@ -1,8 +1,10 @@
 # <img src="docs/Logo/nodulus-logo-2-green-transparent-outline-dark-cropped.png" width="28"> Nodulus
 
-![Nodulus Preview](docs/gif/nodulus-gameplay-1.gif)
+Nodulus is a puzzle game designed for touch that involves twisting and turning rods attached to cubes.
 
-Nodulus is a puzzle game designed for touch that involves twisting and turning rods attached to cubes, created using Unity3D.
+[![Nodulus Preview](docs/gif/nodulus-gameplay-1.gif)](https://gfycat.com/PresentPeacefulHerring)
+
+Created using Unity3D & C#.
 
 ## Contributing
 
