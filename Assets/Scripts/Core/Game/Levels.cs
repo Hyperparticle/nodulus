@@ -56,7 +56,6 @@ namespace Core.Game
     public class LevelParser
     {
         private static readonly string TempFilePath = Application.persistentDataPath + "/TempLevels.yaml";
-//        private static StreamWriter _tempFileWriter;
 
         private static Thread _writerThread;
 
