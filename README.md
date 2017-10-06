@@ -1,4 +1,4 @@
-# <img src="docs/logo/nodulus-logo-512.png" width="28"> Nodulus
+# <img src="docs/Logo/nodulus-logo-512.png" width="28"> Nodulus
 
 Nodulus is a puzzle game designed for touch that involves twisting and turning rods attached to cubes.
 

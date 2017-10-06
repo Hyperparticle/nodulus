@@ -18,6 +18,6 @@ Nodulus is a puzzle game with a clever twist. Based on the mathematical theory b
 ◉ Optimized for touch devices
 
 Follow the developer:
-• https://nodulus.hyperparticle.com
-• https://twitter.com/hyperparticle
-• https://github.com/hyperparticle/nodulus
+• GitHub - https://github.com/hyperparticle/nodulus
+• Twitter - https://twitter.com/hyperparticle
+• Slack - https://slackin-nodulus.herokuapp.com/
