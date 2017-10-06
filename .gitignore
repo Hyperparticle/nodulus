@@ -134,3 +134,4 @@ WebGL/
 *.zip
 
 *.keystore
+/ios/

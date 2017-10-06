@@ -1,4 +1,4 @@
-# <img src="docs/Logo/nodulus-logo-2-green-transparent-outline-dark-cropped.png" width="28"> Nodulus
+# <img src="docs/logo/nodulus-logo-512.png" width="28"> Nodulus
 
 Nodulus is a puzzle game designed for touch that involves twisting and turning rods attached to cubes.
 
@@ -10,9 +10,7 @@ Created using Unity3D & C#.
 
 Keep up to date with Nodulus's progress, discussion, and ideas in the game's Slack Channel. [Click here](https://slackin-nodulus.herokuapp.com/) to join.
 
-Have a cool idea for Nodulus and want to build it into the game? 
-
-Found a bug or want to change the game's behavior? Just open a GitHub issue with your query.
+Have a cool idea for Nodulus and want to build it into the game? Found a bug or want to change the game's behavior? Just open a GitHub issue with your query.
 
 ## Libraries and Resources Used
 
