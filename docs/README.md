@@ -2,7 +2,7 @@
 
 ## Short Description
 
-A puzzle game with a clever twist
+Puzzle game with clever twists
 
 ## Full Description
 
@@ -20,4 +20,4 @@ Nodulus is a puzzle game with a clever twist. Based on the mathematical theory b
 Follow the developer:
 • GitHub - https://github.com/hyperparticle/nodulus
 • Twitter - https://twitter.com/hyperparticle
-• Slack - https://slackin-nodulus.herokuapp.com/
+• Slack - https://nodulus.slack.hyperparticle.com
