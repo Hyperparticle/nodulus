@@ -22,4 +22,4 @@ Have a cool idea for Nodulus and want to build it into the game? Found a bug or 
 
 ## Credits
 
-Created, designed, and developed by [Dan Kondratyuk](https://hyperparticle.com/about/). Please give credit to this project if you use it elsewhere. Open sourced under the [MIT license](LICENSE.md). :heart:
+Created, designed, and developed by [Dan Kondratyuk](https://hyperparticle.com/about/). Music and sound design provided by [Travis W. Hendrix](http://traviswhendrix.com/) and [Stuart Myers](https://stuartmyers.com/). Please give credit to this project if you use it elsewhere. Open sourced under the [MIT license](LICENSE.md). :heart:
