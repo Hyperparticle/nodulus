@@ -6,6 +6,17 @@
 
 [![Nodulus Preview](docs/gif/nodulus-gameplay-1.gif)](https://gfycat.com/PresentPeacefulHerring "Nodulus Preview")
 
+◉ Original concept - designed and developed by a math lover
+<br>
+◉ 20 increasingly challenging levels that will test your problem solving
+<br>
+◉ Quick and easy level select
+<br>
+◉ Abstract atmosphere with relaxing music
+<br>
+◉ Optimized for touch devices
+
+
 Made with [Unity3D](https://unity3d.com/ "Unity3D home") & [C#](https://docs.microsoft.com/en-us/dotnet/csharp/getting-started/introduction-to-the-csharp-language-and-the-net-framework "C# Getting Started").
 
 ## Contributing :mega:

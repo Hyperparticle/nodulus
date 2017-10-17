@@ -1,5 +1,565 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="ContentModelStore">
+    <e p="C:\Users\hyper\.Rider2017.2\system\resharper-host\local\Transient\ReSharperHost\v10\SolutionCaches\_nodulus.1897330182.00" t="ExcludeRecursive" />
+    <e p="C:\Users\hyper\Documents\repos\nodulus" t="IncludeRecursive">
+      <e p="Assembly-CSharp-Editor-firstpass.csproj" t="IncludeRecursive" />
+      <e p="Assembly-CSharp-Editor.csproj" t="IncludeRecursive" />
+      <e p="Assembly-CSharp-firstpass.csproj" t="IncludeRecursive" />
+      <e p="Assembly-CSharp.csproj" t="IncludeRecursive" />
+      <e p="Assets" t="Include">
+        <e p="Components" t="Include">
+          <e p="Shaders" t="Include">
+            <e p="FogShader.shader" t="Include" />
+            <e p="OutlineBaseShader.shader" t="Include" />
+            <e p="OutlineShader.shader" t="Include" />
+            <e p="WaveShader.shader" t="Include" />
+          </e>
+          <e p="Text" t="Include">
+            <e p="DigitalFont" t="Include">
+              <e p="readme.txt" t="Include" />
+            </e>
+            <e p="RobotoFont" t="Include">
+              <e p="LICENSE.txt" t="Include" />
+            </e>
+          </e>
+        </e>
+        <e p="Plugins" t="Include">
+          <e p="Editor" t="Include">
+            <e p="JetBrains" t="Include">
+              <e p="Unity3DRider.cs" t="Include" />
+            </e>
+          </e>
+          <e p="LeanTween" t="Include">
+            <e p="LeanAudio.cs" t="Include" />
+            <e p="LeanTest.cs" t="Include" />
+            <e p="LeanTween.cs" t="Include" />
+            <e p="LTDescr.cs" t="Include" />
+            <e p="LTDescrOptional.cs" t="Include" />
+            <e p="LTSeq.cs" t="Include" />
+          </e>
+          <e p="TouchKit" t="Include">
+            <e p="Editor" t="Include">
+              <e p="TouchKitEditor.cs" t="Include" />
+            </e>
+            <e p="Helpers" t="Include">
+              <e p="TKRect.cs" t="Include" />
+              <e p="TKTouch.cs" t="Include" />
+              <e p="TouchKitEditorSupport.cs" t="Include" />
+            </e>
+            <e p="Recognizers" t="Include">
+              <e p="TKAbstractGestureRecognizer.cs" t="Include" />
+              <e p="TKAngleSwipeRecognizer.cs" t="Include" />
+              <e p="TKAnyTouchRecognizer.cs" t="Include" />
+              <e p="TKButtonRecognizer.cs" t="Include" />
+              <e p="TKCurveRecognizer.cs" t="Include" />
+              <e p="TKLongPressRecognizer.cs" t="Include" />
+              <e p="TKOneFingerRotationRecognizer.cs" t="Include" />
+              <e p="TKPanRecognizer.cs" t="Include" />
+              <e p="TKPinchRecognizer.cs" t="Include" />
+              <e p="TKRotationRecognizer.cs" t="Include" />
+              <e p="TKSwipeRecognizer.cs" t="Include" />
+              <e p="TKTapRecognizer.cs" t="Include" />
+              <e p="TKTouchPadRecognizer.cs" t="Include" />
+            </e>
+            <e p="TouchKit.cs" t="Include" />
+          </e>
+          <e p="YamlDotNet" t="Include">
+            <e p="Core" t="Include">
+              <e p="AnchorNotFoundException.cs" t="Include" />
+              <e p="CharacterAnalyzer.cs" t="Include" />
+              <e p="Constants.cs" t="Include" />
+              <e p="Cursor.cs" t="Include" />
+              <e p="Emitter.cs" t="Include" />
+              <e p="EmitterState.cs" t="Include" />
+              <e p="Events" t="Include">
+                <e p="AnchorAlias.cs" t="Include" />
+                <e p="Comment.cs" t="Include" />
+                <e p="DocumentEnd.cs" t="Include" />
+                <e p="DocumentStart.cs" t="Include" />
+                <e p="EventType.cs" t="Include" />
+                <e p="IParsingEventVisitor.cs" t="Include" />
+                <e p="MappingEnd.cs" t="Include" />
+                <e p="MappingStart.cs" t="Include" />
+                <e p="MappingStyle.cs" t="Include" />
+                <e p="NodeEvent.cs" t="Include" />
+                <e p="ParsingEvent.cs" t="Include" />
+                <e p="Scalar.cs" t="Include" />
+                <e p="SequenceEnd.cs" t="Include" />
+                <e p="SequenceStart.cs" t="Include" />
+                <e p="SequenceStyle.cs" t="Include" />
+                <e p="StreamEnd.cs" t="Include" />
+                <e p="StreamStart.cs" t="Include" />
+              </e>
+              <e p="FakeList.cs" t="Include" />
+              <e p="ForwardAnchorNotSupportedException.cs" t="Include" />
+              <e p="HashCode.cs" t="Include" />
+              <e p="IEmitter.cs" t="Include" />
+              <e p="ILookAheadBuffer.cs" t="Include" />
+              <e p="InsertionQueue.cs" t="Include" />
+              <e p="IParser.cs" t="Include" />
+              <e p="IScanner.cs" t="Include" />
+              <e p="LookAheadBuffer.cs" t="Include" />
+              <e p="Mark.cs" t="Include" />
+              <e p="MaximumRecursionLevelReachedException.cs" t="Include" />
+              <e p="MergingParser.cs" t="Include" />
+              <e p="Parser.cs" t="Include" />
+              <e p="ParserExtensions.cs" t="Include" />
+              <e p="ParserState.cs" t="Include" />
+              <e p="RecursionLevel.cs" t="Include" />
+              <e p="ScalarStyle.cs" t="Include" />
+              <e p="Scanner.cs" t="Include" />
+              <e p="SemanticErrorException.cs" t="Include" />
+              <e p="SimpleKey.cs" t="Include" />
+              <e p="StringLookAheadBuffer.cs" t="Include" />
+              <e p="SyntaxErrorException.cs" t="Include" />
+              <e p="TagDirectiveCollection.cs" t="Include" />
+              <e p="Tokens" t="Include">
+                <e p="Anchor.cs" t="Include" />
+                <e p="AnchorAlias.cs" t="Include" />
+                <e p="BlockEnd.cs" t="Include" />
+                <e p="BlockEntry.cs" t="Include" />
+                <e p="BlockMappingStart.cs" t="Include" />
+                <e p="BlockSequenceStart.cs" t="Include" />
+                <e p="Comment.cs" t="Include" />
+                <e p="DocumentEnd.cs" t="Include" />
+                <e p="DocumentStart.cs" t="Include" />
+                <e p="FlowEntry.cs" t="Include" />
+                <e p="FlowMappingEnd.cs" t="Include" />
+                <e p="FlowMappingStart.cs" t="Include" />
+                <e p="FlowSequenceEnd.cs" t="Include" />
+                <e p="FlowSequenceStart.cs" t="Include" />
+                <e p="Key.cs" t="Include" />
+                <e p="Scalar.cs" t="Include" />
+                <e p="StreamEnd.cs" t="Include" />
+                <e p="StreamStart.cs" t="Include" />
+                <e p="Tag.cs" t="Include" />
+                <e p="TagDirective.cs" t="Include" />
+                <e p="Token.cs" t="Include" />
+                <e p="Value.cs" t="Include" />
+                <e p="VersionDirective.cs" t="Include" />
+              </e>
+              <e p="Version.cs" t="Include" />
+              <e p="YamlException.cs" t="Include" />
+            </e>
+            <e p="Examples" t="Include">
+              <e p="ConvertYamlToJson.cs" t="Include" />
+              <e p="DeserializeObjectGraph.cs" t="Include" />
+              <e p="DeserializingMultipleDocuments.cs" t="Include" />
+              <e p="Helpers" t="Include">
+                <e p="ExampleRunner.cs" t="Include" />
+                <e p="SampleAttribute.cs" t="Include" />
+                <e p="TestOutputHelperExtensions.cs" t="Include" />
+              </e>
+              <e p="LoadingAYamlStream.cs" t="Include" />
+              <e p="SerializeObjectGraph.cs" t="Include" />
+            </e>
+            <e p="Helpers" t="Include">
+              <e p="ExpressionExtensions.cs" t="Include" />
+              <e p="GenericCollectionToNonGenericAdapter.cs" t="Include" />
+              <e p="GenericDictionaryToNonGenericAdapter.cs" t="Include" />
+              <e p="ITestOutputHelper.cs" t="Include" />
+              <e p="Portability.cs" t="Include" />
+            </e>
+            <e p="readme.txt" t="Include" />
+            <e p="RepresentationModel" t="Include">
+              <e p="DocumentLoadingState.cs" t="Include" />
+              <e p="EmitterState.cs" t="Include" />
+              <e p="IYamlVisitor.cs" t="Include" />
+              <e p="YamlAliasNode.cs" t="Include" />
+              <e p="YamlDocument.cs" t="Include" />
+              <e p="YamlMappingNode.cs" t="Include" />
+              <e p="YamlNode.cs" t="Include" />
+              <e p="YamlNodeIdentityEqualityComparer.cs" t="Include" />
+              <e p="YamlNodeType.cs" t="Include" />
+              <e p="YamlScalarNode.cs" t="Include" />
+              <e p="YamlSequenceNode.cs" t="Include" />
+              <e p="YamlStream.cs" t="Include" />
+              <e p="YamlVisitor.cs" t="Include" />
+              <e p="YamlVisitorBase.cs" t="Include" />
+            </e>
+            <e p="Serialization" t="Include">
+              <e p="BuilderSkeleton.cs" t="Include" />
+              <e p="Converters" t="Include">
+                <e p="DateTimeConverter.cs" t="Include" />
+                <e p="GuidConverter.cs" t="Include" />
+              </e>
+              <e p="Deserializer.cs" t="Include" />
+              <e p="DeserializerBuilder.cs" t="Include" />
+              <e p="EmissionPhaseObjectGraphVisitorArgs.cs" t="Include" />
+              <e p="EventEmitters" t="Include">
+                <e p="ChainedEventEmitter.cs" t="Include" />
+                <e p="CustomTagEventEmitter.cs" t="Include" />
+                <e p="JsonEventEmitter.cs" t="Include" />
+                <e p="TypeAssigningEventEmitter.cs" t="Include" />
+                <e p="WriterEventEmitter.cs" t="Include" />
+              </e>
+              <e p="EventInfo.cs" t="Include" />
+              <e p="IAliasProvider.cs" t="Include" />
+              <e p="IEventEmitter.cs" t="Include" />
+              <e p="INamingConvention.cs" t="Include" />
+              <e p="INodeDeserializer.cs" t="Include" />
+              <e p="INodeTypeResolver.cs" t="Include" />
+              <e p="IObjectDescriptor.cs" t="Include" />
+              <e p="IObjectFactory.cs" t="Include" />
+              <e p="IObjectGraphTraversalStrategy.cs" t="Include" />
+              <e p="IObjectGraphVisitor.cs" t="Include" />
+              <e p="IPropertyDescriptor.cs" t="Include" />
+              <e p="IRegistrationLocationSelectionSyntax.cs" t="Include" />
+              <e p="ITypeInspector.cs" t="Include" />
+              <e p="ITypeResolver.cs" t="Include" />
+              <e p="IValueDeserializer.cs" t="Include" />
+              <e p="IValuePromise.cs" t="Include" />
+              <e p="IValueSerializer.cs" t="Include" />
+              <e p="IYamlConvertible.cs" t="Include" />
+              <e p="IYamlSerializable.cs" t="Include" />
+              <e p="IYamlTypeConverter.cs" t="Include" />
+              <e p="LazyComponentRegistrationList.cs" t="Include" />
+              <e p="LazyComponentRegistrationListExtensions.cs" t="Include" />
+              <e p="NamingConventions" t="Include">
+                <e p="CamelCaseNamingConvention.cs" t="Include" />
+                <e p="HyphenatedNamingConvention.cs" t="Include" />
+                <e p="NullNamingConvention.cs" t="Include" />
+                <e p="PascalCaseNamingConvention.cs" t="Include" />
+                <e p="UnderscoredNamingConvention.cs" t="Include" />
+              </e>
+              <e p="NodeDeserializers" t="Include">
+                <e p="ArrayNodeDeserializer.cs" t="Include" />
+                <e p="CollectionNodeDeserializer.cs" t="Include" />
+                <e p="DictionaryNodeDeserializer.cs" t="Include" />
+                <e p="EnumerableNodeDeserializer.cs" t="Include" />
+                <e p="NullNodeDeserializer.cs" t="Include" />
+                <e p="ObjectNodeDeserializer.cs" t="Include" />
+                <e p="ScalarNodeDeserializer.cs" t="Include" />
+                <e p="TypeConverterNodeDeserializer.cs" t="Include" />
+                <e p="YamlConvertibleNodeDeserializer.cs" t="Include" />
+                <e p="YamlSerializableNodeDeserializer.cs" t="Include" />
+              </e>
+              <e p="NodeTypeResolvers" t="Include">
+                <e p="DefaultContainersNodeTypeResolver.cs" t="Include" />
+                <e p="TagNodeTypeResolver.cs" t="Include" />
+                <e p="TypeNameInTagNodeTypeResolver.cs" t="Include" />
+                <e p="YamlConvertibleTypeResolver.cs" t="Include" />
+                <e p="YamlSerializableTypeResolver.cs" t="Include" />
+              </e>
+              <e p="Nothing.cs" t="Include" />
+              <e p="ObjectDescriptor.cs" t="Include" />
+              <e p="ObjectFactories" t="Include">
+                <e p="DefaultObjectFactory.cs" t="Include" />
+                <e p="LambdaObjectFactory.cs" t="Include" />
+              </e>
+              <e p="ObjectGraphTraversalStrategies" t="Include">
+                <e p="FullObjectGraphTraversalStrategy.cs" t="Include" />
+                <e p="RoundtripObjectGraphTraversalStrategy.cs" t="Include" />
+              </e>
+              <e p="ObjectGraphVisitors" t="Include">
+                <e p="AnchorAssigner.cs" t="Include" />
+                <e p="AnchorAssigningObjectGraphVisitor.cs" t="Include" />
+                <e p="ChainedObjectGraphVisitor.cs" t="Include" />
+                <e p="CustomSerializationObjectGraphVisitor.cs" t="Include" />
+                <e p="DefaultExclusiveObjectGraphVisitor.cs" t="Include" />
+                <e p="EmittingObjectGraphVisitor.cs" t="Include" />
+                <e p="PreProcessingPhaseObjectGraphVisitorSkeleton.cs" t="Include" />
+              </e>
+              <e p="PropertyDescriptor.cs" t="Include" />
+              <e p="SerializationOptions.cs" t="Include" />
+              <e p="Serializer.cs" t="Include" />
+              <e p="SerializerBuilder.cs" t="Include" />
+              <e p="StreamFragment.cs" t="Include" />
+              <e p="TagMappings.cs" t="Include" />
+              <e p="TypeInspectors" t="Include">
+                <e p="CachedTypeInspector.cs" t="Include" />
+                <e p="NamingConventionTypeInspector.cs" t="Include" />
+                <e p="ReadableAndWritablePropertiesTypeInspector.cs" t="Include" />
+                <e p="ReadablePropertiesTypeInspector.cs" t="Include" />
+                <e p="TypeInspectorSkeleton.cs" t="Include" />
+              </e>
+              <e p="TypeResolvers" t="Include">
+                <e p="DynamicTypeResolver.cs" t="Include" />
+                <e p="StaticTypeResolver.cs" t="Include" />
+              </e>
+              <e p="Utilities" t="Include">
+                <e p="IPostDeserializationCallback.cs" t="Include" />
+                <e p="ObjectAnchorCollection.cs" t="Include" />
+                <e p="ReflectionUtility.cs" t="Include" />
+                <e p="SerializerState.cs" t="Include" />
+                <e p="StringExtensions.cs" t="Include" />
+                <e p="TypeConverter.cs" t="Include" />
+              </e>
+              <e p="ValueDeserializers" t="Include">
+                <e p="AliasValueDeserializer.cs" t="Include" />
+                <e p="NodeValueDeserializer.cs" t="Include" />
+              </e>
+              <e p="YamlAttributeOverrides.cs" t="Include" />
+              <e p="YamlAttributeOverridesInspector.cs" t="Include" />
+              <e p="YamlAttributesTypeInspector.cs" t="Include" />
+              <e p="YamlFormatter.cs" t="Include" />
+              <e p="YamlIgnoreAttribute.cs" t="Include" />
+              <e p="YamlMember.cs" t="Include" />
+            </e>
+            <e p="YamlDotNet.license.txt" t="Include" />
+          </e>
+        </e>
+        <e p="PostProcessing" t="Include">
+          <e p="Editor" t="Include">
+            <e p="Attributes" t="Include">
+              <e p="PostProcessingModelEditorAttribute.cs" t="Include" />
+            </e>
+            <e p="Models" t="Include">
+              <e p="AmbientOcclusionModelEditor.cs" t="Include" />
+              <e p="AntialiasingModelEditor.cs" t="Include" />
+              <e p="BloomModelEditor.cs" t="Include" />
+              <e p="BuiltinDebugViewsEditor.cs" t="Include" />
+              <e p="ChromaticAberrationEditor.cs" t="Include" />
+              <e p="ColorGradingModelEditor.cs" t="Include" />
+              <e p="DefaultPostFxModelEditor.cs" t="Include" />
+              <e p="DepthOfFieldModelEditor.cs" t="Include" />
+              <e p="DitheringModelEditor.cs" t="Include" />
+              <e p="EyeAdaptationModelEditor.cs" t="Include" />
+              <e p="FogModelEditor.cs" t="Include" />
+              <e p="GrainModelEditor.cs" t="Include" />
+              <e p="MotionBlurModelEditor.cs" t="Include" />
+              <e p="ScreenSpaceReflectionModelEditor.cs" t="Include" />
+              <e p="UserLutModelEditor.cs" t="Include" />
+              <e p="VignetteModelEditor.cs" t="Include" />
+            </e>
+            <e p="Monitors" t="Include">
+              <e p="HistogramMonitor.cs" t="Include" />
+              <e p="ParadeMonitor.cs" t="Include" />
+              <e p="VectorscopeMonitor.cs" t="Include" />
+              <e p="WaveformMonitor.cs" t="Include" />
+            </e>
+            <e p="PostProcessingBehaviourEditor.cs" t="Include" />
+            <e p="PostProcessingFactory.cs" t="Include" />
+            <e p="PostProcessingInspector.cs" t="Include" />
+            <e p="PostProcessingModelEditor.cs" t="Include" />
+            <e p="PostProcessingMonitor.cs" t="Include" />
+            <e p="PropertyDrawers" t="Include">
+              <e p="GetSetDrawer.cs" t="Include" />
+              <e p="MinDrawer.cs" t="Include" />
+              <e p="TrackballGroupDrawer.cs" t="Include" />
+            </e>
+            <e p="Utils" t="Include">
+              <e p="CurveEditor.cs" t="Include" />
+              <e p="EditorGUIHelper.cs" t="Include" />
+              <e p="EditorResources.cs" t="Include" />
+              <e p="FxStyles.cs" t="Include" />
+              <e p="ReflectionUtils.cs" t="Include" />
+            </e>
+          </e>
+          <e p="Editor Resources" t="Include">
+            <e p="Monitors" t="Include">
+              <e p="HistogramCompute.compute" t="Include" />
+              <e p="HistogramRender.shader" t="Include" />
+              <e p="ParadeRender.shader" t="Include" />
+              <e p="VectorscopeCompute.compute" t="Include" />
+              <e p="VectorscopeRender.shader" t="Include" />
+              <e p="WaveformCompute.compute" t="Include" />
+              <e p="WaveformRender.shader" t="Include" />
+            </e>
+            <e p="UI" t="Include">
+              <e p="CurveBackground.shader" t="Include" />
+              <e p="Trackball.shader" t="Include" />
+            </e>
+          </e>
+          <e p="Resources" t="Include">
+            <e p="Bluenoise64" t="Include">
+              <e p="COPYING.txt" t="Include" />
+              <e p="LICENSE.txt" t="Include" />
+            </e>
+            <e p="Shaders" t="Include">
+              <e p="ACES.cginc" t="Include" />
+              <e p="AmbientOcclusion.cginc" t="Include" />
+              <e p="AmbientOcclusion.shader" t="Include" />
+              <e p="Blit.shader" t="Include" />
+              <e p="Bloom.cginc" t="Include" />
+              <e p="Bloom.shader" t="Include" />
+              <e p="BuiltinDebugViews.shader" t="Include" />
+              <e p="ColorGrading.cginc" t="Include" />
+              <e p="Common.cginc" t="Include" />
+              <e p="DepthOfField.cginc" t="Include" />
+              <e p="DepthOfField.shader" t="Include" />
+              <e p="DiskKernels.cginc" t="Include" />
+              <e p="EyeAdaptation.cginc" t="Include" />
+              <e p="EyeAdaptation.shader" t="Include" />
+              <e p="EyeHistogram.compute" t="Include" />
+              <e p="Fog.shader" t="Include" />
+              <e p="FXAA.shader" t="Include" />
+              <e p="FXAA3.cginc" t="Include" />
+              <e p="GrainGen.shader" t="Include" />
+              <e p="LutGen.shader" t="Include" />
+              <e p="MotionBlur.cginc" t="Include" />
+              <e p="MotionBlur.shader" t="Include" />
+              <e p="ScreenSpaceRaytrace.cginc" t="Include" />
+              <e p="ScreenSpaceReflection.shader" t="Include" />
+              <e p="TAA.cginc" t="Include" />
+              <e p="TAA.shader" t="Include" />
+              <e p="Tonemapping.cginc" t="Include" />
+              <e p="Uber.shader" t="Include" />
+              <e p="UberSecondPass.cginc" t="Include" />
+            </e>
+          </e>
+          <e p="Runtime" t="Include">
+            <e p="Attributes" t="Include">
+              <e p="GetSetAttribute.cs" t="Include" />
+              <e p="MinAttribute.cs" t="Include" />
+              <e p="TrackballAttribute.cs" t="Include" />
+              <e p="TrackballGroupAttribute.cs" t="Include" />
+            </e>
+            <e p="Components" t="Include">
+              <e p="AmbientOcclusionComponent.cs" t="Include" />
+              <e p="BloomComponent.cs" t="Include" />
+              <e p="BuiltinDebugViewsComponent.cs" t="Include" />
+              <e p="ChromaticAberrationComponent.cs" t="Include" />
+              <e p="ColorGradingComponent.cs" t="Include" />
+              <e p="DepthOfFieldComponent.cs" t="Include" />
+              <e p="DitheringComponent.cs" t="Include" />
+              <e p="EyeAdaptationComponent.cs" t="Include" />
+              <e p="FogComponent.cs" t="Include" />
+              <e p="FxaaComponent.cs" t="Include" />
+              <e p="GrainComponent.cs" t="Include" />
+              <e p="MotionBlurComponent.cs" t="Include" />
+              <e p="ScreenSpaceReflectionComponent.cs" t="Include" />
+              <e p="TaaComponent.cs" t="Include" />
+              <e p="UserLutComponent.cs" t="Include" />
+              <e p="VignetteComponent.cs" t="Include" />
+            </e>
+            <e p="Models" t="Include">
+              <e p="AmbientOcclusionModel.cs" t="Include" />
+              <e p="AntialiasingModel.cs" t="Include" />
+              <e p="BloomModel.cs" t="Include" />
+              <e p="BuiltinDebugViewsModel.cs" t="Include" />
+              <e p="ChromaticAberrationModel.cs" t="Include" />
+              <e p="ColorGradingModel.cs" t="Include" />
+              <e p="DepthOfFieldModel.cs" t="Include" />
+              <e p="DitheringModel.cs" t="Include" />
+              <e p="EyeAdaptationModel.cs" t="Include" />
+              <e p="FogModel.cs" t="Include" />
+              <e p="GrainModel.cs" t="Include" />
+              <e p="MotionBlurModel.cs" t="Include" />
+              <e p="ScreenSpaceReflectionModel.cs" t="Include" />
+              <e p="UserLutModel.cs" t="Include" />
+              <e p="VignetteModel.cs" t="Include" />
+            </e>
+            <e p="PostProcessingBehaviour.cs" t="Include" />
+            <e p="PostProcessingComponent.cs" t="Include" />
+            <e p="PostProcessingContext.cs" t="Include" />
+            <e p="PostProcessingModel.cs" t="Include" />
+            <e p="PostProcessingProfile.cs" t="Include" />
+            <e p="Utils" t="Include">
+              <e p="ColorGradingCurve.cs" t="Include" />
+              <e p="GraphicsUtils.cs" t="Include" />
+              <e p="MaterialFactory.cs" t="Include" />
+              <e p="RenderTextureFactory.cs" t="Include" />
+            </e>
+          </e>
+          <e p="Utilities" t="Include">
+            <e p="CustomMotionTexture" t="Include">
+              <e p="ExampleWheelController.cs" t="Include" />
+              <e p="Shaders" t="Include">
+                <e p="CustomMotionVectorTexture.shader" t="Include" />
+              </e>
+            </e>
+          </e>
+        </e>
+        <e p="Scripts" t="Include">
+          <e p="Core" t="Include">
+            <e p="Builders" t="Include">
+              <e p="BoardPrinter.cs" t="Include" />
+              <e p="FieldBuilder.cs" t="Include" />
+              <e p="GameBoardBuilder.cs" t="Include" />
+            </e>
+            <e p="Data" t="Include">
+              <e p="Direction.cs" t="Include" />
+              <e p="Island.cs" t="Include" />
+              <e p="IslandSet.cs" t="Include" />
+              <e p="Player.cs" t="Include" />
+              <e p="PlayerState.cs" t="Include" />
+              <e p="Point.cs" t="Include" />
+              <e p="PointDir.cs" t="Include" />
+            </e>
+            <e p="Game" t="Include">
+              <e p="GameBoard.cs" t="Include" />
+              <e p="Grid.cs" t="Include" />
+              <e p="Levels.cs" t="Include" />
+              <e p="Puzzle.cs" t="Include" />
+            </e>
+            <e p="Items" t="Include">
+              <e p="Arc.cs" t="Include" />
+              <e p="Field.cs" t="Include" />
+              <e p="IBoardItem.cs" t="Include" />
+              <e p="Node.cs" t="Include" />
+            </e>
+            <e p="Moves" t="Include">
+              <e p="IMove.cs" t="Include" />
+              <e p="PullMove.cs" t="Include" />
+              <e p="PushMove.cs" t="Include" />
+            </e>
+          </e>
+          <e p="Editor" t="Include">
+            <e p="PuzzleStateEditor.cs" t="Include" />
+            <e p="PuzzleTest.cs" t="Include" />
+          </e>
+          <e p="Utility" t="Include">
+            <e p="HSBColor.cs" t="Include" />
+            <e p="Pair.cs" t="Include" />
+          </e>
+          <e p="View" t="Include">
+            <e p="Control" t="Include">
+              <e p="BoardInput.cs" t="Include" />
+              <e p="CameraScript.cs" t="Include" />
+              <e p="FpsCounter.cs" t="Include" />
+              <e p="GameAudio.cs" t="Include" />
+              <e p="GameBoardAudio.cs" t="Include" />
+              <e p="GameController.cs" t="Include" />
+              <e p="GameDef.cs" t="Include" />
+              <e p="MenuRotator.cs" t="Include" />
+              <e p="MoveDisplay.cs" t="Include" />
+              <e p="NavigationScript.cs" t="Include" />
+              <e p="ScrollView.cs" t="Include" />
+            </e>
+            <e p="Data" t="Include">
+              <e p="ArcViewMap.cs" t="Include" />
+              <e p="FieldViewMap.cs" t="Include" />
+            </e>
+            <e p="Game" t="Include">
+              <e p="BoardAction.cs" t="Include" />
+              <e p="CursorSwipe.cs" t="Include" />
+              <e p="CursorView.cs" t="Include" />
+              <e p="LatticeView.cs" t="Include" />
+              <e p="PuzzleInfo.cs" t="Include" />
+              <e p="PuzzleScale.cs" t="Include" />
+              <e p="PuzzleSpawner.cs" t="Include" />
+              <e p="PuzzleState.cs" t="Include" />
+              <e p="PuzzleView.cs" t="Include" />
+              <e p="SwipeView.cs" t="Include" />
+            </e>
+            <e p="Items" t="Include">
+              <e p="ArcView.cs" t="Include" />
+              <e p="ButtonScript.cs" t="Include" />
+              <e p="Colorizer.cs" t="Include" />
+              <e p="FieldView.cs" t="Include" />
+              <e p="ItemPool.cs" t="Include" />
+              <e p="NodeView.cs" t="Include" />
+              <e p="ScaleScript.cs" t="Include" />
+            </e>
+            <e p="Tween" t="Include">
+              <e p="GridTransit.cs" t="Include" />
+              <e p="NodeTransit.cs" t="Include" />
+              <e p="Oscillator.cs" t="Include" />
+            </e>
+          </e>
+        </e>
+      </e>
+      <e p="Library" t="ExcludeRecursive" />
+      <e p="nodulus.sln" t="IncludeFlat" />
+      <e p="obj" t="ExcludeRecursive" />
+      <e p="packages" t="ExcludeRecursive" />
+      <e p="Temp" t="ExcludeRecursive">
+        <e p="bin" t="ExcludeRecursive" />
+      </e>
+    </e>
+  </component>
   <component name="RiderRiderContentModelStore">
     <excludedPaths>
       <Path>Temp</Path>
