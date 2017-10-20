@@ -16,14 +16,19 @@
 <br>
 ◉ Optimized for touch devices
 
-
 Made with [Unity3D](https://unity3d.com/ "Unity3D home") & [C#](https://docs.microsoft.com/en-us/dotnet/csharp/getting-started/introduction-to-the-csharp-language-and-the-net-framework "C# Getting Started").
+
+## Getting Started :traffic_light:
+
+This project requires [Unity3d](http://unity3d.com/) (2017.2.0+) to build and run. Clone this repository and open the root folder in Unity.
+
+For more detailed information, see the [GitHub Wiki](https://github.com/Hyperparticle/nodulus/wiki).
 
 ## Contributing :mega:
 
 Keep up to date with Nodulus's progress, discussion, and ideas in the game's Slack Channel. [Click here](http://nodulus.slack.hyperparticle.com/ "Nodulus Slack") to join.
 
-Have a cool idea for Nodulus and want to build it into the game? Found a bug or want to change the game's behavior? Just open a [GitHub issue](https://github.com/Hyperparticle/nodulus/issues) with your query.
+Have a cool idea for Nodulus and want to build it into the game? Found a bug or want to change the game's behavior? Just open a [GitHub Issue](https://github.com/Hyperparticle/nodulus/issues) with your query.
 
 ## Libraries and Resources Used :books:
 
