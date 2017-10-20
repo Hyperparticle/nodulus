@@ -542,6 +542,7 @@
               <e p="ItemPool.cs" t="Include" />
               <e p="NodeView.cs" t="Include" />
               <e p="ScaleScript.cs" t="Include" />
+              <e p="SimpleRotator.cs" t="Include" />
             </e>
             <e p="Tween" t="Include">
               <e p="GridTransit.cs" t="Include" />
