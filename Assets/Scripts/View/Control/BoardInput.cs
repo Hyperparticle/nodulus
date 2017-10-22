@@ -71,14 +71,16 @@ namespace View.Control
                 return;
             }
             
-//            // Find the nearest node to the tap
-//            var field = GetNearestField(recognizer);
-//
-//            if (field == null) {
-//                return;
-//            }
+            // Find the nearest node to the tap
+            var node = GetNearestNode(recognizer.touchLocation());
 
-//            _boardAction.Play(field);
+            // If the swipe is invalid, don't do anything
+            if (node == null) {
+                return;
+            }
+
+            // Otherwise, play the move
+            _boardAction.Play(node);
         }
 
         /// <summary>

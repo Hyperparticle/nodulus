@@ -218,7 +218,7 @@ namespace View.Game
             return pullMove;
         }
 
-        public bool PushArc(NodeView nodeView, FieldView fieldView)
+        private bool PushArc(NodeView nodeView, FieldView fieldView)
         {
             // Validate that the node is in the island
             if (!_playerState.HasNodeAt(nodeView.Node)) {
@@ -242,7 +242,7 @@ namespace View.Game
             return true;
         }
 
-        public bool PullArc(ArcView arcView, Direction dir)
+        private bool PullArc(ArcView arcView, Direction dir)
         {
             var arcPos = arcView.Arc.Position;
             var arcConnPos = arcView.Arc.ConnectedPosition;

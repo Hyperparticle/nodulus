@@ -29,7 +29,7 @@ namespace View.Items
         
         // TODO: make configurable
         private const float MoveVolume = 0.3f;
-
+        
         private void Awake()
         {
             _arcScale = GetComponent<ScaleScript>();
@@ -112,8 +112,8 @@ namespace View.Items
                         break;
             }
         }
-        
-        public void MoveTo(NodeView nodeView, Action onComplete)
+
+        private void MoveTo(NodeView nodeView, Action onComplete)
         {
             // Move to the same node
             if (nodeView.transform.Equals(transform.parent.parent)) {
@@ -135,7 +135,7 @@ namespace View.Items
         /// <summary>
         /// Moves this arc along a path of nodes specified in the given node list
         /// </summary>
-        public void MoveTo(List<NodeView> nodeViews, Action onComplete)
+        public void MoveTo(IEnumerable<NodeView> nodeViews, Action onComplete)
         {
             var list = new LinkedList<NodeView>(nodeViews);
             MoveNext(list.First, onComplete);
@@ -159,6 +159,24 @@ namespace View.Items
             }
 
             MoveTo(head, () => MoveNext(tail, onComplete));
+        }
+
+        public void Float(Direction dir)
+        {
+            // TODO: make configurable
+            const float time = 1f;
+            const float amount = 0.3f;
+
+//            var rot = Quaternion.Euler(90f, 0f, 0f)
+//                      * Quaternion.Inverse(transform.localRotation) 
+//                      * dir.Vector();
+            
+//            var endPos = transform.localPosition - rot * amount;
+
+//            var endPos = transform.parent.position + transform.parent.rotation * Vector3.forward;
+//            
+//            LeanTween.move(gameObject, endPos, time)
+//                .setEase(LeanTweenType.easeOutBack);
         }
 
         private void CreateMarkers()

@@ -78,8 +78,8 @@ namespace View.Game
                 stayNodeView.SlightRotate(dir.Opposite(), stayArcView.Arc.Length);
             }
 
-            // Push the newly connected node down
             if (!pull) {
+                // Push the newly connected node down
                 var moveArc = arcViews[dir].Arc;
                 var moveNode = moveArc.ParentNode.Equals(nodeView.Node) ?
                         moveArc.ConnectedNode : moveArc.ParentNode;
@@ -109,12 +109,23 @@ namespace View.Game
             nodeView.Shake(dir, OnViewUpdated);
         }
 
-        public void MoveRotate(List<NodeView> nodeViews, ArcView arcView, Direction dir)
+        public void MoveRotate(List<NodeView> nodeViews, ArcView arcView, Direction dir, Action onComplete)
         {
             arcView.MoveTo(nodeViews, () => {
                 arcView.PushSound();
                 Rotate(nodeViews[nodeViews.Count - 1], arcView, dir, false);
+                onComplete();
             });
+        }
+        
+        public void FloatIsland(bool pulled)
+        {
+            var dir = pulled ? Direction.Up : Direction.Down;
+            
+            foreach (var arc in _puzzleState.PlayerArcs
+                .Where(arc => !arc.Equals(_puzzleState.PulledArcView))) {
+                arc.Float(dir);
+            }
         }
 
         public void Highlight(IEnumerable<NodeView> nodes, bool enable)

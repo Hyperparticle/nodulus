@@ -107,16 +107,27 @@ namespace View.Game
                 _puzzleView.Rotate(nodeView, _puzzleState.PulledArcView, dir, true);
                 _puzzleState.PulledArcView.PullSound();
                 _puzzleView.Shake(dir);
+                _puzzleView.FloatIsland(true);
                 HighlightAll();
             } else {
                 // Push move
                 // If a push move has been played, move the arc to the node, then rotate it
-                _puzzleView.MoveRotate(_puzzleState.PushNodePath, _puzzleState.PulledArcView, dir);
+                _puzzleView.MoveRotate(_puzzleState.PushNodePath, _puzzleState.PulledArcView, dir, () =>
+                    _puzzleView.FloatIsland(false));
                 _puzzleView.Shake(dir);
+                
                 HighlightAll();
             }
 
             _numActions++;
+        }
+
+        /// <summary>
+        /// Handle the user selecting a node
+        /// </summary>
+        [MethodImpl(MethodImplOptions.Synchronized)]
+        public void Play(NodeView nodeView)
+        {
         }
 
         public void HighlightAll()
