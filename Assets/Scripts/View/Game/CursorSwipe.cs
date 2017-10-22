@@ -15,6 +15,7 @@ namespace View.Game
 		private SpriteRenderer _spriteRenderer;
 		private Color _initColor;
 		private Vector3 _initPos;
+		private Vector3 _hotSpot;
 			
 		private int _colorTween;
 		private int _moveTween;
@@ -22,8 +23,10 @@ namespace View.Game
 		private void Awake()
 		{
 			_spriteRenderer = GetComponent<SpriteRenderer>();
+			
+			_hotSpot = new Vector2 (_spriteRenderer.bounds.size.x, _spriteRenderer.bounds.size.y) / 2f;
 
-			_initPos = transform.localPosition;
+			_initPos = transform.localPosition + Vector3.up * _hotSpot.y / 2f;
 			_initColor = _spriteRenderer.color;
 			_spriteRenderer.color = Colorizer.Alpha(_spriteRenderer.color, 0f);
 		}
