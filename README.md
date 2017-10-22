@@ -27,6 +27,8 @@ For more detailed information, see the [GitHub Wiki](https://github.com/Hyperpar
 
 ## Contributing :mega:
 
+[![](docs/badges/chat-badge.png)](http://nodulus.slack.hyperparticle.com/)
+
 Keep up to date with Nodulus's progress, discussion, and ideas in the game's Slack Channel. [Click here](http://nodulus.slack.hyperparticle.com/ "Nodulus Slack") to join.
 
 Have a cool idea for Nodulus and want to build it into the game? Found a bug or want to change the game's behavior? Just open a [GitHub Issue](https://github.com/Hyperparticle/nodulus/issues) with your query.
