@@ -135,3 +135,5 @@ WebGL/
 
 *.keystore
 /ios/
+
+*.jks
