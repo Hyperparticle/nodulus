@@ -8,37 +8,54 @@ namespace View.Control
         public ButtonScript TopButton;
         public ButtonScript BottomButton;
 
-        private GameObject _currentButton;
-        private GameObject _disabledButton;
+        private GameObject _topButton;
+        private GameObject _bottomButton;
+
+        private float _currentRotation;
 
         private void Awake()
         {
-            _currentButton = TopButton.gameObject;
-            _disabledButton = BottomButton.gameObject;
+            _topButton = TopButton.gameObject;
+            _bottomButton = BottomButton.gameObject;
         }
 
         private void Start()
         {
-            _disabledButton.GetComponent<BoxCollider>().enabled = false;
+            _bottomButton.GetComponent<BoxCollider>().enabled = false;
         }
 
-        public void Toggle()
+        public void ShowSettingsButtons()
         {
             // TODO: make configurable
             const float time = 0.8f;
             const float delay = 0.2f;
             
-            _currentButton.GetComponent<BoxCollider>().enabled = false;
+            _bottomButton.GetComponent<BoxCollider>().enabled = false;
 
-            LeanTween.rotateAroundLocal(gameObject, Vector3.right, 180f, time)
+            LeanTween.rotateAroundLocal(gameObject, Vector3.right, 180f - _currentRotation, time)
                 .setDelay(delay)
                 .setEase(LeanTweenType.easeInOutBack)
                 .setOnComplete(() => {
-                    var tmp = _currentButton;
-                    _currentButton = _disabledButton;
-                    _disabledButton = tmp;
+                    _bottomButton.GetComponent<BoxCollider>().enabled = true;
+                    _currentRotation = 180f;
+                });
+        }
+
+        public void ShowLevelButtons()
+        {
+            // TODO: make configurable
+            const float time = 0.8f;
+            const float delay = 0.2f;
+            
+            _topButton.GetComponent<BoxCollider>().enabled = false;
+
+            LeanTween.rotateAroundLocal(gameObject, Vector3.right, _currentRotation, time)
+                .setDelay(delay)
+                .setEase(LeanTweenType.easeInOutBack)
+                .setOnComplete(() => {
+                    _topButton.GetComponent<BoxCollider>().enabled = true;
                     
-                    _currentButton.GetComponent<BoxCollider>().enabled = true;
+                    _currentRotation = 0f;
                 });
         }
     }

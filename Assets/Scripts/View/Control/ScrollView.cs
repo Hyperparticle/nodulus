@@ -488,6 +488,16 @@ namespace View.Control
 			
 		}
 
+		public void ToggleMusic()
+		{
+			_gameAudio.MusicEnabled = !_gameAudio.MusicEnabled;
+		}
+
+		public void ToggleSfx()
+		{
+			_gameAudio.SfxEnabled = !_gameAudio.SfxEnabled;
+		}
+
 		private void OnTap(TKTapRecognizer recognizer)
 		{
 			if (!_scrollEnabled) {

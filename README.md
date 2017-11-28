@@ -22,7 +22,7 @@ Made with [Unity3D](https://unity3d.com/ "Unity3D home") & [C#](https://docs.mic
 
 ## Getting Started :traffic_light:
 
-This project requires [Unity3d](http://unity3d.com/) (2017.2.0+) to build and run. Clone this repository and open the root folder in Unity.
+This project requires [Unity3D](http://unity3d.com/ "Unity3D home") (2017.2.0+) to build and run. Clone this repository and open the root folder in Unity.
 
 For more detailed information, see the [GitHub Wiki](https://github.com/Hyperparticle/nodulus/wiki).
 

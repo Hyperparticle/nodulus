@@ -11,8 +11,8 @@ namespace View.Items
 
         public event Action<ButtonType> ButtonPressed;
 
-        public float ButtonTransitionTime => GameDef.Get.ButtonTransitionTime;
-        public LeanTweenType ButtonEase => GameDef.Get.ButtonEase;
+        private static float ButtonTransitionTime => GameDef.Get.ButtonTransitionTime;
+        private static LeanTweenType ButtonEase => GameDef.Get.ButtonEase;
 
         private void OnMouseDown()
         {
@@ -46,8 +46,9 @@ namespace View.Items
     public enum ButtonType
     {
         LevelSelect,
-        ContinueLevel,
         RestartLevel,
-        Settings
+        Settings,
+        MusicToggle,
+        SfxToggle
     }
 }

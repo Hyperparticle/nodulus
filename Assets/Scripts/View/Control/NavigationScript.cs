@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using View.Items;
 
@@ -10,12 +11,12 @@ namespace View.Control
         private ScrollView _scrollView;
 
         private Transform _moveDisplay;
-        private Transform _buttonSelect;
         private Transform _scrollHelper;
+        private MenuRotator _buttonSelect;
 
         private Vector3 _moveDisplayStart;
-        private Vector3 _buttonSelectStart;
         private Vector3 _scrollHelperStart;
+        private Vector3 _buttonSelectStart;
         
         private readonly Vector3 _moveDisplayEnd = new Vector3(-4f, 1.5f, 0f);
         private readonly Vector3 _buttonSelectEnd = new Vector3(3f, 1.5f, 0f);
@@ -28,9 +29,10 @@ namespace View.Control
         private readonly IDictionary<ButtonType, Action<ScrollView>> _buttonActions = 
                 new Dictionary<ButtonType, Action<ScrollView>> {
             { ButtonType.LevelSelect, scrollView => scrollView.EnableScroll() },
-            { ButtonType.ContinueLevel, scrollView => scrollView.EnableScroll() },
             { ButtonType.RestartLevel, scrollView => scrollView.RestartLevel() },
-            { ButtonType.Settings, scrollView => scrollView.ShowSettings()}
+            { ButtonType.Settings, scrollView => scrollView.ShowSettings() },
+            { ButtonType.MusicToggle, scrollView => scrollView.ToggleMusic() },
+            { ButtonType.SfxToggle, scrollView => scrollView.ToggleSfx() },
         };
 
         private void Awake()
@@ -38,10 +40,11 @@ namespace View.Control
             _scrollView = GameObject.FindGameObjectWithTag("MainView").GetComponent<ScrollView>();
 
             _moveDisplay = GetComponentInChildren<MoveDisplay>().transform;
-            _buttonSelect = GetComponentInChildren<MenuRotator>().transform;
             _scrollHelper = GameObject.FindGameObjectWithTag("ScrollHelper").transform;
+            _buttonSelect = GetComponentInChildren<MenuRotator>();
 
-            var buttons = GetComponentsInChildren<ButtonScript>();
+            var buttons = GameObject.FindGameObjectsWithTag("Button")
+                .Select(obj => obj.GetComponent<ButtonScript>());
 
             foreach (var button in buttons) {
                 button.ButtonPressed += buttonState => _buttonActions[buttonState](_scrollView);
@@ -51,12 +54,12 @@ namespace View.Control
         private void Start()
         {
             _moveDisplayStart = _moveDisplay.localPosition;
-            _buttonSelectStart = _buttonSelect.localPosition;
             _scrollHelperStart = _scrollHelper.localPosition;
+            _buttonSelectStart = _buttonSelect.transform.localPosition;
             
             _moveDisplay.Translate(_moveDisplayEnd);
-            _buttonSelect.Translate(_buttonSelectEnd);
             _scrollHelper.Translate(_scrollHelperEnd);
+            _buttonSelect.transform.Translate(_buttonSelectEnd);
             
             Show();
         }
@@ -67,13 +70,15 @@ namespace View.Control
                 .setDelay(TransitionDelay)
                 .setEase(LeanTweenType.easeOutSine);
             
+            LeanTween.moveLocal(_scrollHelper.gameObject, _scrollHelperStart + _scrollHelperEnd, TransitionTime)
+                .setDelay(TransitionDelay)
+                .setEase(LeanTweenType.easeOutSine);
+            
             LeanTween.moveLocal(_buttonSelect.gameObject, _buttonSelectStart, TransitionTime)
                 .setDelay(TransitionDelay)
                 .setEase(LeanTweenType.easeOutSine);
             
-            LeanTween.moveLocal(_scrollHelper.gameObject, _scrollHelperStart + _scrollHelperEnd, TransitionTime)
-                .setDelay(TransitionDelay)
-                .setEase(LeanTweenType.easeOutSine);
+            _buttonSelect.ShowLevelButtons();
         }
 
         public void Hide()
@@ -82,13 +87,11 @@ namespace View.Control
                 .setDelay(TransitionDelay)
                 .setEase(LeanTweenType.easeOutSine);
             
-            LeanTween.moveLocal(_buttonSelect.gameObject, _buttonSelectStart + _buttonSelectEnd, TransitionTime)
-                .setDelay(TransitionDelay)
-                .setEase(LeanTweenType.easeOutSine);
-            
             LeanTween.moveLocal(_scrollHelper.gameObject, _scrollHelperStart, TransitionTime)
                 .setDelay(TransitionDelay)
                 .setEase(LeanTweenType.easeOutSine);
+            
+            _buttonSelect.ShowSettingsButtons();
         }
 
     }
