@@ -130,10 +130,10 @@ crashlytics.properties
 crashlytics-build.properties
 fabric.properties
 
-WebGL/
+# Project Specific
 *.zip
-
 *.keystore
-/ios/
-
 *.jks
+*.mobileprovision
+*.cer
+*.p12
