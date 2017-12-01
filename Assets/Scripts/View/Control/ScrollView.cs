@@ -33,7 +33,6 @@ namespace View.Control
 
 		private NavigationScript _navigation;
 		private MoveDisplay _moveDisplay;
-//		private MenuRotator _menuRotator;
 		private GameAudio _gameAudio;
 
 		private void Awake()
@@ -43,7 +42,6 @@ namespace View.Control
 
 			_navigation = GameObject.FindGameObjectWithTag("Navigation").GetComponent<NavigationScript>();
 			_moveDisplay = GameObject.FindGameObjectWithTag("MoveDisplay").GetComponent<MoveDisplay>();
-//			_menuRotator = GameObject.FindGameObjectWithTag("ButtonSelect").GetComponent<MenuRotator>();
 			_gameAudio = GameObject.FindGameObjectWithTag("GameAudio").GetComponent<GameAudio>();
 		}
 
@@ -483,21 +481,6 @@ namespace View.Control
 			return _selectedLevel;
 		}
 
-		public void ShowSettings()
-		{
-			
-		}
-
-		public void ToggleMusic()
-		{
-			_gameAudio.MusicEnabled = !_gameAudio.MusicEnabled;
-		}
-
-		public void ToggleSfx()
-		{
-			_gameAudio.SfxEnabled = !_gameAudio.SfxEnabled;
-		}
-
 		private void OnTap(TKTapRecognizer recognizer)
 		{
 			if (!_scrollEnabled) {
@@ -522,6 +505,26 @@ namespace View.Control
 			}
 			
 			EnableScroll();
+		}
+		
+		public void ToggleSettings()
+		{
+			_navigation.ToggleSettings();
+		}
+
+		public void ToggleMusic()
+		{
+			_gameAudio.MusicEnabled = !_gameAudio.MusicEnabled;
+		}
+
+		public void ToggleSfx()
+		{
+			_gameAudio.SfxEnabled = !_gameAudio.SfxEnabled;
+		}
+
+		public void ToggleFreeze()
+		{
+			_scrollEnabled = !_scrollEnabled;
 		}
 	}
 }

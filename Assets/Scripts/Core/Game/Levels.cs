@@ -72,15 +72,16 @@ namespace Core.Game
 
             var file = File.ReadAllText(filePath);
             var levelPack = DeserializeLevelPack(file);
-            var update = !levelPack.PackInfo.Version.Equals(fallbackLevelPack.PackInfo.Version);
-
-            if (!update) {
-                return levelPack;
-            }
-            
-            // If there is an update, use the fallback
-            File.WriteAllText(filePath, fallbackFile.text);
-            return fallbackLevelPack;
+            return levelPack;
+//            var update = !levelPack.PackInfo.Version.Equals(fallbackLevelPack.PackInfo.Version);
+//
+//            if (!update) {
+//                return levelPack;
+//            }
+//            
+//            // If there is an update, use the fallback
+//            File.WriteAllText(filePath, fallbackFile.text);
+//            return fallbackLevelPack;
         }
 
         public static LevelPack DeserializeLevelPackDef(string filePath)

@@ -13,6 +13,7 @@ namespace View.Control
         private Transform _moveDisplay;
         private Transform _scrollHelper;
         private MenuRotator _buttonSelect;
+        private GameObject _settings;
 
         private Vector3 _moveDisplayStart;
         private Vector3 _scrollHelperStart;
@@ -26,11 +27,16 @@ namespace View.Control
         private const float TransitionTime = 1f;
         private const float TransitionDelay = 0.2f;
 
+        private bool _showSettings;
+        private int _settingsTweenId;
+        private Vector3 _mainViewStart;
+        private Vector3 _settingsStart;
+
         private readonly IDictionary<ButtonType, Action<ScrollView>> _buttonActions = 
                 new Dictionary<ButtonType, Action<ScrollView>> {
             { ButtonType.LevelSelect, scrollView => scrollView.EnableScroll() },
             { ButtonType.RestartLevel, scrollView => scrollView.RestartLevel() },
-            { ButtonType.Settings, scrollView => scrollView.ShowSettings() },
+            { ButtonType.Settings, scrollView => scrollView.ToggleSettings() },
             { ButtonType.MusicToggle, scrollView => scrollView.ToggleMusic() },
             { ButtonType.SfxToggle, scrollView => scrollView.ToggleSfx() },
         };
@@ -42,6 +48,7 @@ namespace View.Control
             _moveDisplay = GetComponentInChildren<MoveDisplay>().transform;
             _scrollHelper = GameObject.FindGameObjectWithTag("ScrollHelper").transform;
             _buttonSelect = GetComponentInChildren<MenuRotator>();
+            _settings = GameObject.FindGameObjectWithTag("Settings");
 
             var buttons = GameObject.FindGameObjectsWithTag("Button")
                 .Select(obj => obj.GetComponent<ButtonScript>());
@@ -56,6 +63,8 @@ namespace View.Control
             _moveDisplayStart = _moveDisplay.localPosition;
             _scrollHelperStart = _scrollHelper.localPosition;
             _buttonSelectStart = _buttonSelect.transform.localPosition;
+            _mainViewStart = _scrollView.transform.localPosition;
+            _settingsStart = _settings.transform.localPosition;
             
             _moveDisplay.Translate(_moveDisplayEnd);
             _scrollHelper.Translate(_scrollHelperEnd);
@@ -94,5 +103,27 @@ namespace View.Control
             _buttonSelect.ShowSettingsButtons();
         }
 
+        public void ToggleSettings()
+        {
+            if (LeanTween.isTweening(_settingsTweenId)) {
+                return;
+            }
+            
+            _showSettings = !_showSettings;
+//            var displacement = _scrollView.transform.position.x - _settings.transform.position.x;
+            var settingsDisplacement = _showSettings ? 0f : _settingsStart.x;
+            var scrollDisplacement = _showSettings ? -40f : _mainViewStart.x;
+            
+            // TODO: make configurable
+            const float time = 0.8f;
+            _settingsTweenId = LeanTween.moveLocalX(_scrollView.gameObject, scrollDisplacement, time)
+                .setEase(LeanTweenType.easeInOutSine)
+                .id;
+
+            LeanTween.moveLocalX(_settings, settingsDisplacement, time)
+                .setEase(LeanTweenType.easeInOutSine);
+                
+            _scrollView.ToggleFreeze();
+        }
     }
 }

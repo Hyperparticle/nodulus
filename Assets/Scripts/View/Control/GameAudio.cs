@@ -4,27 +4,54 @@ namespace View.Control
 {
     public class GameAudio : MonoBehaviour
     {
+        private const string MusicStatusKey = "music.status";
+        private const string SfxStatusKey = "sfx.status";
+        
         private const float MusicVolume = 0.2f;
         
         public AudioClip[] MusicClips;
         public AudioClip[] SfxClips;
 
         private AudioSource _musicSource;
+        private int _musicVolumeTweenId;
         private bool _musicEnabled = true;
         public bool MusicEnabled
         {
             get { return _musicEnabled; }
             set {
+                if (_musicEnabled != value) {
+                    LeanTween.cancel(_musicVolumeTweenId);
+                }
+                
                 _musicEnabled = value;
                 _musicSource.volume = value ? MusicVolume : 0f;
+                PlayerPrefs.SetInt(MusicStatusKey, value ? 0 : 1);
             }
         }
 
-        public bool SfxEnabled { get; set; } = true;
+        private bool _sfxEnabled = true;
+        public bool SfxEnabled
+        {
+            get { return _sfxEnabled; }
+            set {
+                _sfxEnabled = value;
+                PlayerPrefs.SetInt(SfxStatusKey, value ? 0 : 1);
+            }
+        }
 
         private void Start()
         {
             StartMusic();
+
+            if (!PlayerPrefs.HasKey(MusicStatusKey)) {
+                PlayerPrefs.SetInt(MusicStatusKey, 0);
+            }
+            if (!PlayerPrefs.HasKey(SfxStatusKey)) {
+                PlayerPrefs.SetInt(SfxStatusKey, 0);
+            }
+
+            MusicEnabled = PlayerPrefs.GetInt(MusicStatusKey) == 0;
+            SfxEnabled = PlayerPrefs.GetInt(SfxStatusKey) == 0;
         }
 
         public void Play(GameClip clip, float delay = 0f, float volume = 1f, float startTime = 0f)
@@ -47,12 +74,13 @@ namespace View.Control
             
             _musicSource = LeanAudio.play(audioClip, 0f, delay, true, startTime);
 
-            LeanTween.value(0f, volume, fadeTime)
+            _musicVolumeTweenId = LeanTween.value(0f, volume, fadeTime)
                 .setDelay(delay)
                 .setEase(LeanTweenType.easeInOutSine)
                 .setOnUpdate(v => {
                     _musicSource.volume = v;
-                });
+                })
+                .id;
         }
 
         private void StartMusic()

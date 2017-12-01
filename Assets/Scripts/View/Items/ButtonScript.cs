@@ -9,10 +9,33 @@ namespace View.Items
         public ButtonType ButtonType;
         public float ButtonDistance = 0.5f;
 
+        public GameObject ButtonShapePrimary;
+        public GameObject ButtonShapeSecondary;
+        private GameObject CurrentShape;
+
+        public string prefsKey;
+
         public event Action<ButtonType> ButtonPressed;
 
         private static float ButtonTransitionTime => GameDef.Get.ButtonTransitionTime;
         private static LeanTweenType ButtonEase => GameDef.Get.ButtonEase;
+
+        private void Awake()
+        {
+            CurrentShape = ButtonShapePrimary;
+        }
+
+        private void Start()
+        {
+            if (!PlayerPrefs.HasKey(prefsKey)) {
+                return;
+            }
+
+            var prevShape = CurrentShape;
+            CurrentShape = PlayerPrefs.GetInt(prefsKey) == 0 ? ButtonShapePrimary : ButtonShapeSecondary;
+            prevShape.SetActive(false);
+            CurrentShape.SetActive(true);
+        }
 
         private void OnMouseDown()
         {
@@ -33,7 +56,18 @@ namespace View.Items
 
             LeanTween.moveLocalZ(gameObject, pos.z + ButtonDistance, ButtonTransitionTime)
                 .setEase(ButtonEase)
-                .setOnComplete(() => MoveBack(pos));
+                .setOnComplete(() => {
+                    MoveBack(pos);
+
+                    if (CurrentShape == null) {
+                        return;
+                    }
+                    
+                    CurrentShape.SetActive(false);
+                    CurrentShape = CurrentShape == ButtonShapePrimary ? 
+                        ButtonShapeSecondary : ButtonShapePrimary;
+                    CurrentShape.SetActive(true);
+                });
         }
 
         private void MoveBack(Vector3 pos)
