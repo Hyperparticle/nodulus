@@ -27,7 +27,7 @@ namespace View.Control
         public void ShowSettingsButtons()
         {
             // TODO: make configurable
-            const float time = 0.8f;
+            const float time = 0.6f;
             const float delay = 0.2f;
             
             _topButton.GetComponent<BoxCollider>().enabled = false;
@@ -44,7 +44,7 @@ namespace View.Control
         public void ShowLevelButtons()
         {
             // TODO: make configurable
-            const float time = 0.8f;
+            const float time = 0.6f;
             const float delay = 0.2f;
             
             _bottomButton.GetComponent<BoxCollider>().enabled = false;

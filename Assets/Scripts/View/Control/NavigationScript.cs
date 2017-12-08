@@ -110,12 +110,11 @@ namespace View.Control
             }
             
             _showSettings = !_showSettings;
-//            var displacement = _scrollView.transform.position.x - _settings.transform.position.x;
             var settingsDisplacement = _showSettings ? 0f : _settingsStart.x;
             var scrollDisplacement = _showSettings ? -40f : _mainViewStart.x;
             
             // TODO: make configurable
-            const float time = 0.8f;
+            const float time = 0.4f;
             _settingsTweenId = LeanTween.moveLocalX(_scrollView.gameObject, scrollDisplacement, time)
                 .setEase(LeanTweenType.easeInOutSine)
                 .id;
