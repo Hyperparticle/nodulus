@@ -41,6 +41,8 @@ namespace View.Control
             { ButtonType.SfxToggle, scrollView => scrollView.ToggleSfx() },
         };
 
+        public bool IsTweening => _buttonSelect.IsTweening;
+
         private void Awake()
         {
             _scrollView = GameObject.FindGameObjectWithTag("MainView").GetComponent<ScrollView>();

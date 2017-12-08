@@ -198,7 +198,6 @@ namespace View.Control
 		public void EnableScroll()
 		{
 			if (_scrollEnabled) {
-				_scrollEnabled = false;
 				DisableScroll();
 				return;
 			}
@@ -231,8 +230,14 @@ namespace View.Control
 			puzzleInfo.Show();
 		}
 
-		public void DisableScroll(float delay = 0f)
+		private void DisableScroll(float delay = 0f)
 		{
+			if (_navigation.IsTweening) {
+				return;
+			}
+			
+			_scrollEnabled = false;
+			
 			var puzzleScale = _levels[_selectedLevel].GetComponent<PuzzleScale>();
 			var puzzleState = _levels[_selectedLevel].GetComponent<PuzzleState>();
 			
