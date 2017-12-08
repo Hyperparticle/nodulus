@@ -30,7 +30,7 @@ namespace View.Control
             const float time = 0.8f;
             const float delay = 0.2f;
             
-            _bottomButton.GetComponent<BoxCollider>().enabled = false;
+            _topButton.GetComponent<BoxCollider>().enabled = false;
 
             LeanTween.rotateAroundLocal(gameObject, Vector3.right, 180f - _currentRotation, time)
                 .setDelay(delay)
@@ -47,14 +47,13 @@ namespace View.Control
             const float time = 0.8f;
             const float delay = 0.2f;
             
-            _topButton.GetComponent<BoxCollider>().enabled = false;
+            _bottomButton.GetComponent<BoxCollider>().enabled = false;
 
             LeanTween.rotateAroundLocal(gameObject, Vector3.right, _currentRotation, time)
                 .setDelay(delay)
                 .setEase(LeanTweenType.easeInOutBack)
                 .setOnComplete(() => {
                     _topButton.GetComponent<BoxCollider>().enabled = true;
-                    
                     _currentRotation = 0f;
                 });
         }
