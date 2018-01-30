@@ -2,6 +2,9 @@ using UnityEngine;
 
 namespace View.Control
 {
+    /// <summary>
+    /// The main controller for the game's audio. Handles SFX along with looping music.
+    /// </summary>
     public class GameAudio : MonoBehaviour
     {
         private const string MusicStatusKey = "music.status";
@@ -54,6 +57,9 @@ namespace View.Control
             SfxEnabled = PlayerPrefs.GetInt(SfxStatusKey) == 0;
         }
 
+        /// <summary>
+        /// Plays the given sound clip with the specified parameters.
+        /// </summary>
         public void Play(GameClip clip, float delay = 0f, float volume = 1f, float startTime = 0f)
         {
             if (!enabled || !SfxEnabled) {
@@ -64,6 +70,9 @@ namespace View.Control
             LeanAudio.play(audioClip, volume, delay, time: startTime);
         }
         
+        /// <summary>
+        /// Plays the given music clip with the specifide parameters.
+        /// </summary>
         public void Play(MusicClip clip, float fadeTime = 0f, float delay = 0f, float volume = 1f, float startTime = 0f)
         {
             if (!enabled || !MusicEnabled) {
@@ -92,6 +101,9 @@ namespace View.Control
         }
     }
 
+    /// <summary>
+    /// A one-to-one map of all sound clips
+    /// </summary>
     public enum GameClip
     {
         GameStart,
@@ -114,6 +126,9 @@ namespace View.Control
         ArcMoveLow
     }
 
+    /// <summary>
+    /// A one-to-one map of all music clips
+    /// </summary>
     public enum MusicClip
     {
         Ambient01,

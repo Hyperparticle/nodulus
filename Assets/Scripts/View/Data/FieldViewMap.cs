@@ -4,6 +4,9 @@ using View.Items;
 
 namespace View.Data
 {
+    /// <summary>
+    /// Maps point directions to their corresponding field views.
+    /// </summary>
     public class FieldViewMap
     {
         private readonly IDictionary<PointDir, FieldView> _fieldMap = new Dictionary<PointDir, FieldView>();

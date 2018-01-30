@@ -11,11 +11,16 @@ using YamlDotNet.Serialization.NamingConventions;
 
 namespace Core.Game
 {
-    public class Levels
+    /// <summary>
+    /// Serializes/deserializes levels. Levels are organized into yaml files with minimal information to
+    /// reconstruct the current game state. The yaml files specify x,y coordinates of the nodes along with the
+    /// coordinates and directions of the arcs for each game board level.
+    /// </summary>
+    public static class Levels
     {
         private const string BeginnerLevels = "Levels/BeginnerLevels";
-        
-        public static readonly string SavedLevels = Application.persistentDataPath + "/SavedLevels.yaml";
+
+        private static readonly string SavedLevels = Application.persistentDataPath + "/SavedLevels.yaml";
 
         private static readonly LevelPack OriginalLevels = LevelParser.DeserializeLevelPackDef(BeginnerLevels);
         private static readonly LevelPack CurrentLevels = LevelParser.DeserializeLevelPack(SavedLevels, BeginnerLevels);
@@ -53,7 +58,10 @@ namespace Core.Game
         }
     }
 
-    public class LevelParser
+    /// <summary>
+    /// Utility for serializing/deserializing levels to/from basic data classes.
+    /// </summary>
+    public static class LevelParser
     {
         private static readonly string TempFilePath = Application.persistentDataPath + "/TempLevels.yaml";
 
@@ -84,13 +92,19 @@ namespace Core.Game
 //            return fallbackLevelPack;
         }
 
+        /// <summary>
+        /// Deserializes the default level pack. Use this if no saved level pack exists.
+        /// </summary>
         public static LevelPack DeserializeLevelPackDef(string filePath)
         {
             var file = Resources.Load<TextAsset>(filePath);
             return DeserializeLevelPack(file.text);
         }
-        
-        public static LevelPack DeserializeLevelPack(string fileText)
+
+        /// <summary>
+        /// Deserializes a saved level pack.
+        /// </summary>
+        private static LevelPack DeserializeLevelPack(string fileText)
         {
             var deserializer = new DeserializerBuilder()
                 .WithNamingConvention(new CamelCaseNamingConvention())
@@ -103,6 +117,9 @@ namespace Core.Game
             }
         }
 
+        /// <summary>
+        /// Saves the level pack to persistent storage.
+        /// </summary>
         public static void SerializeLevelPack(LevelPack levelPack, string filePath)
         {
             #if !UNITY_WEBGL
@@ -136,6 +153,9 @@ namespace Core.Game
             #endif
         }
 
+        /// <summary>
+        /// A level pack as it is laid out in a yaml file
+        /// </summary>
         public class LevelPackSer
         {
             public LevelPackInfo Info { get; set; }
@@ -152,6 +172,9 @@ namespace Core.Game
             }
         }
 
+        /// <summary>
+        /// A level as it is laid out in a yaml file
+        /// </summary>
         public class LevelSer
         {
             public string Name { get; set; }
@@ -206,6 +229,9 @@ namespace Core.Game
         }
     }
 
+    /// <summary>
+    /// A collection of levels
+    /// </summary>
     public class LevelPack
     {
         public LevelPackInfo PackInfo { get; }
@@ -229,6 +255,9 @@ namespace Core.Game
         public string Version { get; set; }
     }
 
+    /// <summary>
+    /// Information about the game state for one level.
+    /// </summary>
     public class Level
     {
         public string Name { get; }
@@ -250,6 +279,9 @@ namespace Core.Game
         
         public List<PointDir> Tutorial { get; }
         
+        /// <summary>
+        /// Unpacks the serialized level and extrapolates fields from serialized structure.
+        /// </summary>
         public Level(LevelParser.LevelSer levelSer, int number)
         {
             Name = levelSer.Name;

@@ -5,6 +5,9 @@ using View.Control;
 
 namespace View.Game
 {
+    /// <summary>
+    /// Scales the puzzle appropriately and provides properties about the board's dimensions.
+    /// </summary>
     public class PuzzleScale : MonoBehaviour
     {
         public float Scaling => GameDef.Get.Scaling;

@@ -4,6 +4,9 @@ using UnityEngine.UI;
 
 namespace View.Control
 {
+    /// <summary>
+    /// Controls a move counter display.
+    /// </summary>
     public class MoveDisplay : MonoBehaviour
     {
         private Text _moveText;

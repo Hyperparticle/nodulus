@@ -2,6 +2,9 @@
 
 namespace View.Game
 {
+	/// <summary>
+	/// Displays the user's cursor and changes its look based on the mouse's state.
+	/// </summary>
 	public class CursorView : MonoBehaviour {
 
 		public Texture2D CursorTexture;

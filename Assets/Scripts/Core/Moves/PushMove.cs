@@ -4,6 +4,10 @@ using Core.Items;
 
 namespace Core.Moves
 {
+    /// <summary>
+    /// A player move that can potentially push an arc. This connects the arc to a field, allowing the player to
+    /// traverse to the field's connected node (and any of its connected nodes).
+    /// </summary>
     public class PushMove : IMove
     {
         private readonly GameBoard _gameBoard;
@@ -19,18 +23,19 @@ namespace Core.Moves
             _field = field;
         }
 
+        /// <summary>
+        /// A push move is valid if:
+        /// 1. The arc is in a pulled state
+        /// 2. The field is empty (contains no arc)
+        /// 3. The arc's length is equal to the field's length
+        /// 4. The arc will not overlap with another arc
+        /// 5. The field is proximal to the player island
+        /// </summary>
         public bool IsValid
         {
-            // A push move is valid if:
-            // 1. The arc is in a pulled state
-            // 2. The field is empty (contains no arc)
-            // 3. The arc's length is equal to the field's length
-            // 4. The arc will not overlap with another arc
-            // 5. The field is proximal to the player island
-
             get
             {
-                // TODO: create an enum to show validation status
+                // TODO: create an enum to reveal the validation status/reason
                 if (_player == null || _arc == null || _field == null) return false;
                 return _arc.IsPulled && _player.IsProximal(_field) && _field.ValidPlacement(_arc);
             }

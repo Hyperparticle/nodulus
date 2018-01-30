@@ -5,6 +5,7 @@ namespace View.Items
 {
     public class ItemPool : MonoBehaviour
     {
+        // TODO: not really used, was an idea to pool nodes/arcs together
 //        private readonly Queue<NodeView> _nodes = new Queue<NodeView>();
 //        private readonly Queue<ArcView> _arcs = new Queue<ArcView>();
 //        private readonly Queue<FieldView> _fields = new Queue<FieldView>();

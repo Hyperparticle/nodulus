@@ -3,6 +3,9 @@ using View.Items;
 
 namespace View.Control
 {
+    /// <summary>
+    /// Controls a rotatable menu with GUI buttons.
+    /// </summary>
     public class MenuRotator : MonoBehaviour
     {
         public ButtonScript TopButton;

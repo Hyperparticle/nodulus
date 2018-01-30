@@ -3,6 +3,9 @@ using UnityEngine;
 
 namespace Utility
 {
+    /// <summary>
+    /// Utility class for HSB colors.
+    /// </summary>
     [Serializable]
     public struct HsbColor
     {

@@ -34,6 +34,10 @@ namespace Core.Game
             _player = new Player(gameBoard);
         }
 
+        /// <summary>
+        /// Pulls the arc in the given direction. Return true if this operation is valid and was
+        /// executed.
+        /// </summary>
         public bool PullArc(Arc arc, Direction pullDir)
         {
             if (IsPulled || arc == null) {
@@ -52,12 +56,20 @@ namespace Core.Game
             return result;
         }
 
+        /// <summary>
+        /// Pulls the arc attached to the node in the given direction. Return true if this
+        /// operation is valid and was executed.
+        /// </summary>
         public bool PullArc(Point nodePos, Direction pullDir)
         {
             var arc = _gameBoard.GetArcAt(nodePos, pullDir.Opposite());
             return PullArc(arc, pullDir);
         }
 
+        /// <summary>
+        /// Push the arc into the given field. Return true if this
+        /// operation is valid and was executed.
+        /// </summary>
         public bool PushArc(Field field)
         {
             if (!IsPulled || field == null) {
@@ -77,6 +89,10 @@ namespace Core.Game
             return result;
         }
 
+        /// <summary>
+        /// Push the arc at the position into the field at the given direction. Return true if this
+        /// operation is valid and was executed.
+        /// </summary>
         public bool PushArc(Point nodePos, Direction pushDir)
         {
             var field = _gameBoard.GetFieldAt(nodePos, pushDir);

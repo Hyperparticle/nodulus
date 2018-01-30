@@ -2,6 +2,9 @@
 
 namespace View.Control
 {
+    /// <summary>
+    /// A basic FPS counter in the corner of the screen.
+    /// </summary>
     public class FpsCounter : MonoBehaviour {
         
         private float _deltaTime;

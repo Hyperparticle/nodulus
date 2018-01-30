@@ -5,6 +5,9 @@ using View.Tween;
 
 namespace View.Game
 {
+    /// <summary>
+    /// A view of transparent lattice (grid) underneath the game board. Allows the user to more easily guess distances.
+    /// </summary>
     public class LatticeView : MonoBehaviour
     {
         public GameObject GridLinePrefab;

@@ -2,6 +2,9 @@ using UnityEngine;
 
 namespace View.Tween
 {
+    /// <summary>
+    /// Applies simple harmonic translation motion on the attached game object.
+    /// </summary>
     public class Oscillator : MonoBehaviour
     {
         public float MoveTime = 1f;

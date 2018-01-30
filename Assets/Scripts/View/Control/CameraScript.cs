@@ -2,6 +2,9 @@
 
 namespace View.Control
 {
+    /// <summary>
+    /// Handles basic camera zooming.
+    /// </summary>
     public class CameraScript : MonoBehaviour
     {
         private static int _zoomId;

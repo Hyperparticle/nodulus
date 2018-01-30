@@ -9,7 +9,7 @@ using View.Items;
 namespace View.Game
 {
     /// <summary>
-    /// Handles all basic initialization logic to create and destroy the gameboard
+    /// Contains functions to rotate/shake nodes and change their color. 
     /// </summary>
     public class PuzzleView : MonoBehaviour
     {

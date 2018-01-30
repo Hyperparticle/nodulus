@@ -15,6 +15,9 @@ namespace Core.Data
         Right,
     }
 
+    /// <summary>
+    /// A collection of handy extension methods for the <see cref="Direction"/> enum
+    /// </summary>
     public static class DirectionExtensions
     {
         private static readonly IDictionary<Direction, Direction> Opposites =
@@ -77,11 +80,17 @@ namespace Core.Data
                 { Direction.None, Direction.None }
             };
 
+        /// <summary>
+        /// Returns the opposite direction
+        /// </summary>
         public static Direction Opposite(this Direction direction)
         {
             return Opposites[direction];
         }
 
+        /// <summary>
+        /// Rotates the direction 90 degrees counterclockwise the given number of times
+        /// </summary>
         public static Direction Rotated(this Direction direction, int dir)
         {
             while (true)
@@ -166,7 +175,7 @@ namespace Core.Data
 
         public static List<Direction> All => new List<Direction>(DirectionList);
 
-        public static IEnumerable<Direction> Orthagonal(Direction direction)
+        public static IEnumerable<Direction> Orthogonal(Direction direction)
         {
             return new List<Direction> { direction.Rotated(1), direction.Rotated(-1) };
         }

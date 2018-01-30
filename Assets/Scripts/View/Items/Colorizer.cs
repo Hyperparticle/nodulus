@@ -6,6 +6,9 @@ using View.Control;
 
 namespace View.Items
 {
+    /// <summary>
+    /// Allows easy modification of the color of the attached game object's material.
+    /// </summary>
     public class Colorizer : MonoBehaviour
     {
         // Defaults

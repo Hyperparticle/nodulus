@@ -6,8 +6,17 @@ using Core.Items;
 
 namespace Core.Builders
 {
-    public class GameBoardBuilder 
+    /// <summary>
+    /// Builder responsible for instantiating a game board with the appropriate node/arc layout and connections given
+    /// a level description.
+    /// </summary>
+    public static class GameBoardBuilder 
     {
+        /// <summary>
+        /// Builds a game board from the given level by instantiating all nodes, arcs, and connections.
+        /// </summary>
+        /// <param name="level">The serializable level data</param>
+        /// <returns>An interactable game board</returns>
         public static GameBoard BuildBoard(Level level)
         {
             var gameBoard = new GameBoard(level);

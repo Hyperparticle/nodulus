@@ -32,6 +32,9 @@ namespace Core.Game
             Metadata = metadata;
         }
 
+        /// <summary>
+        /// Attempts to add the node at its given position to the game board. Returns true upon success.
+        /// </summary>
         public bool PlaceNode(Node node)
         {
             var added = _grid.AddNode(node);
@@ -40,6 +43,9 @@ namespace Core.Game
             return added;
         }
 
+        /// <summary>
+        /// Attempts to create an arc at the given position and direction. Returns true upon success.
+        /// </summary>
         public bool CreateArc(Point pos, Direction dir)
         {
             var node = _grid.NodeAt(pos);
@@ -61,7 +67,7 @@ namespace Core.Game
             return _grid.GetFieldAt(fieldPos, fieldDir);
         }
 
-        public bool CreateArc(Field field, bool pull = false)
+        private bool CreateArc(Field field, bool pull = false)
         {
             if (field.HasArc) return false;
             var arc = new Arc(field);

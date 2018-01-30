@@ -5,6 +5,9 @@ using View.Items;
 
 namespace View.Game
 {
+	/// <summary>
+	/// Displays a cursor icon hint to show where the user should swipe in the game board.
+	/// </summary>
 	public class CursorSwipe : MonoBehaviour
 	{
 		// TODO: make configurable

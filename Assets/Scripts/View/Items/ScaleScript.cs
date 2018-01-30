@@ -5,6 +5,9 @@ using View.Game;
 
 namespace View.Items
 {
+    /// <summary>
+    /// Scales a cube-like object into its appropriate shape.
+    /// </summary>
     public class ScaleScript : MonoBehaviour
     {
         public float Length { get; private set; }

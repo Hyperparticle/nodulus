@@ -6,6 +6,9 @@ using View.Items;
 
 namespace View.Control
 {
+    /// <summary>
+    /// Control for navigating between the main scroll level select view and the settings view.
+    /// </summary>
     public class NavigationScript : MonoBehaviour
     {
         private ScrollView _scrollView;

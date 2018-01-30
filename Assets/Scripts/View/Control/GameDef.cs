@@ -2,6 +2,9 @@ using UnityEngine;
 
 namespace View.Control
 {
+    /// <summary>
+    /// A collection of configurable parameters to tweak the game's behavior and look.
+    /// </summary>
     public class GameDef : MonoBehaviour
     {
         private void Awake()

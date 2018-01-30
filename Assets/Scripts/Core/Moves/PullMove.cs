@@ -4,6 +4,12 @@ using Core.Items;
 
 namespace Core.Moves
 {
+    /// <inheritdoc />
+    /// <summary>
+    /// A player move that can potentially pull an arc. This disconnects the arc from its field and connected nodes,
+    /// preventing the player from traversing to that node. This limits the player island, but allows the player to
+    /// push the arc back into a different field slot.
+    /// </summary>
     public class PullMove : IMove
     {
         private readonly GameBoard _gameBoard;
@@ -23,15 +29,16 @@ namespace Core.Moves
             //_field = arc.Field;
         }
 
+        /// <summary>
+        /// A pull move on an arc is valid if:
+        /// 1. The arc is not in a pulled state
+        /// 2. The arc's field is proximal to the player island
+        /// </summary>
         public bool IsValid
         {
-            // A pull move on an arc is valid if:
-            // 1. The arc is not in a pulled state
-            // 2. The arc's field is proximal to the player island
-
             get
             {
-                // TODO: create an enum to show validation status
+                // TODO: create an enum to reveal the validation status/reason
                 if (_player == null || _arc == null) return false;
                 return !_arc.IsPulled && _player.IsProximal(_arc.Field);
             }

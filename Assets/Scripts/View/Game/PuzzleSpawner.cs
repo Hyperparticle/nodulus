@@ -9,6 +9,10 @@ using View.Items;
 
 namespace View.Game
 {
+    /// <summary>
+    /// Generates new puzzle views from a given level number. Handles all basic initialization logic to create and
+    /// destroy the gameboard.
+    /// </summary>
     public class PuzzleSpawner : MonoBehaviour
     {
         private GameBoard _gameBoard;

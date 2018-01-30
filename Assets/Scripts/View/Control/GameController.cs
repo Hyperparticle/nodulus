@@ -2,6 +2,9 @@
 
 namespace View.Control
 {
+	/// <summary>
+	/// The main game controller.
+	/// </summary>
 	public class GameController : MonoBehaviour
 	{
 		private void Update() 

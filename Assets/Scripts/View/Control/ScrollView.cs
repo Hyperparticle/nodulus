@@ -8,6 +8,10 @@ using View.Game;
 
 namespace View.Control
 {
+	/// <summary>
+	/// A view of all levels in the game. Allows the user to go into level select mode to scroll between levels. The
+	/// user can also go back to play mode which displays a single level.
+	/// </summary>
 	public class ScrollView : MonoBehaviour
 	{
 		public GameObject PuzzleGamePrefab;

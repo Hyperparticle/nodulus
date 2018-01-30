@@ -8,7 +8,7 @@ using View.Items;
 namespace View.Tween
 {
     /// <summary>
-    /// Performs transition animations
+    /// Performs transition animations on nodes.
     /// </summary>
     public class NodeTransit : MonoBehaviour
     {

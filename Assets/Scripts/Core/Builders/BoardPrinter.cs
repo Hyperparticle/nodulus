@@ -5,6 +5,9 @@ using Core.Items;
 
 namespace Core.Builders
 {
+    /// <summary>
+    /// Prints the state of the board using ASCII text
+    /// </summary>
     public static class BoardPrinter
     {
         private const char Node = 'O';

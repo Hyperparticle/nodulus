@@ -10,6 +10,9 @@ using View.Items;
 
 namespace View.Game
 {
+    /// <summary>
+    /// A collection of the puzzle's state information, i.e., player, game board, nodes, arcs, and fields.
+    /// </summary>
     public class PuzzleState : MonoBehaviour
     {
         private readonly FieldViewMap _fieldMap = new FieldViewMap();
@@ -221,7 +224,7 @@ namespace View.Game
         private bool PushArc(NodeView nodeView, FieldView fieldView)
         {
             // Validate that the node is in the island
-            if (!_playerState.HasNodeAt(nodeView.Node)) {
+            if (!_playerState.Contains(nodeView.Node)) {
                 return false;
             }
 

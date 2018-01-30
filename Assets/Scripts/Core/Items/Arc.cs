@@ -2,6 +2,7 @@ using Core.Data;
 
 namespace Core.Items
 {
+    /// <inheritdoc />
     /// <summary>
     /// An Arc represents a visible connection between two nodes, allowing a traversible
     /// path between them.
@@ -29,25 +30,24 @@ namespace Core.Items
             Length = field.Length;
         }
 
+        /// <summary>
+        /// Disconnects this Arc from an existing field
+        /// </summary>
         public void Pull()
         {
-            // Disconnect this Arc from an existing field
             Field?.DisconnectArc(this);
             PrevField = Field;
             Field = null;
         }
 
+        /// <summary>
+        /// Connects this Arc to the new field
+        /// </summary>
         public void Push(Field field)
         {
-            //if (field == null) {
-            //    // TODO: logging
-            //    return;
-            //}
-
             // Pull before pushing
             Pull();
 
-            // Connect this Arc to the new field
             Field = field;
             field.ConnectArc(this);
         }
@@ -56,7 +56,6 @@ namespace Core.Items
         {
             return Field.Root(dir);
         }
-
 
         public override string ToString()
         {

@@ -4,6 +4,9 @@ using View.Control;
 
 namespace View.Items
 {
+    /// <summary>
+    /// Controller for a basic GUI button.
+    /// </summary>
     public class ButtonScript : MonoBehaviour
     {
         public ButtonType ButtonType;
@@ -43,7 +46,6 @@ namespace View.Items
                 return;
             }
 
-            // Invoke the event
             ButtonPressed?.Invoke(ButtonType);
 
             // Play the button animation

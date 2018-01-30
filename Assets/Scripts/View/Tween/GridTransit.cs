@@ -3,6 +3,9 @@ using View.Control;
 
 namespace View.Tween
 {
+	/// <summary>
+	/// Tweens in/out a game board's lattice (grid) view.
+	/// </summary>
 	public class GridTransit : MonoBehaviour
 	{
 		public float WaveInTravel => GameDef.Get.WaveInTravel / 1.5f;

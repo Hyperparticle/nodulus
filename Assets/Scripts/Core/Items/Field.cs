@@ -5,6 +5,12 @@ using Core.Data;
 
 namespace Core.Items
 {
+    /// <inheritdoc />
+    /// <summary>
+    /// A Field represents a potential connection between two nodes, i.e., a slot for an arc to fit in. Any two
+    /// adjacent nodes should have a field between them with the appropriate length and direction. Only arcs with
+    /// the appropriate length can fit inside a field.
+    /// </summary>
     public class Field : IBoardItem
     {
         public const int MaxLength = 10;
@@ -25,7 +31,6 @@ namespace Core.Items
         public ICollection<Field> Overlap { get; }
         public PointDir ConnectedPointDir { get; }
 
-
         // Note: parent should be the top left node
         public Field(int length, Node parentNode, Node connectedNode)
         {
@@ -43,14 +48,18 @@ namespace Core.Items
             ConnectedPointDir = new PointDir(ConnectedPosition, Direction.Opposite());
         }
 
+        /// <summary>
+        /// Whether the arc has a valid placement.
+        /// A placement is valid if:
+        /// 1. No Arc exists in the field
+        /// 2. Arc length is equal to field length
+        /// 3. Arcs do not overlap
+        /// </summary>
+        /// <param name="arc"></param>
+        /// <returns></returns>
         public bool ValidPlacement(Arc arc)
         {
-            // A placement is valid if:
-            // 1. No Arc exists in the field
-            // 2. Arc length is equal to field length
-            // 3. Arcs do not overlap
-
-            var noArc = !HasArc;// || Arc.Equals(arc);
+            var noArc = !HasArc;
             var overlap = Overlap.Any(field => field.HasArc);
             return noArc && arc.Length == Length && !overlap;
         }

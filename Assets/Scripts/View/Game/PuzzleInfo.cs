@@ -3,6 +3,9 @@ using UnityEngine.UI;
 
 namespace View.Game
 {
+	/// <summary>
+	/// Basic information about the puzzle.
+	/// </summary>
 	public class PuzzleInfo : MonoBehaviour
 	{
 		public Color EnableColor;

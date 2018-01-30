@@ -4,6 +4,9 @@ using View.Items;
 
 namespace View.Data
 {
+    /// <summary>
+    /// Maps point directions to their corresponding arc views.
+    /// </summary>
     public class ArcViewMap
     {
         private readonly IDictionary<PointDir, ArcView> _arcMap = new Dictionary<PointDir, ArcView>();

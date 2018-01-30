@@ -2,6 +2,9 @@
 
 namespace View.Items
 {
+	/// <summary>
+	/// Rotates the attached game object with the given rotation vectors.
+	/// </summary>
 	public class SimpleRotator : MonoBehaviour
 	{
 		// TODO: make configurable

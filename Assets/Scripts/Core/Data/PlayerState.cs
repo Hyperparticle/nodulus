@@ -5,6 +5,10 @@ using Core.Items;
 
 namespace Core.Data
 {
+    /// <summary>
+    /// Comprehensive information about what island the player is in, what arcs/nodes are accessible. Contains methods
+    /// to move between nodes/islands and push/pull arcs in the game board.
+    /// </summary>
     public class PlayerState
     {
         private readonly IslandSet _islandSet;
@@ -34,12 +38,17 @@ namespace Core.Data
         public bool IsFinal => _playerIsland.IsFinal;
         public Point PullPosition { get; private set; }
 
-
+        /// <summary>
+        /// Whether the player is on the island containing the node.
+        /// </summary>
         public bool Contains(Node node)
         {
             return _playerIsland.Contains(node);
         }
 
+        /// <summary>
+        /// Creates the player state from a beginning game board.
+        /// </summary>
         public PlayerState(GameBoard gameBoard)
         {
             _islandSet = gameBoard.IslandSet;
@@ -49,6 +58,9 @@ namespace Core.Data
             _arcs = new HashSet<Arc>(gameBoard.Arcs);
         }
 
+        /// <summary>
+        /// Moves the player to the given node. Note: external validation is necessary to enforce game rules.
+        /// </summary>
         public void MoveTo(Node node)
         {
             PullPosition = node.Position;
@@ -61,7 +73,7 @@ namespace Core.Data
         /// </summary>
         private void UpdateState()
         {
-            // TODO: improve efficiency
+            // TODO: efficiency could be improved, but currently plenty fast enough
             _playerNodes.Clear();
             _playerArcs.Clear();
             _nonPlayerNodes.Clear();
@@ -76,6 +88,9 @@ namespace Core.Data
             _nonPlayerArcs.ExceptWith(_playerArcs);
         }
 
+        /// <summary>
+        /// Updates the player state to account for the newly pushed arc (new nodes accessible).
+        /// </summary>
         public void UpdatePush(Arc pullArc)
         {
             _pushFields.Clear();
@@ -84,18 +99,16 @@ namespace Core.Data
             if (pullArc == null) {
                 _nonPushFields.UnionWith(_fields);
                 return;
-            } 
+            }
 
             _pushFields.UnionWith(_playerIsland.Outskirts.Where(field => field.ValidPlacement(pullArc)));
             _nonPushFields.UnionWith(_fields);
             _nonPushFields.ExceptWith(_pushFields);
         }
 
-        public bool HasNodeAt(Node node)
-        {
-            return _playerIsland.Contains(node);
-        }
-
+        /// <summary>
+        /// Finds a path between the start and end nodes (empty if none exists).
+        /// </summary>
         public List<Node> PushPath(Node start, Node end)
         {
             // Make sure the nodes are in the player island
