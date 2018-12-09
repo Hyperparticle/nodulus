@@ -2,8 +2,34 @@ info:
   title: Beginner Level Pack
   description: Introduces the player to the game
   version: 1.4
+  
+  availableLanguages:
+    - english
+    - chinese
+    - japanese
+    - french
+    - spanish
+    - russian
 
 currentLevel: 0
+
+currentLanguage: default
+
+localization:
+  english:
+    music: Music
+    sfx: Sound Effects
+    credit: A game by Hyperparticle
+    version: v1.1.1
+  chinese:
+  japanese:
+  french:
+  spanish:
+  russian:
+    music: Музыка
+    sfx: Звуковые эффекты
+    credit: Игра от Hyperparticle
+    version: в 1.1.1
 
 levels:
   - name: First Steps
@@ -46,6 +72,14 @@ levels:
         direction: Right
       - parent: [4, 0]
         direction: Right
+      
+    localization:
+      english: First Steps
+      chinese: 初试身手
+      japanese: 第一歩を踏み出す
+      french: Premiers pas
+      spanish: Primeros pasos
+      russian: Первые шаги
     
   - name: Roundabout
     description: Moving in different directions
@@ -86,6 +120,8 @@ levels:
         direction: Down
       - parent: [3, 0]
         direction: Right
+    localization:
+      russian: Карусель
 
   - name: Pieces
     description: Multiple pieces

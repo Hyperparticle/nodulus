@@ -1,4 +1,7 @@
-﻿using UnityEngine;
+﻿using System;
+using System.Collections.Generic;
+using Core.Game;
+using UnityEngine;
 using UnityEngine.UI;
 
 namespace View.Game
@@ -42,8 +45,19 @@ namespace View.Game
 		{
 			_canvas.transform.localPosition =_showPos =
 				_initPos - (Vector3) _puzzleScale.Offset - Vector3.up * _puzzleScale.Offset.y;
-	
-			_text.text = $"{_puzzleState.Metadata.Number}. {_puzzleState.Metadata.Name}";
+
+			var language = Levels.CurrentLanguage;
+			var levelName = _puzzleState.Metadata.Name;
+			if (language != null && !language.Equals("default")) {
+				try {
+					levelName = _puzzleState.Metadata.Localization[language];
+				} catch (Exception e) {
+					Debug.LogWarning($"Failed to apply localization for {language} (level " +
+					                 $"{_puzzleState.Metadata.Number}) \n {e}");
+				}
+			}
+			
+			_text.text = $"{_puzzleState.Metadata.Number}. {levelName}";
 			
 			_canvas.transform.Translate(_hidePos);
 			

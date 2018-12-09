@@ -29,6 +29,10 @@ namespace Core.Game
 
         public static int CurrentLevelNum => CurrentLevels.CurrentLevelNum;
 
+        public static string CurrentLanguage => CurrentLevels.CurrentLanguage;
+
+        public static Dictionary<string, Dictionary<string, string>> Localization => CurrentLevels.Localization;
+
         public static GameBoard BuildLevel(int levelNum, bool restart = false)
         {
             if (levelNum < 0 || levelNum >= LevelCount) {
@@ -160,6 +164,8 @@ namespace Core.Game
         {
             public LevelPackInfo Info { get; set; }
             public int CurrentLevel { get; set; }
+            public string CurrentLanguage { get; set; }
+            public Dictionary<string, Dictionary<string, string>> Localization { get; set; }
             public List<LevelSer> Levels { get; set; }
 
             public static LevelPackSer Create(LevelPack levelPack)
@@ -167,7 +173,9 @@ namespace Core.Game
                 return new LevelPackSer {
                     Info = levelPack.PackInfo,
                     Levels = levelPack.Levels.Select(LevelSer.Create).ToList(),
-                    CurrentLevel = levelPack.CurrentLevelNum
+                    CurrentLevel = levelPack.CurrentLevelNum,
+                    CurrentLanguage = levelPack.CurrentLanguage,
+                    Localization = levelPack.Localization
                 };
             }
         }
@@ -192,6 +200,8 @@ namespace Core.Game
             public Direction StartPull { get; set; } = Direction.None;
             
             public List<PointDirSer> Tutorial { get; set; }
+            
+            public Dictionary<string, string> Localization { get; set; }
 
             public static LevelSer Create(Level level)
             {
@@ -212,12 +222,13 @@ namespace Core.Game
                     FinalNode = new[] {level.FinalNode.x, level.FinalNode.y},
                     StartPull = level.StartPull,
                     WinCount = level.WinCount,
-                    Tutorial =  level.Tutorial
+                    Tutorial = level.Tutorial
                         ?.Select(arc => new PointDirSer {
                             Parent = new[] {arc.Point.x, arc.Point.y},
                             Direction = arc.Direction
                         })
-                        ?.ToList()
+                        ?.ToList(),
+                    Localization = level.Localization
                 };
             }
         }
@@ -236,15 +247,19 @@ namespace Core.Game
     {
         public LevelPackInfo PackInfo { get; }
         public int CurrentLevelNum { get; set; }
+        public string CurrentLanguage { get; }
+        public Dictionary<string, Dictionary<string, string>> Localization { get; }
         public List<Level> Levels { get; }
 
         public LevelPack(LevelParser.LevelPackSer levelPackSer)
         {
             PackInfo = levelPackSer.Info;
+            CurrentLanguage = levelPackSer.CurrentLanguage;
             Levels = levelPackSer.Levels
                 .Select((levelSer, i) => new Level(levelSer, i))
                 .ToList();
             CurrentLevelNum = levelPackSer.CurrentLevel;
+            Localization = levelPackSer.Localization;
         }
     }
 
@@ -253,6 +268,7 @@ namespace Core.Game
         public string Title { get; set; }
         public string Description { get; set; }
         public string Version { get; set; }
+        public List<string> AvailableLanguages { get; set; }
     }
 
     /// <summary>
@@ -278,6 +294,8 @@ namespace Core.Game
         public Direction StartPull { get; }
         
         public List<PointDir> Tutorial { get; }
+        
+        public Dictionary<string, string> Localization { get; }
         
         /// <summary>
         /// Unpacks the serialized level and extrapolates fields from serialized structure.
@@ -318,6 +336,8 @@ namespace Core.Game
                     return new PointDir(point, arc.Direction);
                 })
                 ?.ToList();
+
+            Localization = levelSer.Localization;
         }
 
         public Level(string name, string description, int number,

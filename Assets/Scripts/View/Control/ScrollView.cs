@@ -4,6 +4,7 @@ using System.Linq;
 using Core.Game;
 using UnityEngine;
 using UnityEngine.Analytics;
+using UnityEngine.UI;
 using View.Game;
 
 namespace View.Control
@@ -47,6 +48,28 @@ namespace View.Control
 			_navigation = GameObject.FindGameObjectWithTag("Navigation").GetComponent<NavigationScript>();
 			_moveDisplay = GameObject.FindGameObjectWithTag("MoveDisplay").GetComponent<MoveDisplay>();
 			_gameAudio = GameObject.FindGameObjectWithTag("GameAudio").GetComponent<GameAudio>();
+			
+			// Set the game's strings to their localized versions
+			var language = Levels.CurrentLanguage;
+			if (language.Equals("default")) {
+				return;
+			}
+			
+			try {
+				var map = new Dictionary<string, string> {
+					["MusicToggleText"] = "music",
+					["SfxToggleText"] = "sfx",
+					["CreditText"] = "credit",
+					["VersionText"] = "version"
+				};
+					
+				foreach(var entry in map) {
+					var textDisplay = GameObject.FindGameObjectWithTag(entry.Key).GetComponent<Text>();
+					textDisplay.text = Levels.Localization[language][entry.Value];
+				}
+			} catch (Exception e) {
+				Debug.LogWarning("Failed to apply localization for " + language + "\n" + e);
+			}
 		}
 
 		private void Start()
