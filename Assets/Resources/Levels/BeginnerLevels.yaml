@@ -22,9 +22,21 @@ localization:
     credit: A game by Hyperparticle
     version: v1.1.1
   chinese:
+    music: 音乐
+    sfx: 音效
+    credit: 本游戏由Hyperparticle开发
+    version: 版本1.1.1
   japanese:
   french:
+    music: Musique
+    sfx: Effets sonores
+    credit: Un jeu de Hyperparticle
+    version: v1.1.1
   spanish:
+    music: Música
+    sfx: Efectos de sonido
+    credit: Un juego de Hyperparticle.
+    version: v1.1.1  
   russian:
     music: Музыка
     sfx: Звуковые эффекты
@@ -76,7 +88,7 @@ levels:
     localization:
       english: First Steps
       chinese: 初试身手
-      japanese: 第一歩を踏み出す
+      japanese: 
       french: Premiers pas
       spanish: Primeros pasos
       russian: Первые шаги
@@ -121,8 +133,13 @@ levels:
       - parent: [3, 0]
         direction: Right
     localization:
+      english: Roundabout
+      chinese: 按部就班
+      japanese: 
+      french: Rond point
+      spanish: Rotonda
       russian: Карусель
-
+      
   - name: Pieces
     description: Multiple pieces
     nodes:
@@ -159,6 +176,13 @@ levels:
         direction: Left
       - parent: [1, 2]
         direction: Down
+    localization:
+      english: Pieces
+      chinese: 七拼八凑
+      japanese: 
+      french: Pièces
+      spanish: Piezas
+      russian: Фишки
 
   - name: Bridge
     description: Jumping over pieces
@@ -188,6 +212,14 @@ levels:
         direction: Right
       - parent: [6, 0]
         direction: Up
+    localization:
+      english: Bridge
+      chinese: 搭桥补路
+      japanese: 
+      french: Pont
+      spanish: Puente
+      russian: Мост
+    
         
   - name: Ladder
     description: Move the big piece down
@@ -205,6 +237,13 @@ levels:
         direction: Right
       - parent: [1, 2]
         direction: Right
+    localization:
+      english: Ladder
+      chinese: 历阶而下
+      japanese: 
+      french: Échelle
+      spanish: Escalera
+      russian: Ступени
 
   - name: Broken
     description: A bit harder this time
@@ -222,6 +261,13 @@ levels:
         direction: Right
       - parent: [1, 1]
         direction: Right
+    localization:
+      english: Broken
+      chinese: 移东补西
+      japanese: 
+      french: Cassé
+      spanish: Roto
+      russian: Сломанная
 
   - name: Barrier
     description: Need to remove the obstacle
@@ -241,6 +287,13 @@ levels:
         direction: Up
       - parent: [3, 0]
         direction: Up
+    localization:
+      english: Barrier
+      chinese: 跨越障碍
+      japanese: 
+      french: Barrière
+      spanish: Barrera
+      russian: Барьер
 
   - name: Loop
     description: A Simple Challenge
@@ -262,6 +315,14 @@ levels:
         direction: Right
       - parent: [2, 0]
         direction: Right
+    localization:
+      english: Loop
+      chinese: 绕了一圈
+      japanese: 
+      french: Circuit
+      spanish: Circuito
+      russian: Петля
+
 
   - name: Back and Forth
     description: tbd
@@ -286,6 +347,13 @@ levels:
         direction: Right
       - parent: [6, 0]
         direction: Up
+    localization:
+      english: Back and Forth
+      chinese: 来来回回
+      japanese: 
+      french: D'avant en arrière
+      spanish: De un lado a otro
+      russian: Назад и вперед
 
   - name: Switcheroo
     description: tbd
@@ -310,6 +378,13 @@ levels:
         direction: Right
       - parent: [4, 1]
         direction: Up
+    localization:
+      english: Switcheroo
+      chinese: 出其不意
+      japanese: 
+      french: Changement Inattendu
+      spanish: Cambio inesperado
+      russian: Туда Сюда
 
   - name: Patience
     description: tbd
@@ -335,7 +410,14 @@ levels:
         direction: Right
       - parent: [2, 1]
         direction: Up
-
+    localization:
+      english: Patience
+      chinese: 柳暗花明
+      japanese: 
+      french: Patience
+      spanish: Paciencia
+      russian: Терпение
+      
   - name: Slick
     description: tbd
     nodes:
@@ -359,6 +441,13 @@ levels:
         direction: Right
       - parent: [3, 1]
         direction: Up
+    localization:
+      english: Slick
+      chinese: 熟能生巧
+      japanese: 
+      french: Glissant
+      spanish: Astuto
+      russian: Шустро
 
   - name: Deep End
     description: Original Plank Puzzle (1)
@@ -414,6 +503,13 @@ levels:
         direction: Right
       - parent: [5, 0]
         direction: Up
+    localization:
+      english: Deep End
+      chinese: 窘境脱困
+      japanese: 
+      french: Profondeur
+      spanish: En aguas profundas
+      russian: Глубокий Конец
   
   - name: Six Squared
     description: tbd
@@ -446,6 +542,13 @@ levels:
         direction: Right
       - parent: [3, 5]
         direction: Right
+    localization:
+      english: Staircase
+      chinese: 拾级而上
+      japanese: 
+      french: Escalier
+      spanish: Escalera
+      russian: Лестница
 
   - name: Expressway
     description: tbd
@@ -486,6 +589,13 @@ levels:
         direction: Right 
       - parent: [4, 2]
         direction: Right 
+    localization:
+      english: Six Squared
+      chinese: 六的平方
+      japanese: 
+      french: Six carrés
+      spanish: Seis al cuadrado
+      russian: Шесть квадратов
   
   - name: Box Step 
     description: tbd
@@ -522,7 +632,14 @@ levels:
         direction: Up
       - parent: [3, 5]
         direction: Right 
-
+    localization:
+      english: Box Step
+      chinese: 收放自如
+      japanese: 
+      french: Le Box Step
+      spanish: Paso de la caja
+      russian: Бокс Степ
+      
   - name: Brute 66
     description: tbd
     nodes:
@@ -565,6 +682,13 @@ levels:
         direction: Up
       - parent: [6, 3]
         direction: Up
+    localization:
+      english: Brute 66
+      chinese: 暴力66
+      japanese: 
+      french: Brute 66
+      spanish: Brute 66
+      russian: Брут 66
 
   - name: Junior
     description: tbd
@@ -606,7 +730,14 @@ levels:
         direction: Up 
       - parent: [7, 0]
         direction: Up 
-
+    localization:
+      english: Junior
+      chinese: 小有所成
+      japanese: 
+      french: Junior
+      spanish: Júnior
+      russian: Юниор
+      
   - name: Smash Hit
     description: Original Plank Puzzle (2)
     nodes:
@@ -650,6 +781,13 @@ levels:
         direction: Up
       - parent: [6, 3]
         direction: Up
+    localization:
+      english: Smash Hit
+      chinese: 平地春雷
+      japanese: 
+      french: Succès foudroyant
+      spanish: Éxito rotundo
+      russian: Шлягер
 
   - name: Route 66
     description: Minimum of 66 moves
@@ -700,6 +838,13 @@ levels:
         direction: Right
       - parent: [6, 3]
         direction: Right
+    localization:
+      english: Route 66
+      chinese: 66号公路
+      japanese: 
+      french: La Route 66
+      spanish: Ruta 66
+      russian: Маршрут 66
 
 #  - name: test
 #    description: test
