@@ -36,18 +36,17 @@ namespace View.Control
 
 		private int _cameraZoomId;
 
+		[SerializeField]
 		private NavigationScript _navigation;
+		[SerializeField]
 		private MoveDisplay _moveDisplay;
+		[SerializeField]
 		private GameAudio _gameAudio;
 
 		private void Awake()
 		{
             // Set the maximum number of simultaneous tweens
-            LeanTween.init(30000);
-
-			_navigation = GameObject.FindGameObjectWithTag("Navigation").GetComponent<NavigationScript>();
-			_moveDisplay = GameObject.FindGameObjectWithTag("MoveDisplay").GetComponent<MoveDisplay>();
-			_gameAudio = GameObject.FindGameObjectWithTag("GameAudio").GetComponent<GameAudio>();
+            LeanTween.init(30000);			
 			
 			// Set the game's strings to their localized versions
 			var language = Levels.CurrentLanguage;
