@@ -42,6 +42,8 @@ namespace View.Control
             { ButtonType.Settings, scrollView => scrollView.ToggleSettings() },
             { ButtonType.MusicToggle, scrollView => scrollView.ToggleMusic() },
             { ButtonType.SfxToggle, scrollView => scrollView.ToggleSfx() },
+            { ButtonType.ScrollUp, scrollView => scrollView.ScrollUp() },
+            { ButtonType.ScrollDown, scrollView => scrollView.ScrollDown() },
         };
 
         public bool IsTweening => _buttonSelect.IsTweening;

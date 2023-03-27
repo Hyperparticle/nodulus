@@ -452,7 +452,8 @@ namespace View.Control
 
 		private void OnPan(TKPanRecognizer recognizer)
 		{
-			if (!_scrollEnabled) {
+            Debug.Log("OnPan");
+            if (!_scrollEnabled) {
 				return;
 			}
 
@@ -469,7 +470,57 @@ namespace View.Control
 			transform.position = new Vector2(transform.position.x, clampedPos);
 		}
 
-		private void OnPanComplete(TKPanRecognizer recognizer)
+		public void OnPanUp()
+		{
+            Debug.Log("OnPanUp");
+        
+            if (!_scrollEnabled)
+			{
+				return;
+			}
+
+			_isPanning = true;
+
+			_panVelocity = Vector2.zero;
+			_magnetVelocity = Vector2.zero;
+
+			// TODO: make configurable
+			const float scalingFactor = 5f;
+		
+			transform.Translate(Vector3.down * scalingFactor);
+
+			var clampedPos = Mathf.Clamp(transform.position.y, _listBottom, _listTop);
+			transform.position = new Vector2(transform.position.x, clampedPos);
+
+            
+        }
+
+        public void OnPanDown()
+        {
+          
+            Debug.Log("OnPanDown");
+        
+            if (!_scrollEnabled)
+            {
+                return;
+            }
+
+            _isPanning = true;
+
+            _panVelocity = Vector2.zero;
+            _magnetVelocity = Vector2.zero;
+
+            // TODO: make configurable
+            const float scalingFactor = 5f;
+			transform.Translate(Vector3.up * scalingFactor);
+
+			var clampedPos = Mathf.Clamp(transform.position.y, _listBottom, _listTop);
+			transform.position = new Vector2(transform.position.x, clampedPos);
+
+		
+		}
+
+        private void OnPanComplete(TKPanRecognizer recognizer)
 		{
 			if (!_scrollEnabled) {
 				return;
@@ -554,7 +605,17 @@ namespace View.Control
 			_gameAudio.SfxEnabled = !_gameAudio.SfxEnabled;
 		}
 
-		public void ToggleFreeze()
+		public void ScrollUp()
+		{
+			Debug.Log("ScrollUpArrowPressed");
+			OnPanUp();
+		}
+        public void ScrollDown()
+        {
+            Debug.Log("ScrollDownArrowPressed");
+			OnPanDown();
+        }
+        public void ToggleFreeze()
 		{
 			_scrollEnabled = !_scrollEnabled;
 		}
