@@ -15,6 +15,9 @@ namespace View.Control
 	/// </summary>
 	public class ScrollView : MonoBehaviour
 	{
+		[SerializeField]
+		private float _scrollButtonScale;
+
 		public GameObject PuzzleGamePrefab;
 
 		private bool _scrollEnabled;
@@ -26,6 +29,7 @@ namespace View.Control
 		private float _listBottom;
 		private float _listTop;
 		private bool _isPanning;
+		private float _scrollSpeed;
 		private Vector3 _panVelocity;
 		private Vector3 _magnetVelocity;
 
@@ -45,8 +49,8 @@ namespace View.Control
 
 		private void Awake()
 		{
-            // Set the maximum number of simultaneous tweens
-            LeanTween.init(30000);			
+			// Set the maximum number of simultaneous tweens
+			LeanTween.init(30000);			
 			
 			// Set the game's strings to their localized versions
 			var language = Levels.CurrentLanguage;
@@ -451,89 +455,23 @@ namespace View.Control
 
 		private void OnPan(TKPanRecognizer recognizer)
 		{
-            Debug.Log("OnPan");
-            if (!_scrollEnabled) {
-				return;
-			}
-
-			_isPanning = true;
-
-			_panVelocity = Vector2.zero;
-			_magnetVelocity = Vector2.zero;
-			
-			// TODO: make configurable
-			const float scalingFactor = 100f;
-			transform.Translate(Vector3.up * recognizer.deltaTranslation.y / scalingFactor);
-			
-			var clampedPos = Mathf.Clamp(transform.position.y, _listBottom, _listTop);
-			transform.position = new Vector2(transform.position.x, clampedPos);
+			ScrollBegin(recognizer.deltaTranslation.y);			
 		}
-
-		public void OnPanUp()
-		{
-            Debug.Log("OnPanUp");
-        
-            if (!_scrollEnabled)
-			{
-				return;
-			}
-
-			_isPanning = true;
-
-			_panVelocity = Vector2.zero;
-			_magnetVelocity = Vector2.zero;
-
-			// TODO: make configurable
-			const float scalingFactor = 5f;
 		
-			transform.Translate(Vector3.down * scalingFactor);
-
-			var clampedPos = Mathf.Clamp(transform.position.y, _listBottom, _listTop);
-			transform.position = new Vector2(transform.position.x, clampedPos);
-
-            
-        }
-
-        public void OnPanDown()
-        {
-          
-            Debug.Log("OnPanDown");
-        
-            if (!_scrollEnabled)
-            {
-                return;
-            }
-
-            _isPanning = true;
-
-            _panVelocity = Vector2.zero;
-            _magnetVelocity = Vector2.zero;
-
-            // TODO: make configurable
-            const float scalingFactor = 5f;
-			transform.Translate(Vector3.up * scalingFactor);
-
-			var clampedPos = Mathf.Clamp(transform.position.y, _listBottom, _listTop);
-			transform.position = new Vector2(transform.position.x, clampedPos);
-
-		
-		}
-
-        private void OnPanComplete(TKPanRecognizer recognizer)
+		private void OnPanComplete(TKPanRecognizer recognizer)
 		{
-			if (!_scrollEnabled) {
-				return;
-			}
-
-			_isPanning = false;
-			
-			// TODO: make configurable
-			var delta = recognizer.deltaTranslation.y;
-			var velocityMagnitude = Mathf.Abs(delta) < 5f ? 0f : Mathf.Clamp(delta, -50f, 50f);
-			
-			_panVelocity = Vector3.up * velocityMagnitude / VelocityScalingFactor;
+			ScrollEnd();		
 		}
-
+		public void OnScrollUp()
+		{
+			ScrollBegin(-1f * _scrollButtonScale);
+			ScrollEnd();
+		}
+		public void OnScrollDown()
+		{
+			ScrollBegin(_scrollButtonScale);
+			ScrollEnd();
+		}
 		private static void OnLevelStateChanged(Level level, bool win)
 		{
 			Levels.SaveLevel(level, win);
@@ -602,21 +540,47 @@ namespace View.Control
 		public void ToggleSfx()
 		{
 			_gameAudio.SfxEnabled = !_gameAudio.SfxEnabled;
-		}
-
-		public void ScrollUp()
-		{
-			Debug.Log("ScrollUpArrowPressed");
-			OnPanUp();
-		}
-        public void ScrollDown()
-        {
-            Debug.Log("ScrollDownArrowPressed");
-			OnPanDown();
-        }
-        public void ToggleFreeze()
+		}	
+		public void ToggleFreeze()
 		{
 			_scrollEnabled = !_scrollEnabled;
 		}
+
+		private void ScrollBegin(float speed)
+		{
+			if (!_scrollEnabled)
+			{
+				return;
+			}
+
+			_isPanning = true;
+			_scrollSpeed = speed;
+			_panVelocity = Vector2.zero;
+			_magnetVelocity = Vector2.zero;
+
+			const float scalingFactor = 100f;
+
+			transform.Translate(Vector3.up * speed / scalingFactor);
+
+			var clampedPos = Mathf.Clamp(transform.position.y, _listBottom, _listTop);
+			transform.position = new Vector2(transform.position.x, clampedPos);
+		}
+
+		private void ScrollEnd()
+		{
+			if (!_scrollEnabled)
+			{
+				return;
+			}
+
+			_isPanning = false;
+
+			// TODO: make configurable
+			var delta = _scrollSpeed;
+			var velocityMagnitude = Mathf.Abs(delta) < 5f ? 0f : Mathf.Clamp(delta, -50f, 50f);
+
+			_panVelocity = Vector3.up * velocityMagnitude / VelocityScalingFactor;
+		}
+
 	}
 }
