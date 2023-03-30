@@ -18,7 +18,8 @@ namespace View.Control
 		[SerializeField]
 		private float _scrollButtonScale;
 
-		public GameObject PuzzleGamePrefab;
+		[SerializeField]
+		private GameObject _puzzleGamePrefab;
 
 		private bool _scrollEnabled;
 
@@ -344,7 +345,7 @@ namespace View.Control
 
 		private void GenerateLevel(int level, float margin, ref float prevOffset)
 		{
-			var puzzleGame = Instantiate(PuzzleGamePrefab);
+			var puzzleGame = Instantiate(_puzzleGamePrefab);
 			puzzleGame.name = $"PuzzleGame ({level})";
 			puzzleGame.transform.SetParent(transform);
 
