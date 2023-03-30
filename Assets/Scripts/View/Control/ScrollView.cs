@@ -548,8 +548,7 @@ namespace View.Control
 
 		private void ScrollBegin(float speed)
 		{
-			if (!_scrollEnabled)
-			{
+			if (!_scrollEnabled){
 				return;
 			}
 
@@ -568,8 +567,7 @@ namespace View.Control
 
 		private void ScrollEnd()
 		{
-			if (!_scrollEnabled)
-			{
+			if (!_scrollEnabled){
 				return;
 			}
 
